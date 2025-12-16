@@ -1,0 +1,4870 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>ixi-O O&M – Billing & Support Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+
+    /* =========================
+       Color Design Tokens
+    ========================= */
+    :root {
+      /* Base */
+      --bg-body: #f4f4ff;
+      --text-main: #111827;
+      --text-sub: #4b5563;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+
+      /* Brand / Primary */
+      --brand-grad-from: #8b5cf6;
+      --brand-grad-to: #ec4899;
+      --brand-main: #7c3aed;
+      --brand-main-dark: #5b21b6;
+
+      /* Surface / Border */
+      --surface: #ffffff;
+      --surface-soft: #f5f3ff;
+      --surface-softer: #f9fafb;
+      --border-soft: #e5e7eb;
+      --border-input: #e5e0ff;
+
+      /* Sidebar / Menu */
+      --sidebar-bg: #f5f3ff;
+      --sidebar-title: #6b7280;
+      --menu-text: #111827;
+      --submenu-dot: #d4bfff;
+
+      /* Accents */
+      --accent-chip-bg: #f3f4ff;
+      --accent-chip-bg-strong: #e5e7ff;
+      --accent-chip-text: #4b5563;
+      --accent-hover: #f3f4ff;
+      --accent-row-alt: #faf5ff;
+      --accent-link: #4c1d95;
+
+      /* Buttons */
+      --btn-primary-bg: #111827;
+      --btn-primary-bg-hover: #1f2937;
+      --btn-danger-border: #f97373;
+      --btn-danger-text: #b91c1c;
+      --btn-danger-bg-hover: #fef2f2;
+
+      /* Table / Pagination */
+      --table-head-bg: #f5f3ff;
+      --pagination-border: #e5e7eb;
+      --pagination-bg-hover: #ede9fe;
+      --pagination-border-hover:#c4b5fd;
+
+      /* Stub */
+      --stub-border: #e5e7eb;
+
+      /* Selected Row / Pinned */
+      --row-selected-bg: #e0f2fe;
+      --pinned-row-bg: #fef9c3;
+      --pinned-row-border:#facc15;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", system-ui, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+    }
+
+    input[type="checkbox"] { accent-color: var(--brand-main); }
+
+    /* ========================= 헤더 (L1) ========================= */
+    .header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, var(--brand-grad-from), var(--brand-grad-to));
+      color: #ffffff;
+      z-index: 20;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+    }
+    .top-nav {
+      display: flex;
+      gap: 40px;
+      font-size: 15px;
+    }
+    .top-nav-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+    .top-nav-item:hover {
+      background: rgba(255, 255, 255, 0.18);
+      opacity: 1;
+    }
+    .top-nav-item.active {
+      background: #ffffff;
+      color: #4c1d95;
+      font-weight: 600;
+      opacity: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--brand-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* ========================= 레이아웃 ========================= */
+    .layout {
+      display: flex;
+      margin-top: 60px;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* ========================= 사이드바 (L2 / L3) ========================= */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-soft);
+      padding: 24px 16px;
+    }
+    .sidebar-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--sidebar-title);
+      margin-bottom: 12px;
+    }
+    .menu-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .menu-item {
+      border-radius: 10px;
+      color: var(--menu-text);
+    }
+    .menu-main {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    .menu-main:hover { background: #ede9fe; }
+    .menu-item.active > .menu-main {
+      background: var(--brand-main);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .menu-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .menu-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: #ede9fe;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--brand-main);
+    }
+    .menu-item.active .menu-icon {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+    .menu-arrow {
+      font-size: 12px;
+      transition: transform 0.15s ease-out;
+    }
+    .menu-item.open .menu-arrow { transform: rotate(90deg); }
+    .submenu-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 4px 32px;
+      display: none;
+    }
+    .menu-item.open .submenu-list { display: block; }
+    .submenu-item {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-sub);
+      cursor: pointer;
+      position: relative;
+    }
+    .submenu-item::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--submenu-dot);
+    }
+    .submenu-item:hover { background: #f5f3ff; }
+    .submenu-item.active {
+      background: #ede9fe;
+      color: var(--brand-main-dark);
+      font-weight: 600;
+    }
+    .submenu-item.active::before { background: var(--brand-main); }
+
+    /* ========================= 메인 컨텐츠 ========================= */
+    .main {
+      flex: 1;
+      padding: 24px 32px 32px;
+      overflow: auto;
+    }
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .breadcrumb span.current {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--text-main);
+    }
+
+    /* ========================= Support Center 탭/검색 ========================= */
+    .board-tabs {
+      display: inline-flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 6px 18px rgba(148, 163, 184, 0.25);
+      margin-bottom: 16px;
+    }
+    .board-tab {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-sub);
+    }
+    .board-tab.active {
+      background: #ffffff;
+      color: var(--brand-main-dark);
+      font-weight: 600;
+      box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.25);
+    }
+    .board-search-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      margin-top: 4px;
+    }
+    .board-search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-input);
+      background: #fafafc;
+      font-size: 13px;
+      outline: none;
+      color: var(--text-main);
+    }
+    .board-search-input::placeholder { color: var(--text-muted); }
+    .board-search-input:focus {
+      border-color: var(--brand-main);
+      box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.18);
+      background: #ffffff;
+    }
+
+    /* ========================= 버튼 공통 ========================= */
+    .btn-dark {
+      padding: 9px 18px;
+      border-radius: 10px;
+      border: none;
+      background: #111827;
+      color: #ffffff;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-dark:hover { background: #1f2937; }
+    .btn-primary {
+      padding: 9px 22px;
+      border-radius: 10px;
+      border: none;
+      background: var(--btn-primary-bg);
+      color: #ffffff;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-primary:hover { background: var(--btn-primary-bg-hover); }
+    .btn-outline-red {
+      padding: 9px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--btn-danger-border);
+      background: #ffffff;
+      color: var(--btn-danger-text);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .btn-outline-red:hover { background: var(--btn-danger-bg-hover); }
+    .btn-secondary {
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      color: var(--text-sub);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-secondary:hover { background: var(--surface-soft); }
+    .btn-ghost {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn-ghost:hover { background: #f3f4ff; }
+    .btn-group-right {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .btn-accent {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px dashed var(--brand-main);
+      background: #f3f0ff;
+      color: var(--brand-main-dark);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-accent:hover {
+      background: #ede9fe;
+    }
+
+    /* ========================= 테이블 (공통) ========================= */
+    .table-wrap {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead { background: var(--table-head-bg); }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-soft);
+      white-space: nowrap;
+    }
+    th {
+      font-weight: 600;
+      color: var(--text-sub);
+      font-size: 12px;
+    }
+    tbody tr:nth-child(even) { background: var(--accent-row-alt); }
+    tbody tr:hover { background: var(--accent-hover); }
+    tbody tr.selected { background: var(--row-selected-bg) !important; }
+    .text-link {
+      color: var(--accent-link);
+      text-decoration: underline;
+      text-decoration-thickness: 0.07em;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+    .checkbox-cell { width: 40px; }
+    .pinned-row {
+      background: var(--pinned-row-bg);
+      border-bottom: 1px solid var(--pinned-row-border);
+    }
+    .pinned-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #fef3c7;
+      color: #92400e;
+      margin-right: 6px;
+    }
+
+    .empty-state-wrap { padding: 32px 16px; }
+    .empty-state {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 26px 20px 24px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px dashed var(--border-soft);
+      text-align: center;
+    }
+    .empty-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+    .empty-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+    .empty-desc {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ========================= 페이지네이션 ========================= */
+    .table-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--surface);
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .rows-per-page select {
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-input);
+      background: var(--surface);
+      font-size: 12px;
+      color: var(--text-main);
+    }
+    .pagination {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .page-btn {
+      min-width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid var(--pagination-border);
+      background: var(--surface);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--text-main);
+    }
+    .page-btn.active {
+      background: var(--brand-main);
+      border-color: var(--brand-main);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .page-btn:hover {
+      background: var(--pagination-bg-hover);
+      border-color: var(--pagination-border-hover);
+    }
+
+    /* ========================= Stub 카드 ========================= */
+    .stub-card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px dashed var(--stub-border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .stub-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .stub-desc { margin: 0; line-height: 1.6; }
+
+    /* ========================= 카드/폼 공통 ========================= */
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .meta-item-label {
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+    .tag-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: var(--surface-soft);
+      color: var(--brand-main-dark);
+      margin-right: 4px;
+    }
+    .body-content {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-main);
+    }
+    .body-content p { margin: 0 0 8px 0; }
+    .body-content ul {
+      padding-left: 18px;
+      margin: 6px 0;
+    }
+
+    .attachment-list {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .attachment-list th,
+    .attachment-list td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-soft);
+      text-align: left;
+      white-space: nowrap;
+    }
+    .attachment-list th {
+      background: var(--table-head-bg);
+      color: var(--text-sub);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .attachment-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .detail-bottom-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      font-size: 13px;
+    }
+    .detail-prevnext {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .detail-prevnext a {
+      color: var(--accent-link);
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-thickness: 0.06em;
+    }
+
+    /* 폼 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 2fr;
+      gap: 12px 24px;
+      font-size: 13px;
+    }
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-sub);
+      padding-top: 8px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .field-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .field-input,
+    .field-select,
+    .field-multiselect,
+    .field-textarea {
+      border-radius: 6px;
+      border: 1px solid var(--border-input);
+      background: #fafafc;
+      font-size: 13px;
+      padding: 5px 8px;
+      outline: none;
+      color: var(--text-main);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .field-select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 16px;
+      padding-right: 28px;
+    }
+    .field-textarea {
+      min-height: 180px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+    .field-input:focus,
+    .field-select:focus,
+    .field-multiselect:focus,
+    .field-textarea:focus {
+      border-color: var(--brand-main);
+      box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.18);
+      background: #ffffff;
+    }
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .upload-dropzone {
+      border-radius: 12px;
+      border: 1px dashed var(--border-soft);
+      padding: 16px 14px;
+      background: var(--surface-softer);
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .section-title-sm {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    @media (max-width: 960px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      .main { padding: 18px 14px 24px; }
+      th, td { padding: 8px 8px; }
+      .board-tabs { flex-wrap: wrap; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    /* 상단 헤더/사이드바 선택 방지 */
+    .top-nav-item,
+    .top-nav-item *,
+    .menu-item,
+    .menu-main,
+    .menu-label,
+    .submenu-item,
+    .submenu-item::before,
+    .menu-icon {
+      cursor: pointer !important;
+      user-select: none;
+    }
+
+    /* ========================= Billing (청구/수납) ========================= */
+    .billing-list-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .billing-list-table th,
+    .billing-list-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-soft);
+      white-space: nowrap;
+    }
+    /* 월 변경 지점 구분선 */
+    .billing-group-start td {
+      border-top: 2px solid #9ca3af;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+    }
+    .badge-status.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .badge-status.draft {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .badge-status.approved {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge-status.rejected {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .badge-billing {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+    }
+    .billing-status-issued {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .billing-status-remitted {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    .billing-status-partial {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .billing-status-paid {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    /* 금액/날짜 편집 가능한 셀: hover + 인풋 인디케이터(삼각형) */
+    .billing-editable,
+    .billing-date-editable {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .billing-editable:hover,
+    .billing-date-editable:hover {
+      background: var(--accent-hover);
+    }
+
+    /* 입력 가능한 셀 표시용 작은 직각삼각형 (우상단) – '미입력' 상태에서만 표시 */
+    .billing-editable.billing-cell-empty::before,
+    .billing-date-editable.billing-cell-empty::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-top: 6px solid #d1d5db;   /* 튀지 않는 회색 */
+      border-left: 6px solid transparent;
+    }
+
+    .billing-confirm-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.2fr);
+      gap: 16px;
+      margin-top: 8px;
+    }
+    @media (max-width: 1200px) {
+      .billing-confirm-grid { grid-template-columns: 1fr; }
+    }
+
+    .billing-mini-table,
+    .billing-approval-list {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .billing-mini-table th,
+    .billing-mini-table td,
+    .billing-approval-list th,
+    .billing-approval-list td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border-soft);
+      white-space: nowrap;
+    }
+    .billing-mini-table thead th,
+    .billing-approval-list thead th {
+      background: var(--table-head-bg);
+      font-weight: 600;
+      color: var(--text-sub);
+      font-size: 11px;
+    }
+
+    /* 결재/승인 패널 */
+    .approval-tabs {
+      display: inline-flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      margin: 6px 0 10px;
+    }
+    .approval-tab {
+      border: none;
+      background: transparent;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--text-sub);
+      cursor: pointer;
+    }
+    .approval-tab:hover { background: var(--accent-hover); }
+    .approval-tab.active {
+      background: #111827;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .approval-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-chip-bg-strong);
+      color: var(--accent-chip-text);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .approval-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+    }
+    .approval-meta {
+      background: #f9fafb;
+      border: 1px dashed var(--border-soft);
+    }
+    .approval-meta-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+    }
+    .approval-form .field-group {
+      gap: 10px;
+    }
+    .approval-form .field-inline {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .approval-form .field-inline .meta-item-label { min-width: 70px; font-size:12px; }
+    .approval-form .field-inline .field-input,
+    .approval-form .field-inline .field-select,
+    .approval-form .field-inline textarea { flex: 1; font-size:12px; }
+    .approval-form textarea {
+      min-height: 64px;
+    }
+    .approval-list-empty {
+      text-align: center;
+      padding: 14px 0;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .approval-detail-card {
+      background: #f8fafc;
+      border-color: var(--border-soft);
+    }
+    .approval-detail-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 1100px) {
+      .approval-detail-grid { grid-template-columns: 1fr; }
+    }
+    .approval-opinion-box {
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+      min-height: 64px;
+      font-size: 13px;
+      color: var(--text-sub);
+      white-space: pre-wrap;
+    }
+    .approval-breakdown {
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      background: #fff;
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+    .approval-breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .approval-breakdown-row:last-child { border-bottom: none; }
+    .approval-row-active {
+      background: var(--accent-row-alt);
+    }
+    .approval-panel-wrap {
+      background: #f8fafc;
+      padding: 10px;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+    }
+    .approval-line-table-wrap {
+      overflow-x: auto;
+    }
+    .approval-line-table {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .approval-line-table th,
+    .approval-line-table td {
+      padding: 6px 8px;
+      border: 1px solid var(--border-soft);
+      text-align: left;
+    }
+    .approval-line-table th { background: #eef2ff; color: var(--text-sub); }
+    .approval-line-add {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 6px 10px;
+      background: var(--accent-hover);
+      border-radius: 8px;
+      border: 1px dashed var(--border-soft);
+      cursor: pointer;
+    }
+    .approval-section {
+      font-size: 12px;
+    }
+    .approval-section .sub-card-title { font-size: 12px; }
+    .approval-section .meta-item-label { font-size: 12px; }
+    .approval-section .sub-card {
+      background: #f8fafc;
+      border-color: var(--border-soft);
+    }
+    .approval-line-handle {
+      cursor: move;
+      user-select: none;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+    .approval-line-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: #eef2ff;
+      color: var(--text-sub);
+      font-size: 12px;
+    }
+    .approval-breakdown-total {
+      background: #f5f3ff;
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+    .approval-line-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 6px 0 10px;
+    }
+    .approval-line-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 12px;
+    }
+    .approval-line-step .step-order {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: #eef2ff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #4338ca;
+      flex-shrink: 0;
+    }
+    .approval-line-step .step-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .approval-line-step .step-meta strong {
+      font-size: 12px;
+    }
+    .approval-line-step .step-meta .field-note {
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .approval-line-step .badge-status {
+      white-space: nowrap;
+      margin-left: auto;
+    }
+    .approval-table-wrap {
+      width: 100%;
+      overflow: auto;
+    }
+
+    .sub-card {
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      padding: 10px 12px;
+      margin-top: 8px;
+      background: var(--surface-soft);
+    }
+    .sub-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+    .sub-card-note {
+      margin: 6px 0 0;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* 반복/일회성 청구 타이틀 배경 */
+    .sub-card-title-repeat {
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .sub-card-title-onetime {
+      background: #dcfce7;
+      color: #166534;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    /* Billing Main Tabs */
+    .billing-main-tabs {
+      display: inline-flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+    }
+    .billing-main-tab {
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--text-sub);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .billing-main-tab:hover { background: #f3f4ff; }
+    .billing-main-tab.active {
+      background: #111827;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* 할인 섹션 */
+    .discount-selected-list {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .discount-list-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface-softer);
+    }
+    .discount-list-row.dragging { opacity: 0.7; }
+    .discount-handle {
+      cursor: grab;
+      margin-right: 4px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .discount-main .discount-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .discount-main .discount-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .discount-right {
+      text-align: right;
+      font-size: 12px;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .discount-picker-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .discount-picker-item {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+      cursor: pointer;
+      background: var(--surface-softer);
+    }
+    .discount-picker-item:hover {
+      background: #f3f4ff;
+      border-color: var(--brand-main);
+    }
+
+    /* 삭제 아이콘 (원형 X) */
+    .icon-delete-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      background: #ffffff;
+      color: var(--text-sub);
+    }
+
+    /* placeholder 셀 */
+    .placeholder-cell {
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    /* 슬라이딩 패널 (할인요소) */
+    .slide-panel-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.35);
+      display: none;
+      align-items: stretch;
+      justify-content: flex-end;
+      z-index: 30;
+    }
+    .slide-panel-backdrop.open { display: flex; }
+    .slide-panel {
+      width: 360px;
+      max-width: calc(100% - 80px);
+      background: var(--surface);
+      box-shadow: -12px 0 24px rgba(15, 23, 42, 0.18);
+      display: flex;
+      flex-direction: column;
+    }
+    .slide-panel-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slide-panel-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .slide-panel-body {
+      padding: 14px 16px;
+      flex: 1;
+      overflow: auto;
+      font-size: 13px;
+    }
+    .slide-panel-footer {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .billing-total-label {
+      font-weight: 600;
+    }
+    .billing-total-sub-label {
+      padding-left: 12px;
+      font-weight: 500;
+      color: var(--text-sub);
+    }
+
+    .billing-total-final-row th,
+    .billing-total-final-row td {
+      background: #ede9fe;
+      color: var(--brand-main-dark);
+      font-weight: 700;
+    }
+
+    /* 강조용 금액 셀 (청구서 상세 내 '청구할인 후 금액', '크레딧 차감 후 금액') */
+    .billing-highlight-amount {
+      font-weight: 600;
+      color: var(--brand-main-dark);
+    }
+
+    /* 계약명 표시 (청구 수납 이력) */
+    .billing-contract-cell {
+      font-weight: 600;
+      color: var(--text-main);
+      min-width: 180px;
+    }
+    .contract-name {
+      display: block;
+    }
+    .contract-status-chip {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .contract-status-chip--active {
+      background: #ecfdf3;
+      color: #166534;
+    }
+    .contract-status-chip--ended {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    /* 계약 상태 아이콘 (요약 표시) */
+    .contract-status-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f3f4f6;
+      color: #374151;
+    }
+    .contract-status-icon-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #9ca3af;
+      display: inline-block;
+    }
+    .contract-status-icon.active {
+      background: #ecfdf3;
+      color: #166534;
+    }
+    .contract-status-icon.active .contract-status-icon-dot { background: #16a34a; }
+    .contract-status-icon.ended {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+    .contract-status-icon.ended .contract-status-icon-dot { background: #ef4444; }
+
+    /* 계약 선택 카드 (청구서 컨펌) */
+    .contract-select-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    .contract-card {
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+    }
+    .contract-card:hover {
+      border-color: #c4b5fd;
+      box-shadow: 0 6px 14px rgba(124, 58, 237, 0.1);
+      transform: translateY(-1px);
+    }
+    .contract-card.active {
+      border-color: var(--brand-main);
+      box-shadow: 0 8px 18px rgba(124, 58, 237, 0.16);
+      background: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%);
+    }
+    .contract-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .contract-card-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .contract-card-meta {
+      font-size: 12px;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .contract-search-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+    }
+    .contract-search-input {
+      width: 240px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-input);
+      background: #fff;
+      font-size: 12px;
+    }
+    .contract-search-input:focus {
+      border-color: var(--brand-main);
+      outline: none;
+      box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.12);
+    }
+    .contract-select-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    /* ========================= 모달 공통 (예측, 인라인 편집) ========================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-card {
+      width: 520px;
+      max-width: calc(100% - 40px);
+      background: var(--surface);
+      border-radius: 16px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
+      border: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      max-height: 80vh;
+    }
+    .modal-card.small {
+      width: 420px;
+      max-width: calc(100% - 40px);
+    }
+    .modal-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .modal-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .modal-body {
+      padding: 14px 18px;
+      overflow: auto;
+      font-size: 13px;
+    }
+    .modal-footer {
+      padding: 10px 18px 14px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .modal-close-icon {
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      cursor: pointer;
+      color: var(--text-sub);
+    }
+    .modal-close-icon:hover {
+      background: #f3f4ff;
+      border-radius: 999px;
+    }
+    /* 고객사 입력 전용 컬럼 (시각 구분용) */
+    .customer-entry-cell {
+      background: #fffaf0; /* 연한 크림 컬러로 구분 */
+    }
+    th.customer-col { background: #fffaf0; }
+
+    /* 합계 행 스타일 */
+    .billing-month-totals {
+      height: 28px;
+      font-size: 11px;
+    }
+    .billing-month-totals td {
+      padding: 2px 6px;
+      vertical-align: middle;
+      color: var(--text-sub);
+      font-weight: 500;
+    }
+
+    /* 첫 번째 청구 이력 행 라벨 색상 구분 */
+    .billing-main-row:first-of-type td {
+      background: #f9f9fc;
+    }
+    .billing-main-row:first-of-type .customer-entry-cell {
+      background: #fef7f0;
+    }
+
+    /* 청구 이력 테이블 행 선택 - 첫 번째 행도 selected 색상 적용 */
+    .billing-main-row.selected,
+    .billing-main-row.selected:first-of-type {
+      background: #e5e7ff !important;
+    }
+    .billing-main-row.selected td {
+      background: #e5e7ff;
+    }
+    .billing-main-row.selected .customer-entry-cell {
+      background: #e5d9ff;
+    }
+
+    /* 상태별 색상 */
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      text-align: center;
+      width: 100%;
+    }
+    .status-badge.발행 {
+      background: #fef3c7;
+      color: #b45309;
+    }
+    .status-badge.송금 {
+      background: #dbeafe;
+      color: #0c4a6e;
+    }
+    .status-badge.부분수납 {
+      background: #fed7aa;
+      color: #92400e;
+    }
+    .status-badge.완납 {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    /* 작은 원형 버튼 (+ / -) */
+    .circle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      color: var(--text-sub);
+      font-size: 14px;
+      line-height: 1;
+      padding: 0;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+    .circle-btn:hover { background: #f3f4ff; }
+    .circle-btn--danger { border-color: #fca5a5; color: #b91c1c; }
+
+    /* 청구 이력 테이블 행 선택 */
+    .billing-main-row {
+      cursor: pointer;
+    }
+    .billing-main-row:hover {
+      background: #f3f4ff;
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">ixi-O O&M</div>
+      <nav class="top-nav">
+        <div class="top-nav-item" data-top-label="상품 운영">상품 운영</div>
+        <div class="top-nav-item active" data-top-label="서비스 운영">서비스 운영</div>
+        <div class="top-nav-item" data-top-label="서비스 정산">서비스 정산</div>
+        <div class="top-nav-item" data-top-label="일반">일반</div>
+      </nav>
+    </div>
+    <div class="header-right">
+      <div class="avatar">A</div>
+      <span>관리자</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title" id="sidebar-title">서비스 운영</div>
+      <ul class="menu-list" id="sidebar-menu"></ul>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="main">
+      <div class="breadcrumb" id="breadcrumb"></div>
+      <div id="page-inner"></div>
+    </main>
+  </div>
+
+  <!-- 당월 청구금액 예상 모달 -->
+  <div class="modal-backdrop" data-role="monthly-forecast-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">당월 청구금액 예상</div>
+        <button class="modal-close-icon" type="button" data-role="btn-close-monthly-forecast">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="field-note" style="margin-bottom:10px;">
+          현재 기준 당월 가입자·사용량 추이를 기반으로 월말 기준 청구항목 값과 예상 청구금액을 제공합니다.
+        </p>
+
+        <div class="sub-card" style="margin-top:4px;">
+          <div class="sub-card-title">예상 청구 내역</div>
+          <table class="billing-mini-table">
+            <thead>
+              <tr>
+                <th>청구항목</th>
+                <th>예상 청구항목 값 (월말 기준)</th>
+                <th>가입자당 단가</th>
+                <th>예상 청구 금액</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>월 평균 가입자 (예상)</td>
+                <td>158,000명</td>
+                <td>0.025</td>
+                <td>USD 3,950.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" type="button" data-role="btn-close-monthly-forecast">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 인라인 편집 모달 (금액/일회성 청구/날짜 입력 공통) -->
+  <div class="modal-backdrop" data-role="inline-edit-modal">
+    <div class="modal-card small">
+      <div class="modal-header">
+        <div class="modal-title" data-edit-modal-title>값 입력</div>
+        <button class="modal-close-icon" type="button" data-role="btn-close-inline-edit">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label class="form-label" data-edit-modal-label>값 입력</label>
+          <input class="field-input" data-edit-modal-input />
+          <p class="field-note" data-edit-modal-note></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" type="button" data-role="btn-cancel-inline-edit">취소</button>
+        <button class="btn-primary" type="button" data-role="btn-apply-inline-edit">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ========================= 메뉴 구조 ========================= */
+    const MENU_STRUCTURE = {
+      "상품 운영": {
+        "상품 관리": ["상품 기준 정보"],
+        "고객사 관리": ["고객사 정보", "계약 관리"],
+        "대시보드": ["사업 실적", "학습데이터 수집"]
+      },
+      "서비스 운영": {
+        "사용자 관리": ["계정 관리"],
+        "구독 관리": ["구독 현황"],
+        "DevOps": ["AI 모델"],
+        "Support Center": ["공지/SOP/FAQ"]
+      },
+      "서비스 정산": {
+        "청구/수납": ["Maxis", "A사", "B사"]
+      },
+      "일반": {
+        "시스템": ["보안, 컴플라이언스", "설정"]
+      }
+    };
+
+    let currentTop = "서비스 운영";
+    let currentL2 = "Support Center";
+    let currentL3 = "공지/SOP/FAQ";
+
+    // Support Center 상태
+    let currentBoardType = "공지사항";
+    let currentBoardView = "list"; // list / detail / edit
+    let boardEditMode = "create";
+
+    // Billing 상태
+    let currentBillingCustomer = "Maxis";
+    let billingHistoryMode = "view"; // view | edit
+
+    const USER_ROLE = "admin";
+
+    const BILLING_HISTORY_SEED = [
+      {
+        contractNumber: "CN-2024-001",
+        contractName: "Maxis 메인 구독 계약",
+        contractStatus: "유효",
+        usageMonth: "2025-10",
+        billingMonth: "2025-11",
+        issuedDate: "2025-11-05",
+        finalAmount: "USD 3,476.68",
+        status: "발행",
+        remit: "USD 1,500.00",
+        remitDate: "2025-11-10",
+        customerStatus: "송금",
+        receive: "USD 800.00",
+        receiveDate: "2025-11-12",
+        companyStatus: "송금",
+        entries: [
+          {
+            remit: "USD 1,000.00",
+            remitDate: "2025-11-15",
+            customerStatus: "송금",
+            receive: "USD 1,176.68",
+            receiveDate: "2025-11-18",
+            companyStatus: "부분 수납",
+          },
+        ],
+      },
+      {
+        contractNumber: "CN-2025-014",
+        contractName: "Maxis 확장 옵션 계약",
+        contractStatus: "유효",
+        usageMonth: "2025-09",
+        billingMonth: "2025-10",
+        issuedDate: "2025-10-05",
+        finalAmount: "USD 3,210.40",
+        status: "완납",
+        remit: "USD 3,210.40",
+        remitDate: "2025-10-10",
+        customerStatus: "완납",
+        receive: "USD 3,210.40",
+        receiveDate: "2025-10-12",
+        companyStatus: "완납",
+        entries: [],
+      },
+      {
+        contractNumber: "CN-2023-077",
+        contractName: "구 ixi-O 초기 도입 계약",
+        contractStatus: "해지",
+        usageMonth: "2025-08",
+        billingMonth: "2025-09",
+        issuedDate: "2025-09-05",
+        finalAmount: "USD 3,050.00",
+        status: "부분 수납",
+        remit: "USD 1,500.00",
+        remitDate: "2025-09-10",
+        customerStatus: "부분 수납",
+        receive: "USD 1,000.00",
+        receiveDate: "2025-09-12",
+        companyStatus: "부분 수납",
+        entries: [
+          {
+            remit: "USD 1,550.00",
+            remitDate: "2025-09-20",
+            customerStatus: "송금",
+            receive: "USD 2,050.00",
+            receiveDate: "2025-09-22",
+            companyStatus: "완납",
+          },
+        ],
+      },
+    ];
+
+    const billingHistoryData = structuredClone(BILLING_HISTORY_SEED);
+
+    const APPROVAL_GROUPS = [
+      {
+        id: "accounting",
+        name: "정산 그룹",
+        tag: "청구/정산",
+        description: "반복·일회성 청구 금액 검증 및 할인 반영 확인",
+        lineSummary: "정산 담당 → 정산 리더 → 재무팀장",
+        members: [
+          { order: 1, role: "기안", name: "정산 담당", contact: "hong@uplus.co.kr / 010-1234-5678" },
+          { order: 2, role: "승인", name: "정산 리더", contact: "lead@uplus.co.kr / 010-2222-3333" },
+          { order: 3, role: "승인", name: "재무팀장", contact: "cfo@uplus.co.kr / 010-9999-1111" },
+        ],
+        defaultCc: "finance@uplus.co.kr",
+      },
+      {
+        id: "management",
+        name: "관리 그룹",
+        tag: "서비스 운영",
+        description: "서비스 운영/관리 부서 승인, 고객 커뮤니케이션 책임",
+        lineSummary: "서비스 운영 매니저 → 서비스 오너",
+        members: [
+          { order: 1, role: "기안", name: "서비스 운영 매니저", contact: "ops@uplus.co.kr / 010-5555-6666" },
+          { order: 2, role: "승인", name: "서비스 오너", contact: "owner@uplus.co.kr / 010-7777-8888" },
+        ],
+        defaultCc: "bizlead@uplus.co.kr",
+      },
+      {
+        id: "finance",
+        name: "재무 그룹",
+        tag: "회계/송금",
+        description: "송금 일정 관리 및 회계 마감용 승인",
+        lineSummary: "회계 담당 → 재무 실장",
+        members: [
+          { order: 1, role: "기안", name: "회계 담당", contact: "acct@uplus.co.kr / 010-1010-2020" },
+          { order: 2, role: "승인", name: "재무 실장", contact: "finlead@uplus.co.kr / 010-3030-4040" },
+        ],
+        defaultCc: "accounting@uplus.co.kr",
+      },
+    ];
+
+    const APPROVAL_REQUEST_SEED = [
+      {
+        id: "billing-202511-01",
+        usageMonth: "2025-10",
+        billingMonth: "2025-11",
+        customer: "Maxis",
+        finalAmount: "USD 3,476.68",
+        status: "대기중",
+        submittedBy: "billing.user01",
+        submittedAt: "2025-11-05",
+        decidedAt: "-",
+        opinion: "10월 사용분(반복+일회성) 할인 반영 청구 건입니다. 청구서 컨펌 금액 확인 후 승인 요청드립니다.",
+        line: "정산 그룹",
+        groupId: "accounting",
+        approvalLineStates: [
+          { order: 1, role: "기안", name: "정산 담당", contact: "hong@uplus.co.kr / 010-1234-5678", status: "승인" },
+          { order: 2, role: "승인", name: "정산 리더", contact: "lead@uplus.co.kr / 010-2222-3333", status: "대기중" },
+          { order: 3, role: "승인", name: "재무팀장", contact: "cfo@uplus.co.kr / 010-9999-1111", status: "대기중" },
+        ],
+        cc: "bizlead@uplus.co.kr",
+        detailItems: [
+          { label: "반복 청구", value: "USD 5,195.20", note: "월 평균 가입자, 콜요약 API 청구" },
+          { label: "할인 적용", value: "-USD 1,718.52", note: "장기 이용 할인 10%, 프로모션 크레딧" },
+          { label: "일회성 청구", value: "USD 45,000.00", note: "ixi-O 2.0 구축비용 (초기 구축)" },
+        ],
+      },
+      {
+        id: "billing-202510-01",
+        usageMonth: "2025-09",
+        billingMonth: "2025-10",
+        customer: "Maxis",
+        finalAmount: "USD 3,210.40",
+        status: "승인",
+        submittedBy: "billing.user02",
+        submittedAt: "2025-10-05",
+        decidedAt: "2025-10-06",
+        opinion: "9월 사용분 승인 완료 기록용입니다.",
+        line: "관리 그룹",
+        groupId: "management",
+        approvalLineStates: [
+          { order: 1, role: "기안", name: "서비스 운영 매니저", contact: "ops@uplus.co.kr / 010-5555-6666", status: "승인" },
+          { order: 2, role: "승인", name: "서비스 오너", contact: "owner@uplus.co.kr / 010-7777-8888", status: "승인" },
+        ],
+        cc: "finance@uplus.co.kr",
+        detailItems: [
+          { label: "반복 청구", value: "USD 3,400.00", note: "가입자/트래픽 기준" },
+          { label: "할인 적용", value: "-USD 189.60", note: "장기 이용 할인" },
+        ],
+      },
+    ];
+
+    const approvalRequests = structuredClone(APPROVAL_REQUEST_SEED);
+    let currentApprovalSelection = null;
+    const CONTRACT_LIST = [
+      {
+        id: "ct-001",
+        number: "CN-2024-001",
+        name: "Maxis 메인 구독 계약",
+        customer: "Maxis",
+        status: "유효",
+        period: "2024-01-01 ~ 2026-12-31",
+        billing: "정기 구독 + 사용량 연동",
+        currency: "USD",
+        manager: "홍AE",
+      },
+      {
+        id: "ct-002",
+        number: "CN-2025-014",
+        name: "Maxis 확장 옵션 계약",
+        customer: "Maxis",
+        status: "유효",
+        period: "2025-01-01 ~ 2026-06-30",
+        billing: "추가 API 패키지",
+        currency: "USD",
+        manager: "김CS",
+      },
+      {
+        id: "ct-003",
+        number: "CN-2023-077",
+        name: "구 ixi-O 초기 도입 계약",
+        customer: "Maxis",
+        status: "해지",
+        period: "2023-01-01 ~ 2024-12-31",
+        billing: "초기 구축 + 유지보수",
+        currency: "USD",
+        manager: "박AE",
+      },
+    ];
+    let currentConfirmContractId = null;
+    let contractSearchTerm = "";
+
+    function escapeHtml(str) {
+      return (str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function parseAmountToNumber(text) {
+      if (!text && text !== 0) return 0;
+      const num = String(text).replace(/[^0-9.\-]/g, "");
+      const n = parseFloat(num);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function formatAmountNumber(n) {
+      if (!Number.isFinite(n)) return "0";
+      return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function renderContractStatusIcon(status) {
+      const key = (status || "").trim();
+      const cls = key === "유효" ? "contract-status-icon active" : "contract-status-icon ended";
+      const label = key || "-";
+      return `<span class="${cls}"><span class="contract-status-icon-dot" aria-hidden="true"></span>${escapeHtml(label)}</span>`;
+    }
+
+    function renderStatusBadge(status) {
+      if (!status) return `<span class="badge-billing billing-status-issued" data-billing-status="-">-</span>`;
+      return renderBillingStatusBadge(status);
+    }
+
+    function renderBillingHistoryRows(mode) {
+      let prevUsageMonth = null;
+      return billingHistoryData
+        .map((row) => {
+          const isEdit = mode === "edit";
+          const isGroupStart = row.usageMonth !== prevUsageMonth;
+          prevUsageMonth = row.usageMonth;
+          const groupClass = `billing-main-row${isGroupStart ? " billing-group-start" : ""}`;
+          const btnCell = isEdit
+            ? `<td class="billing-btn-cell" style="text-align: center; vertical-align: middle;"><button class="circle-btn" title="입력 추가" data-role="btn-add-entry">＋</button></td>`
+            : `<td class="billing-btn-cell"></td>`;
+
+          const remitCell = isEdit
+            ? `<td class="customer-entry-cell" style="padding: 0;"><input class="field-input" data-role="billing-edit-remit" placeholder="0" value="${escapeHtml(row.remit || "")}" style="margin: 0; border-radius: 0;" /></td>`
+            : `<td class="customer-entry-cell">${row.remit || "-"}</td>`;
+
+          const remitDateCell = isEdit
+            ? `<td class="customer-entry-cell" style="padding: 0;"><input class="field-input" type="date" data-col-remit-date data-role="billing-edit-remit-date" value="${escapeHtml(row.remitDate || "")}" style="margin: 0; border-radius: 0;" /></td>`
+            : `<td class="customer-entry-cell" data-col-remit-date>${row.remitDate || "-"}</td>`;
+
+          const customerStatusCell = isEdit
+            ? `<td class="customer-entry-cell" style="padding: 0;">
+                <select class="field-input field-select" data-role="billing-edit-customer-status" style="margin: 0; border-radius: 0;">
+                  <option value="">선택</option>
+                  <option value="발행" ${row.customerStatus === "발행" ? "selected" : ""}>발행</option>
+                  <option value="송금" ${row.customerStatus === "송금" ? "selected" : ""}>송금</option>
+                  <option value="부분 수납" ${row.customerStatus === "부분 수납" ? "selected" : ""}>부분 수납</option>
+                  <option value="완납" ${row.customerStatus === "완납" ? "selected" : ""}>완납</option>
+                </select>
+              </td>`
+            : `<td class="customer-entry-cell">${renderStatusBadge(row.customerStatus)}</td>`;
+
+          const receiveCell = isEdit
+            ? `<td style="padding: 0;"><input class="field-input" data-role="billing-edit-receive" placeholder="0" value="${escapeHtml(row.receive || "")}" style="margin: 0; border-radius: 0;" /></td>`
+            : `<td>${row.receive || "-"}</td>`;
+
+          const receiveDateCell = isEdit
+            ? `<td style="padding: 0;"><input class="field-input" type="date" data-col-receive-date data-role="billing-edit-receive-date" value="${escapeHtml(row.receiveDate || "")}" style="margin: 0; border-radius: 0;" /></td>`
+            : `<td data-col-receive-date>${row.receiveDate || "-"}</td>`;
+
+          const companyStatusCell = isEdit
+            ? `<td style="padding: 0;"><select class="field-input field-select" data-role="billing-edit-status" style="margin: 0; border-radius: 0;">
+                  <option value="">선택</option>
+                  <option value="발행" ${row.companyStatus === "발행" ? "selected" : ""}>발행</option>
+                  <option value="송금" ${row.companyStatus === "송금" ? "selected" : ""}>송금</option>
+                  <option value="부분 수납" ${row.companyStatus === "부분 수납" ? "selected" : ""}>부분 수납</option>
+                  <option value="완납" ${row.companyStatus === "완납" ? "selected" : ""}>완납</option>
+                </select></td>`
+            : `<td>${renderStatusBadge(row.companyStatus)}</td>`;
+
+          const entryRows = row.entries
+            .map((entry) => {
+              const entryRemit = isEdit
+                ? `<td class="customer-entry-cell" style="padding: 0;"><input class="field-input" data-role="input-remit" placeholder="0" value="${escapeHtml(entry.remit || "")}" style="margin: 0; border-radius: 0;" /></td>`
+                : `<td class="customer-entry-cell">${entry.remit || "-"}</td>`;
+              const entryRemitDate = isEdit
+                ? `<td class="customer-entry-cell" style="padding: 0;"><input class="field-input" type="date" data-role="input-remit-date" value="${escapeHtml(entry.remitDate || "")}" style="margin: 0; border-radius: 0;" /></td>`
+                : `<td class="customer-entry-cell">${entry.remitDate || "-"}</td>`;
+              const entryCustomerStatus = isEdit
+                ? `<td class="customer-entry-cell" style="padding: 0;">
+                    <select class="field-input field-select" data-role="input-customer-status" style="margin: 0; border-radius: 0;">
+                      <option value="">선택</option>
+                      <option value="발행" ${entry.customerStatus === "발행" ? "selected" : ""}>발행</option>
+                      <option value="송금" ${entry.customerStatus === "송금" ? "selected" : ""}>송금</option>
+                      <option value="부분 수납" ${entry.customerStatus === "부분 수납" ? "selected" : ""}>부분 수납</option>
+                      <option value="완납" ${entry.customerStatus === "완납" ? "selected" : ""}>완납</option>
+                    </select>
+                  </td>`
+                : `<td class="customer-entry-cell">${renderStatusBadge(entry.customerStatus)}</td>`;
+              const entryReceive = isEdit
+                ? `<td style="padding: 0;"><input class="field-input" data-role="input-receive" placeholder="0" value="${escapeHtml(entry.receive || "")}" style="margin: 0; border-radius: 0;" /></td>`
+                : `<td>${entry.receive || "-"}</td>`;
+              const entryReceiveDate = isEdit
+                ? `<td style="padding: 0;"><input class="field-input" type="date" data-role="input-receive-date" value="${escapeHtml(entry.receiveDate || "")}" style="margin: 0; border-radius: 0;" /></td>`
+                : `<td>${entry.receiveDate || "-"}</td>`;
+              const entryCompanyStatus = isEdit
+                ? `<td style="padding: 0;">
+                    <select class="field-input field-select" data-role="input-company-status" style="margin: 0; border-radius: 0;">
+                      <option value="">선택</option>
+                      <option value="발행" ${entry.companyStatus === "발행" ? "selected" : ""}>발행</option>
+                      <option value="송금" ${entry.companyStatus === "송금" ? "selected" : ""}>송금</option>
+                      <option value="부분 수납" ${entry.companyStatus === "부분 수납" ? "selected" : ""}>부분 수납</option>
+                      <option value="완납" ${entry.companyStatus === "완납" ? "selected" : ""}>완납</option>
+                    </select>
+                  </td>`
+                : `<td>${renderStatusBadge(entry.companyStatus)}</td>`;
+
+              const entryButton = isEdit
+                ? `<td class="billing-btn-cell" style="text-align: center; vertical-align: middle;"><button class="circle-btn circle-btn--danger" data-role="btn-remove-entry">－</button></td>`
+                : `<td class="billing-btn-cell"></td>`;
+
+              return `
+                <tr class="billing-entry-row" data-parent-usage="${row.usageMonth}">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  ${entryButton}
+                  ${entryRemit}
+                  ${entryRemitDate}
+                  ${entryCustomerStatus}
+                  ${entryReceive}
+                  ${entryReceiveDate}
+                  ${entryCompanyStatus}
+                </tr>
+              `;
+            })
+            .join("");
+
+          const remitTotal =
+            parseAmountToNumber(row.remit) +
+            row.entries.reduce((sum, entry) => sum + parseAmountToNumber(entry.remit), 0);
+          const receiveTotal =
+            parseAmountToNumber(row.receive) +
+            row.entries.reduce((sum, entry) => sum + parseAmountToNumber(entry.receive), 0);
+
+          const contractStatusClass = row.contractStatus === "유효" ? "contract-status-chip--active" : "contract-status-chip--ended";
+          const contractBadge = row.contractStatus
+            ? `<span class="contract-status-chip ${contractStatusClass}">${escapeHtml(row.contractStatus)}</span>`
+            : "";
+
+          return `
+            <tr class="${groupClass}" data-contract-name="${escapeHtml(row.contractName || "")}" data-contract-number="${escapeHtml(row.contractNumber || "")}" data-contract-status="${escapeHtml(row.contractStatus || "")}" data-usage-month="${row.usageMonth}" data-billing-month="${row.billingMonth}" data-issued-date="${row.issuedDate}" data-final-amount="${row.finalAmount}" data-status="${row.status}">
+              <td class="billing-contract-cell">
+                <span class="contract-name">${escapeHtml(row.contractName || "-")}</span>
+                ${contractBadge}
+              </td>
+              <td>${escapeHtml(row.contractNumber || "-")}</td>
+              <td>${row.usageMonth}</td>
+              <td>${row.billingMonth}</td>
+              <td>${row.issuedDate}</td>
+              <td>${row.finalAmount}</td>
+              ${btnCell}
+              ${remitCell}
+              ${remitDateCell}
+              ${customerStatusCell}
+              ${receiveCell}
+              ${receiveDateCell}
+              ${companyStatusCell}
+            </tr>
+            ${entryRows}
+            <tr class="billing-month-totals" data-usage-month="${row.usageMonth}">
+              <td colspan="6" class="billing-total-label">합계 (송금 / 수납)</td>
+              <td class="billing-btn-cell"></td>
+              <td class="customer-entry-cell" data-role="month-sum-remit">${formatAmountNumber(remitTotal)}</td>
+              <td></td>
+              <td></td>
+              <td data-role="month-sum-receive">${formatAmountNumber(receiveTotal)}</td>
+              <td></td>
+              <td></td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    function renderContractCards(customerName) {
+      const keyword = (contractSearchTerm || "").toLowerCase().trim();
+      const contracts = CONTRACT_LIST.filter((c) => {
+        const matchCustomer = c.customer === customerName;
+        const matchStatus = c.status === "유효";
+        const matchKeyword =
+          !keyword ||
+          c.name.toLowerCase().includes(keyword) ||
+          c.period.toLowerCase().includes(keyword);
+        return matchCustomer && matchStatus && matchKeyword;
+      });
+      if (!contracts.length) {
+        return `<p class="field-note" style="margin:0;">유효한 계약이 없습니다. 계약 등록 후 청구서를 생성하세요.</p>`;
+      }
+
+      const cards = contracts
+        .map((c) => {
+          const activeClass = currentConfirmContractId === c.id ? " active" : "";
+          return `
+            <div class="contract-card${activeClass}" data-role="contract-card" data-contract-id="${c.id}">
+              <div class="contract-card-header">
+                <div class="contract-card-title">${escapeHtml(c.name)}</div>
+                <div>${renderContractStatusIcon(c.status)}</div>
+              </div>
+              <div class="contract-card-meta">
+                <span>계약번호: ${escapeHtml(c.number || "-")}</span>
+                <span>계약 기간: ${escapeHtml(c.period)}</span>
+                <span>담당: ${escapeHtml(c.manager)}</span>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+
+      return `<div class="contract-select-grid" data-role="contract-list">${cards}</div>`;
+    }
+
+    function updateContractCards(customerName) {
+      const container = document.querySelector("[data-role='contract-list-container']");
+      if (!container) return;
+      container.innerHTML = renderContractCards(customerName);
+      setConfirmContract(currentConfirmContractId);
+    }
+
+    function captureBillingHistoryFromDOM() {
+      const tbody = document.querySelector('[data-role="billing-history-table"] tbody');
+      if (!tbody) return;
+      const mainRows = tbody.querySelectorAll(".billing-main-row[data-usage-month]");
+      const nextData = [];
+
+      mainRows.forEach((row) => {
+        const usage = row.getAttribute("data-usage-month") || (row.cells[2]?.textContent.trim() || "");
+        const billingMonth = row.getAttribute("data-billing-month") || (row.cells[3]?.textContent.trim() || "");
+        const issuedDate = row.getAttribute("data-issued-date") || (row.cells[4]?.textContent.trim() || "");
+        const finalAmount = row.getAttribute("data-final-amount") || (row.cells[5]?.textContent.trim() || "");
+        const status = row.getAttribute("data-status") || "";
+        const contractName = row.getAttribute("data-contract-name") || (row.cells[0]?.textContent.trim() || "");
+        const contractNumber = row.getAttribute("data-contract-number") || (row.cells[1]?.textContent.trim() || "");
+        const contractStatus = row.getAttribute("data-contract-status") || "";
+
+        const getValue = (selector) => {
+          const el = row.querySelector(selector);
+          if (!el) return "";
+          if (el.tagName === "INPUT" || el.tagName === "SELECT" || el.tagName === "TEXTAREA") {
+            return el.value || "";
+          }
+          const badge = el.querySelector("[data-billing-status]");
+          if (badge) return badge.getAttribute("data-billing-status") || badge.textContent || "";
+          return el.textContent || "";
+        };
+
+        const data = {
+          contractName,
+          contractNumber,
+          contractStatus,
+          usageMonth: usage,
+          billingMonth,
+          issuedDate,
+          finalAmount,
+          status,
+          remit: getValue('[data-role="billing-edit-remit"]'),
+          remitDate: getValue('[data-role="billing-edit-remit-date"]'),
+          customerStatus: getValue('[data-role="billing-edit-customer-status"]'),
+          receive: getValue('[data-role="billing-edit-receive"]'),
+          receiveDate: getValue('[data-role="billing-edit-receive-date"]'),
+          companyStatus: getValue('[data-role="billing-edit-status"]'),
+          entries: [],
+        };
+
+        const entryRows = tbody.querySelectorAll(`.billing-entry-row[data-parent-usage="${usage}"]`);
+        entryRows.forEach((entryRow) => {
+          const getEntryValue = (selector) => {
+            const el = entryRow.querySelector(selector);
+            if (!el) return "";
+            if (el.tagName === "INPUT" || el.tagName === "SELECT") {
+              return el.value || "";
+            }
+            const badge = el.querySelector("[data-billing-status]");
+            if (badge) return badge.getAttribute("data-billing-status") || badge.textContent || "";
+            return el.textContent || "";
+          };
+
+          data.entries.push({
+            remit: getEntryValue('[data-role="input-remit"]'),
+            remitDate: getEntryValue('[data-role="input-remit-date"]'),
+            customerStatus: getEntryValue('[data-role="input-customer-status"]'),
+            receive: getEntryValue('[data-role="input-receive"]'),
+            receiveDate: getEntryValue('[data-role="input-receive-date"]'),
+            companyStatus: getEntryValue('[data-role="input-company-status"]'),
+          });
+        });
+
+        nextData.push(data);
+      });
+
+      billingHistoryData.length = 0;
+      nextData.forEach((item) => billingHistoryData.push(item));
+    }
+
+    function setBillingHistoryMode(mode) {
+      if (mode === "edit") {
+        billingHistoryMode = "edit";
+      } else {
+        captureBillingHistoryFromDOM();
+        billingHistoryMode = "view";
+      }
+      renderPage(currentTop, currentL2, currentL3);
+    }
+
+    /* ========================= 인라인 편집 모달 제어 ========================= */
+    let inlineEditContext = null;
+
+    function openInlineEditModal({ title, label, note, initialValue, type, onApply }) {
+      const backdrop = document.querySelector('[data-role="inline-edit-modal"]');
+      if (!backdrop) return;
+      const titleEl = backdrop.querySelector('[data-edit-modal-title]');
+      const labelEl = backdrop.querySelector('[data-edit-modal-label]');
+      const noteEl = backdrop.querySelector('[data-edit-modal-note]');
+      const inputEl = backdrop.querySelector('[data-edit-modal-input]');
+
+      if (titleEl) titleEl.textContent = title || "값 입력";
+      if (labelEl) labelEl.textContent = label || "값 입력";
+      if (noteEl) {
+        if (note) {
+          noteEl.textContent = note;
+          noteEl.style.display = "block";
+        } else {
+          noteEl.textContent = "";
+          noteEl.style.display = "none";
+        }
+      }
+      if (inputEl) {
+        inputEl.type = type === "date" ? "date" : "text";
+        inputEl.value = initialValue || "";
+      }
+
+      inlineEditContext = { onApply: typeof onApply === "function" ? onApply : null };
+      backdrop.classList.add("open");
+
+      if (inputEl) {
+        setTimeout(() => {
+          inputEl.focus();
+          inputEl.select();
+        }, 0);
+      }
+    }
+
+    function closeInlineEditModal(apply) {
+      const backdrop = document.querySelector('[data-role="inline-edit-modal"]');
+      if (!backdrop) return;
+      const inputEl = backdrop.querySelector('[data-edit-modal-input]');
+      const value = inputEl ? inputEl.value : "";
+      backdrop.classList.remove("open");
+      if (apply && inlineEditContext && typeof inlineEditContext.onApply === "function") {
+        inlineEditContext.onApply(value);
+      }
+      inlineEditContext = null;
+      if (inputEl) {
+        inputEl.value = "";
+        inputEl.type = "text";
+      }
+    }
+
+    /* ========================= Support Center – 목록/상세/등록 ========================= */
+    function getBoardListHTML(boardType) {
+      const isAdmin = USER_ROLE === "admin";
+      const hasData = true;
+
+      const countText = hasData
+        ? "전체 123건 · 상단 고정 2건"
+        : "전체 0건 · 상단 고정 0건";
+
+      const rowsWhenData = `
+        <tr class="pinned-row">
+          <td class="checkbox-cell"><input type="checkbox" /></td>
+          <td>공지-2</td>
+          <td>${boardType}</td>
+          <td>${boardType === "SOP" ? "배포 절차" : boardType === "FAQ" ? "계정" : "시스템"}</td>
+          <td>
+            <span class="pinned-badge">상단 고정</span>
+            <span class="text-link" data-role="link-detail">서비스 점검 안내 공지 예시</span>
+          </td>
+          <td>전체 (50)</td>
+          <td>O</td>
+          <td>U+ Admin</td>
+          <td>324</td>
+          <td>2025.11.10</td>
+        </tr>
+        <tr class="pinned-row">
+          <td class="checkbox-cell"><input type="checkbox" /></td>
+          <td>공지-1</td>
+          <td>${boardType}</td>
+          <td>${boardType === "SOP" ? "장애 대응" : boardType === "FAQ" ? "요금" : "릴리즈"}</td>
+          <td>
+            <span class="pinned-badge">상단 고정</span>
+            <span class="text-link" data-role="link-detail">중요 ${boardType} 공지 예시 제목</span>
+          </td>
+          <td>Maxis 외 2개</td>
+          <td>O</td>
+          <td>운영팀</td>
+          <td>812</td>
+          <td>2025.11.01</td>
+        </tr>
+        <tr>
+          <td class="checkbox-cell"><input type="checkbox" /></td>
+          <td>10</td>
+          <td>${boardType}</td>
+          <td>${boardType === "SOP" ? "배포" : boardType === "FAQ" ? "로그인" : "장애"}</td>
+          <td><span class="text-link" data-role="link-detail">${boardType} 게시글 제목 예시 10</span></td>
+          <td>Maxis</td>
+          <td>-</td>
+          <td>홍길동</td>
+          <td>45</td>
+          <td>2025.10.30</td>
+        </tr>
+      `;
+
+      const rowsWhenEmpty = `
+        <tr>
+          <td class="checkbox-cell"></td>
+          <td colspan="9">
+            <div class="empty-state-wrap">
+              <div class="empty-state">
+                <div class="empty-icon">📄</div>
+                <div class="empty-title">등록된 ${boardType}이 없습니다.</div>
+                <p class="empty-desc">
+                  ${isAdmin
+                    ? "우측 상단의 [＋ 신규 등록] 버튼을 눌러 첫 " + boardType + "을(를) 등록해 주세요."
+                    : "등록된 " + boardType + "이 없습니다. 게시글이 등록되면 이 영역에 표시됩니다."
+                  }
+                </p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      `;
+
+      return `
+        <div class="page-title">Support Center 게시판</div>
+
+        <div class="board-tabs" aria-label="게시판 선택 탭">
+          <button class="board-tab ${boardType === "공지사항" ? "active" : ""}" data-board="공지사항">공지사항</button>
+          <button class="board-tab ${boardType === "SOP" ? "active" : ""}" data-board="SOP">SOP</button>
+          <button class="board-tab ${boardType === "FAQ" ? "active" : ""}" data-board="FAQ">FAQ</button>
+        </div>
+
+        <div class="board-search-row">
+          <input class="board-search-input" type="text" placeholder="${boardType} 내에서 검색어를 입력하세요" />
+          <button class="btn-primary" type="button" data-role="btn-search">검색</button>
+        </div>
+
+        <div class="list-toolbar">
+          <div>
+            <strong>${boardType}</strong>
+            <span style="margin-left:8px; color: var(--text-muted);">${countText}</span>
+          </div>
+          <div class="toolbar-actions">
+            ${isAdmin ? '<button class="btn-dark" type="button" data-role="btn-create">＋ 신규 등록</button>' : ""}
+          </div>
+        </div>
+
+        <section class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="checkbox-cell"><input type="checkbox" ${hasData ? "" : "disabled"} /></th>
+                <th>번호</th>
+                <th>유형</th>
+                <th>카테고리</th>
+                <th>제목</th>
+                <th>타겟 기업(수)</th>
+                <th>첨부파일</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>등록일</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${hasData ? rowsWhenData : rowsWhenEmpty}
+            </tbody>
+          </table>
+
+          <div class="table-footer">
+            <div class="rows-per-page">
+              <label>
+                페이지당
+                <select>
+                  <option>20</option>
+                  <option>50</option>
+                  <option>100</option>
+                </select>
+                개 보기
+              </label>
+            </div>
+            <div class="pagination">
+              <button class="page-btn">«</button>
+              <button class="page-btn">‹</button>
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button class="page-btn">›</button>
+              <button class="page-btn">»</button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function getBoardDetailHTML(boardType) {
+      return `
+        <div class="page-title">Support Center 게시판</div>
+
+        <div class="board-tabs" aria-label="게시판 선택 탭">
+          <button class="board-tab ${boardType === "공지사항" ? "active" : ""}" data-board="공지사항">공지사항</button>
+          <button class="board-tab ${boardType === "SOP" ? "active" : ""}" data-board="SOP">SOP</button>
+          <button class="board-tab ${boardType === "FAQ" ? "active" : ""}" data-board="FAQ">FAQ</button>
+        </div>
+
+        <section class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">[${boardType}] 예시 게시글 제목입니다.</h2>
+              <div class="meta-row">
+                <span><span class="meta-item-label">카테고리</span>시스템 공지</span>
+                <span><span class="meta-item-label">등록일</span>2025.11.10 09:00</span>
+                <span><span class="meta-item-label">최종 수정일</span>2025.11.11 14:30</span>
+                <span><span class="meta-item-label">조회수</span>324</span>
+              </div>
+            </div>
+            <div>
+              <div class="section-title-sm" style="margin-bottom:4px;">게시 범위</div>
+              <div>
+                <span class="tag-badge">전체 (50개사)</span>
+                <span class="tag-badge">Maxis</span>
+                <span class="tag-badge">고객사 B</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-title-sm">본문</div>
+          <div class="body-content">
+            <p>서비스 점검으로 인한 일시 중단 안내 예시입니다.</p>
+            <p>아래 일시 동안 일부 기능 접속이 원활하지 않을 수 있습니다.</p>
+            <ul>
+              <li>점검 일시: 2025-11-20(목) 02:00 ~ 04:00 (KST)</li>
+              <li>점검 영향: 대시보드, 구독 관리 일부 메뉴</li>
+              <li>문의: Support Center 또는 담당 SA</li>
+            </ul>
+            <p>점검 완료 후에는 별도 공지를 통해 다시 안내드리겠습니다.</p>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="attachment-header-row">
+            <div class="section-title-sm">첨부파일</div>
+            <button class="btn-secondary" type="button" data-role="btn-download-all">전체 다운로드</button>
+          </div>
+          <table class="attachment-list">
+            <thead>
+              <tr>
+                <th>파일명</th>
+                <th>용량</th>
+                <th>다운로드</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>서비스점검_공지_20251110.pdf</td>
+                <td>1.2MB</td>
+                <td><button class="btn-ghost" type="button" data-role="btn-download">다운로드</button></td>
+              </tr>
+              <tr>
+                <td>릴리즈노트_v1.8.0.xlsx</td>
+                <td>820KB</td>
+                <td><button class="btn-ghost" type="button" data-role="btn-download">다운로드</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="field-note" style="margin-top:8px;">
+            ※ 파일명에 특수문자가 포함된 경우 URL 인코딩 처리 후 다운로드됩니다.
+          </p>
+        </section>
+
+        <section class="card">
+          <div class="detail-bottom-nav">
+            <div class="detail-prevnext">
+              <span>이전글: <a data-role="link-prev">[공지] 11월 기능 업데이트 안내</a></span>
+              <span>다음글: <a data-role="link-next">[공지] 10월 정기 점검 결과</a></span>
+            </div>
+            <div class="btn-group-right">
+              <button class="btn-secondary" type="button" data-role="btn-list">목록</button>
+              <button class="btn-primary" type="button" data-role="btn-edit">수정</button>
+              <button class="btn-outline-red" type="button" data-role="btn-delete">삭제</button>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function getBoardEditHTML(boardType, mode) {
+      const isEdit = mode === "edit";
+      const title = isEdit ? "게시글 수정" : "게시글 등록";
+      const submitLabel = isEdit ? "수정" : "등록";
+
+      return `
+        <div class="page-title">Support Center 게시판</div>
+
+        <div class="board-tabs" aria-label="게시판 선택 탭">
+          <button class="board-tab ${boardType === "공지사항" ? "active" : ""}" data-board="공지사항">공지사항</button>
+          <button class="board-tab ${boardType === "SOP" ? "active" : ""}" data-board="SOP">SOP</button>
+          <button class="board-tab ${boardType === "FAQ" ? "active" : ""}" data-board="FAQ">FAQ</button>
+        </div>
+
+        <section class="card">
+          <div class="card-header" style="margin-bottom:16px;">
+            <h2 class="card-title">${title}</h2>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-label">기본 정보</div>
+            <div class="field-group">
+              <div class="field-inline">
+                <span class="meta-item-label">게시글 유형</span>
+                <div class="radio-group">
+                  <label><input type="radio" name="post-type" value="공지사항" ${boardType === "공지사항" ? "checked" : ""} /> 공지사항</label>
+                  <label><input type="radio" name="post-type" value="SOP" ${boardType === "SOP" ? "checked" : ""} /> SOP</label>
+                  <label><input type="radio" name="post-type" value="FAQ" ${boardType === "FAQ" ? "checked" : ""} /> FAQ</label>
+                </div>
+              </div>
+
+              <div class="field-inline">
+                <span class="meta-item-label">카테고리</span>
+                <select class="field-select">
+                  <option>선택하세요</option>
+                  <option>시스템</option>
+                  <option>배포</option>
+                  <option>계정</option>
+                  <option>장애</option>
+                  <option>기타</option>
+                </select>
+              </div>
+
+              <div class="field-inline">
+                <label><input type="checkbox" ${isEdit ? "checked" : ""} /> 상단 고정</label>
+                <span class="field-note">체크 시 리스트 최상단에 고정 노출됩니다.</span>
+              </div>
+            </div>
+
+            <div class="form-label">공개 대상 (Targeting)</div>
+            <div class="field-group">
+              <select class="field-multiselect" multiple size="4">
+                <option>전체 (모든 기업)</option>
+                <option>Maxis</option>
+                <option>고객사 B</option>
+                <option>고객사 C</option>
+                <option>내부 전용 (U+Only)</option>
+              </select>
+              <span class="field-note">특정 기업 여러 개 선택 가능. 선택된 기업만 게시글 조회가 가능합니다.</span>
+            </div>
+
+            <div class="form-label">컨텐츠 작성</div>
+            <div class="field-group">
+              <input class="field-input" type="text" placeholder="제목을 입력하세요 (최대 100자)" />
+              <textarea class="field-textarea" placeholder="본문 내용을 입력하세요. 이미지 붙여넣기를 지원합니다."></textarea>
+              <span class="field-note">
+                ※ 본문 내 이미지는 업로드 후 URL 링크 방식으로 처리되며, 보안 정책에 따라 XSS 필터링이 적용됩니다.
+              </span>
+              <div class="upload-dropzone">
+                <div style="font-weight:500; margin-bottom:4px;">파일 첨부</div>
+                <div>여기에 파일을 Drag & Drop 하거나, 클릭하여 파일을 선택하세요.</div>
+                <div class="field-note" style="margin-top:4px;">
+                  개별 파일 최대 50MB, 전체 200MB까지 업로드 가능합니다.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-group-right">
+            <button class="btn-secondary" type="button" data-role="btn-cancel">취소</button>
+            <button class="btn-secondary" type="button" data-role="btn-draft">임시저장</button>
+            <button class="btn-primary" type="button" data-role="btn-submit">${submitLabel}</button>
+          </div>
+        </section>
+      `;
+    }
+
+    const ACCOUNT_PAGE_HTML = `
+      <div class="page-title">계정 관리</div>
+      <div class="stub-card">
+        <div class="stub-title">계정 관리 화면은 이후 별도 정의에 따라 구성됩니다.</div>
+        <p class="stub-desc">
+          사용자 계정 리스트, 권한 그룹, 상태 관리 등은 추후 상세 정책 확정 후 구현 예정입니다.
+        </p>
+      </div>
+    `;
+
+    /* ========================= Billing – 고객사별 청구/수납 ========================= */
+    function getBillingPageHTML(customerName) {
+      const titleCustomer = customerName || "Maxis";
+      if (customerName && customerName !== currentBillingCustomer) {
+        currentConfirmContractId = null;
+        contractSearchTerm = "";
+      }
+      const historyRows = renderBillingHistoryRows(billingHistoryMode);
+      const showEditButton = USER_ROLE === "admin" && billingHistoryMode === "view";
+      const showSaveButton = billingHistoryMode === "edit";
+      const contractCardsHtml = renderContractCards(titleCustomer);
+      return `
+        <div class="page-title">청구/수납 – ${titleCustomer}</div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div class="billing-main-tabs" role="tablist" aria-label="청구/수납 상단 탭">
+            <button class="billing-main-tab active" data-billing-main-tab="history">청구 수납 이력</button>
+            <button class="billing-main-tab" data-billing-main-tab="confirm">청구서 컨펌</button>
+          </div>
+          <button class="btn-secondary" type="button" data-role="btn-open-monthly-forecast">
+            당월 청구금액 예상
+          </button>
+        </div>
+
+        <!-- 탭 1: 청구 수납 이력 -->
+        <div data-billing-main-panel="history">
+          <section class="card">
+            <div style="background: #f9f9fc; padding: 12px 16px; margin: -16px -16px 12px -16px; border-radius: 8px 8px 0 0;">
+              <div class="section-title-sm" style="margin-bottom:4px;">청구 수납 이력</div>
+              <p class="field-note" style="margin-bottom:0;">
+                고객사에 발행된 청구서를 기준으로 송금/수납 상태를 관리합니다.
+                행을 선택하면 하단에서 <strong>청구서 상세</strong> 화면을 조회할 수 있습니다.
+                해지된 계약에서 발생한 과거 청구도 모두 표시합니다.
+              </p>
+            </div>
+
+            <table class="billing-list-table" data-role="billing-history-table">
+              <thead>
+                <tr>
+                  <th>계약명</th>
+                  <th>계약번호</th>
+                  <th>사용월</th>
+                  <th>청구월</th>
+                  <th>청구서 발행일</th>
+                  <th>최종 청구금액</th>
+                  <th style="width: 40px;"></th>
+                  <th class="customer-col">송금 금액</th>
+                  <th class="customer-col">송금일</th>
+                  <th class="customer-col">고객 상태</th>
+                  <th>수납 금액</th>
+                  <th>수납일</th>
+                  <th>당사 상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${historyRows}
+              </tbody>
+            </table>
+            <div style="display: flex; justify-content: flex-end; margin-top: 16px; gap: 8px;">
+              ${showSaveButton ? `<button class="btn-primary" type="button" data-role="btn-save-billing">저장</button>` : ""}
+              ${showEditButton ? `<button class="btn-secondary" type="button" data-role="billing-history-edit">편집</button>` : ""}
+            </div>
+          </section>
+
+          <!-- 선택된 청구 건 '청구서 상세' -->
+          <section class="card" data-role="billing-detail-area" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <div class="section-title-sm">청구서 상세</div>
+              <button class="btn-secondary" type="button" data-role="btn-export-raw">기초데이터 추출</button>
+            </div>
+            <p class="field-note" style="margin-bottom:6px;">
+              선택된 청구 건의 반복 청구 및 일회성 청구 내역을 항목 단위로 확인합니다.
+            </p>
+
+            <div class="sub-card">
+              <div class="sub-card-title">청구 요약</div>
+              <div class="meta-row" style="margin-bottom:4px;">
+                <span><span class="meta-item-label">계약명</span><span data-billing-summary-contract>-</span></span>
+                <span><span class="meta-item-label">계약번호</span><span data-billing-summary-contract-number>-</span></span>
+                <span><span class="meta-item-label">사용월</span><span data-billing-summary-usage>-</span></span>
+                <span><span class="meta-item-label">청구월</span><span data-billing-summary-billing>-</span></span>
+                <span><span class="meta-item-label">고객사</span>${titleCustomer}</span>
+                <span><span class="meta-item-label">최종 청구금액</span><strong><span data-billing-summary-final>-</span></strong></span>
+                <span><span class="meta-item-label">상태</span><span data-billing-summary-status>-</span></span>
+              </div>
+            </div>
+
+            <div class="sub-card sub-card-repeat">
+              <div class="sub-card-title sub-card-title-repeat">반복 청구 내역</div>
+              <table class="billing-mini-table">
+                <thead>
+                  <tr>
+                    <th>청구항목</th>
+                    <th>청구항목 값</th>
+                    <th>가입자당 단가</th>
+                    <th>과금할인 단가</th>
+                    <th>최종 단가</th>
+                    <th>청구할인 전 금액</th>
+                    <th>청구할인액</th>
+                    <th>청구할인 후 금액</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>월 평균 가입자</td>
+                    <td>152,340명</td>
+                    <td>0.03</td>
+                    <td>0.005</td>
+                    <td>0.025</td>
+                    <td>USD 4,570.20</td>
+                    <td>USD 761.70</td>
+                    <td class="billing-highlight-amount">USD 3,808.50</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sub-card sub-card-onetime">
+              <div class="sub-card-title sub-card-title-onetime">일회성 청구 내역</div>
+              <table class="billing-mini-table">
+                <thead>
+                  <tr>
+                    <th>청구항목</th>
+                    <th>금액 (크레딧 차감 전)</th>
+                    <th>크레딧 차감액</th>
+                    <th>크레딧 차감 후 금액</th>
+                    <th>크레딧 잔액</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ixi-O 2.0 구축비용</td>
+                    <td>USD 50,000.00</td>
+                    <td>USD 5,000.00</td>
+                    <td class="billing-highlight-amount">USD 45,000.00</td>
+                    <td>USD 0.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <!-- 탭 2: 청구서 컨펌 -->
+        <div data-billing-main-panel="confirm" style="display:none;">
+          <section class="card" data-role="contract-select-section">
+            <div class="contract-select-header">
+              <div class="section-title-sm" style="margin:0;">계약 선택</div>
+              <div class="contract-search-row">
+                <input class="contract-search-input" type="text" data-role="contract-search" placeholder="계약명/기간 검색 (예: 2024-01)" value="${escapeHtml(contractSearchTerm)}" />
+              </div>
+            </div>
+            <p class="field-note" style="margin-bottom:8px;">
+              계정이 담당하는 관리 대상 고객사 중 상태가 <strong>유효</strong>인 계약만 표시됩니다. 계약을 선택하면 청구서 컨펌 입력 영역이 열립니다.
+            </p>
+            <div data-role="contract-list-container">
+              ${contractCardsHtml}
+            </div>
+          </section>
+
+          <section class="card" data-role="billing-main-section" style="${currentConfirmContractId ? "" : "display:none;"}">
+            <div class="section-title-sm" style="margin-bottom:4px;">청구서 컨펌</div>
+            <p class="field-note">
+              반복 청구, 일회성 청구 및 할인요소를 적용해 최종 청구금액을 확정하고, 내부 결재·승인을 통해 청구서를 발행합니다.
+            </p>
+
+            <!-- 청구 기준 -->
+            <div class="sub-card">
+              <div class="sub-card-title">청구 기준</div>
+              <div class="meta-row">
+                <span><span class="meta-item-label">계약명</span><span data-confirm-contract>-</span></span>
+                <span><span class="meta-item-label">계약번호</span><span data-confirm-contract-number>-</span></span>
+                <span><span class="meta-item-label">사용월</span><span data-confirm-usage>2025-10</span></span>
+                <span><span class="meta-item-label">청구월</span><span data-confirm-billing>2025-11</span></span>
+                <span><span class="meta-item-label">고객사</span>${titleCustomer}</span>
+                <span><span class="meta-item-label">화폐</span>USD</span>
+              </div>
+            </div>
+
+            <div class="billing-confirm-grid">
+              <!-- 좌측: 반복 청구 / 일회성 청구 / 할인 / 최종 청구금액 -->
+              <div>
+                <!-- 반복 청구 내역 -->
+                <div class="sub-card sub-card-repeat">
+                  <div class="sub-card-title sub-card-title-repeat">반복 청구 내역</div>
+                  <table class="billing-mini-table">
+                    <thead>
+                      <tr>
+                        <th>청구항목</th>
+                        <th>사용 내역 (전월)</th>
+                        <th>적용 단가</th>
+                        <th>과금 금액</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>월 평균 가입자</td>
+                        <td>152,340명 (고객사 timezone 기준)</td>
+                        <td>USD 0.03 / 인</td>
+                        <td>USD 4,570.20</td>
+                      </tr>
+                      <tr>
+                        <td>콜요약 API 요청</td>
+                        <td>1,250,000건</td>
+                        <td>USD 0.0005 / 건</td>
+                        <td>USD 625.00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="sub-card-note">
+                    ※ 사용 내역: 전월 월 평균 가입자 및 기능별 사용량(Phase 1에서는 가입자 기준 중심). 가입/해지일은 고객사 timezone 기준으로 산정합니다.
+                  </p>
+                </div>
+
+                <!-- 일회성 청구 내역 -->
+                <div class="sub-card sub-card-onetime">
+                  <div class="sub-card-title sub-card-title-onetime">일회성 청구 내역</div>
+                  <table class="billing-mini-table" data-role="onetime-table">
+                    <thead>
+                      <tr>
+                        <th>청구항목</th>
+                        <th>금액 (크레딧 차감 전)</th>
+                        <th>크레딧 차감액</th>
+                        <th>크레딧 차감 후 금액</th>
+                        <th>비고</th>
+                        <th style="width:60px;"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="billing-editable" data-role="onetime-edit" data-field="name">ixi-O 2.0 구축비용</td>
+                        <td class="billing-editable" data-role="onetime-edit" data-field="amount-before">USD 50,000.00</td>
+                        <td class="billing-editable" data-role="onetime-edit" data-field="credit">USD 5,000.00</td>
+                        <td class="billing-editable billing-highlight-amount" data-role="onetime-edit" data-field="amount-after">USD 45,000.00</td>
+                        <td class="billing-editable" data-role="onetime-edit" data-field="note">초기 구축비</td>
+                        <td style="text-align:center;">
+                          <button class="btn-ghost" type="button" data-role="onetime-delete" aria-label="일회성 청구행 삭제">
+                            <span class="icon-delete-circle">×</span>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <button
+                    class="btn-accent"
+                    type="button"
+                    data-role="btn-onetime-add"
+                    style="margin-top:8px;"
+                  >
+                    ＋ 청구항목 추가
+                  </button>
+                  <p class="sub-card-note">
+                    ※ 일회성 청구가 없는 경우, 청구항목을 추가하지 않고 반복 청구 및 할인만으로 확정할 수 있습니다.
+                  </p>
+                </div>
+
+                <!-- 할인 내역 -->
+                <div class="sub-card">
+                  <div class="sub-card-title">할인 내역</div>
+                  <p class="field-note">
+                    적용된 할인요소의 속성을 목록으로 표시하고, 순서를 변경해 적용 순서를 조정할 수 있습니다.
+                  </p>
+
+                  <div class="discount-selected-list" data-discount-selected-list>
+                    <div class="discount-list-row" draggable="true">
+                      <div style="display:flex; align-items:flex-start; gap:4px;">
+                        <span class="discount-handle">☰</span>
+                        <div class="discount-main">
+                          <div class="discount-name">장기 이용 할인 10%</div>
+                          <div class="discount-meta">
+                            할인 유형: 정률 · 할인 형태: 청구액 기준 · 할인액/률: -10% · 적용 조건: 12개월 이상 이용
+                          </div>
+                        </div>
+                      </div>
+                      <div class="discount-right">
+                        <span>- USD 518.52</span>
+                        <span class="field-note">적용 순서 1</span>
+                        <button class="btn-ghost" type="button" data-role="discount-delete" style="font-size:13px; padding:3px 6px; margin-top:4px;" aria-label="할인요소 삭제">
+                          <span class="icon-delete-circle">×</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="discount-list-row" draggable="true">
+                      <div style="display:flex; align-items:flex-start; gap:4px;">
+                        <span class="discount-handle">☰</span>
+                        <div class="discount-main">
+                          <div class="discount-name">프로모션 크레딧 5,000</div>
+                          <div class="discount-meta">
+                            할인 유형: 정액 · 할인 형태: 크레딧 차감 · 할인액/률: -5,000 · 적용 조건: 2025-11~2025-12
+                          </div>
+                        </div>
+                      </div>
+                      <div class="discount-right">
+                        <span>- USD 1,200.00</span>
+                        <span class="field-note">적용 순서 2</span>
+                        <button class="btn-ghost" type="button" data-role="discount-delete" style="font-size:13px; padding:3px 6px; margin-top:4px;" aria-label="할인요소 삭제">
+                          <span class="icon-delete-circle">×</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    class="btn-accent"
+                    type="button"
+                    data-role="btn-discount-panel-open"
+                    style="margin-top:8px;"
+                  >
+                    ＋ 할인요소 추가
+                  </button>
+
+                  <p class="sub-card-note">
+                    ※ 복수 할인요소는 ‘목록 순서’대로 적용됩니다. 순서를 바꾸려면 행을 드래그해 위치를 조정하세요.
+                  </p>
+                </div>
+
+                <!-- 최종 청구금액 -->
+                <div class="sub-card">
+                  <div class="sub-card-title">최종 청구금액</div>
+                  <table class="billing-mini-table">
+                    <tbody>
+                      <tr>
+                        <th class="billing-total-label" style="width:45%;">할인 반영 단가 (과금할인 후)</th>
+                        <td>USD 0.025 / 인</td>
+                      </tr>
+                      <tr>
+                        <th class="billing-total-label">청구할인 전 총 청구금액</th>
+                        <td>USD 5,195.20</td>
+                      </tr>
+                      <tr>
+                        <th class="billing-total-sub-label">ㆍ청구할인액</th>
+                        <td>USD 1,718.52</td>
+                      </tr>
+                      <tr class="billing-total-final-row">
+                        <th class="billing-total-label">청구할인 후 총 청구금액</th>
+                        <td><strong><span data-confirm-final>USD 3,476.68</span></strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- 우측: 결재 영역 -->
+              <div class="approval-panel-wrap approval-section">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                  <div class="section-title-sm" style="margin:0;">결재·승인</div>
+                  <div class="approval-tabs" role="tablist" aria-label="결재 그룹 전환" data-role="approval-tabs">
+                    <button class="approval-tab active" data-role="approval-tab" data-approval-tab="accounting">정산 그룹</button>
+                    <button class="approval-tab" data-role="approval-tab" data-approval-tab="management">관리 그룹</button>
+                  </div>
+                </div>
+
+                <!-- 정산 그룹 -->
+                <div data-approval-panel="accounting">
+                  <div class="sub-card approval-form">
+                    <div class="sub-card-title">결재 상신 (정산 그룹)</div>
+                    <div class="field-group">
+                      <div style="margin-top:4px;">
+                        <div class="field-inline" style="align-items:flex-start;">
+                          <span class="meta-item-label">결재 그룹</span>
+                          <select class="field-select" data-role="approval-group-select" style="min-width:200px;">
+                            <option value="accounting" selected>정산 그룹</option>
+                            <option value="management">관리 그룹</option>
+                            <option value="finance">재무 그룹</option>
+                          </select>
+                        </div>
+                        <div class="field-note">결재 그룹 선택 시 해당 그룹 설정으로 상신/승인됩니다.</div>
+                      </div>
+
+                      <div class="field-inline">
+                        <span class="meta-item-label">결재 의견</span>
+                        <textarea class="field-textarea" placeholder="결재 요청 배경, 주요 할인 적용 내용 등을 입력하세요." data-role="approval-opinion-input" style="font-size:12px;"></textarea>
+                      </div>
+                    </div>
+                    <div class="btn-group-right">
+                      <button class="btn-secondary" type="button" data-role="btn-approval-draft">임시저장</button>
+                      <button class="btn-primary" type="button" data-role="btn-approval-submit">결재 상신</button>
+                    </div>
+                  </div>
+
+                  <div class="sub-card">
+                    <div class="sub-card-title">상신한 결재</div>
+                    <div class="approval-table-wrap">
+                      <table class="billing-approval-list">
+                        <thead>
+                          <tr>
+                            <th>상태</th>
+                            <th>결재 그룹</th>
+                            <th>사용월</th>
+                            <th>청구월</th>
+                            <th>고객사</th>
+                            <th>청구할인 후 총 청구금액</th>
+                            <th>상신 ID</th>
+                            <th>상신일</th>
+                            <th>승인/반려일</th>
+                          </tr>
+                        </thead>
+                        <tbody data-role="approval-submitted-body"></tbody>
+                      </table>
+                    </div>
+                    <div class="approval-list-empty" data-role="approval-submitted-empty" style="display:none;">상신한 결재가 없습니다.</div>
+                  </div>
+                </div>
+
+                <!-- 관리 그룹 -->
+                <div data-approval-panel="management" style="display:none;">
+                  <div class="sub-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                      <div class="sub-card-title">대기중 결재 (관리 그룹)</div>
+                      <span class="field-note">행을 클릭하면 청구 생성 내역을 펼쳐 확인합니다.</span>
+                    </div>
+                    <div class="approval-table-wrap">
+                      <table class="billing-approval-list" data-role="approval-pending-table">
+                        <thead>
+                          <tr>
+                            <th>상태</th>
+                            <th>결재 그룹</th>
+                            <th>사용월</th>
+                            <th>청구월</th>
+                            <th>고객사</th>
+                            <th>청구할인 후 총 청구금액</th>
+                            <th>상신 ID</th>
+                            <th>상신일</th>
+                            <th>승인/반려일</th>
+                          </tr>
+                        </thead>
+                        <tbody data-role="approval-pending-body"></tbody>
+                      </table>
+                    </div>
+                    <div class="approval-list-empty" data-role="approval-pending-empty" style="display:none;">대기중 결재가 없습니다.</div>
+                  </div>
+
+                  <div class="sub-card approval-detail-card" data-role="approval-detail-card" style="display:none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                      <div class="approval-chip">청구 생성 내역</div>
+                      <div class="field-note">선택한 결재 건 상세를 확인 후 승인/반려합니다.</div>
+                    </div>
+                    <div class="approval-detail-grid">
+                      <div>
+                        <div class="approval-meta-grid" style="margin-bottom:10px;">
+                          <div class="approval-meta-item">
+                            <div class="meta-item-label">사용월</div>
+                            <strong data-role="approval-detail-usage">-</strong>
+                          </div>
+                          <div class="approval-meta-item">
+                            <div class="meta-item-label">청구월</div>
+                            <strong data-role="approval-detail-billing">-</strong>
+                          </div>
+                          <div class="approval-meta-item">
+                            <div class="meta-item-label">고객사</div>
+                            <strong data-role="approval-detail-customer">-</strong>
+                          </div>
+                          <div class="approval-meta-item">
+                            <div class="meta-item-label">결재 그룹</div>
+                            <strong data-role="approval-detail-group">-</strong>
+                          </div>
+                          <div class="approval-meta-item">
+                            <div class="meta-item-label">청구할인 후 총 청구금액</div>
+                            <strong data-role="approval-detail-amount">-</strong>
+                          </div>
+                          <div class="approval-meta-item">
+                            <div class="meta-item-label">상신 ID</div>
+                            <strong data-role="approval-detail-id">-</strong>
+                          </div>
+                        </div>
+                        <div class="approval-breakdown" data-role="approval-breakdown"></div>
+                      </div>
+                      <div>
+                        <div class="field-group">
+                          <div class="field-inline" style="justify-content:flex-start;">
+                            <span class="meta-item-label">상신자</span>
+                            <strong data-role="approval-detail-submitter">-</strong>
+                            <span class="field-note" data-role="approval-detail-line">결재선 정보</span>
+                          </div>
+                          <div>
+                            <div class="meta-item-label">결재 의견</div>
+                            <div class="approval-opinion-box" data-role="approval-detail-opinion">-</div>
+                          </div>
+                          <div>
+                            <div class="meta-item-label" style="margin-top:10px;">결재선 상태</div>
+                            <div class="approval-line-steps" data-role="approval-line-steps"></div>
+                          </div>
+                          <div style="margin-top:10px;">
+                            <div class="meta-item-label">관리자 코멘트</div>
+                            <textarea class="field-textarea" placeholder="승인/반려 사유를 입력하세요." data-role="approval-review-comment" style="font-size:12px;"></textarea>
+                          </div>
+                        </div>
+                        <div class="btn-group-right">
+                          <button class="btn-secondary" type="button" data-role="btn-approval-reject">반려</button>
+                          <button class="btn-primary" type="button" data-role="btn-approval-approve">승인</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- 할인요소 슬라이딩 패널 -->
+        <div class="slide-panel-backdrop" data-role="discount-panel-backdrop">
+          <div class="slide-panel">
+            <div class="slide-panel-header">
+              <div class="slide-panel-title">할인요소 추가</div>
+              <button class="btn-ghost" type="button" data-role="btn-discount-panel-close">✕</button>
+            </div>
+            <div class="slide-panel-body">
+              <div class="section-title-sm" style="margin-bottom:4px;">등록된 할인요소</div>
+              <p class="field-note">
+                별도 조회 버튼 없이, 현재 등록된 할인요소 목록을 표시합니다. 항목을 클릭하면 즉시 ‘할인 내역’에 추가됩니다.
+              </p>
+              <div class="discount-picker-list">
+                <div class="discount-picker-item"
+                     data-role="discount-select-existing"
+                     data-name="장기 이용 할인 10%"
+                     data-meta="할인 유형: 정률 · 할인 형태: 청구액 기준 · 할인액/률: -10% · 적용 조건: 12개월 이상 이용"
+                     data-amount="- USD 518.52">
+                  <div class="discount-name">장기 이용 할인 10%</div>
+                  <div class="discount-meta">정률 · 청구액 기준 · 12개월 이상 이용</div>
+                  <div class="field-note">예: - USD 518.52 수준</div>
+                </div>
+                <div class="discount-picker-item"
+                     data-role="discount-select-existing"
+                     data-name="프로모션 크레딧 5,000"
+                     data-meta="할인 유형: 정액 · 할인 형태: 크레딧 차감 · 할인액/률: -5,000 · 적용 조건: 2025-11~2025-12"
+                     data-amount="- USD 1,000.00">
+                  <div class="discount-name">프로모션 크레딧 5,000</div>
+                  <div class="discount-meta">정액 · 크레딧 차감 · 2025-11~2025-12</div>
+                  <div class="field-note">예: - USD 1,000.00 수준</div>
+                </div>
+              </div>
+
+              <hr style="border:none; border-top:1px solid var(--border-soft); margin:10px 0;" />
+
+              <button
+                class="btn-secondary"
+                type="button"
+                data-role="btn-discount-new-toggle"
+                style="margin-bottom:8px;"
+              >
+                ＋ 신규 할인요소 등록
+              </button>
+
+              <div class="field-group" data-discount-new-section style="display:none;">
+                <div class="section-title-sm" style="margin-bottom:4px;">신규 할인요소 등록</div>
+                <input class="field-input" type="text" placeholder="할인요소명 (예: 신규 론치 프로모션 15%)" data-discount-new-name />
+                <div class="field-inline">
+                  <span class="meta-item-label">할인 유형</span>
+                  <select class="field-select" style="width:auto;" data-discount-new-type>
+                    <option value="정률">정률</option>
+                    <option value="정액">정액</option>
+                  </select>
+                  <span class="meta-item-label">할인 형태</span>
+                  <select class="field-select" style="width:auto;" data-discount-new-form>
+                    <option value="청구액 기준">청구액 기준</option>
+                    <option value="크레딧 차감">크레딧 차감</option>
+                  </select>
+                </div>
+                <div class="field-inline">
+                  <span class="meta-item-label">할인액/률</span>
+                  <input class="field-input" type="text" style="width:120px;" placeholder="-10%" data-discount-new-value />
+                </div>
+                <textarea
+                  class="field-textarea"
+                  rows="3"
+                  placeholder="할인 적용 조건 (예: 2025-11~2025-12, 가입자 10만명 이상 등)"
+                  data-discount-new-condition
+                ></textarea>
+                <span class="field-note">
+                  속성 입력 후 [등록] 버튼을 누르면, ‘할인 내역’ 리스트에 신규 할인요소가 추가됩니다.
+                </span>
+              </div>
+            </div>
+            <div class="slide-panel-footer">
+              <button class="btn-secondary" type="button" data-role="btn-discount-panel-close">닫기</button>
+              <button class="btn-primary" type="button" data-role="discount-save-new">등록</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ========================= Breadcrumb ========================= */
+    function renderBreadcrumb(top, l2, l3) {
+      const el = document.getElementById("breadcrumb");
+      if (top === "서비스 운영" && l2 === "Support Center") {
+        el.innerHTML = `
+          <span>서비스 운영</span>
+          <span>›</span>
+          <span>Support Center</span>
+          <span>›</span>
+          <span class="current">공지/SOP/FAQ</span>
+        `;
+        return;
+      }
+      el.innerHTML = `
+        <span>${top}</span>
+        <span>›</span>
+        <span>${l2}</span>
+        ${l3 ? `<span>›</span><span class="current">${l3}</span>` : ""}
+      `;
+    }
+
+    /* ========================= Billing 상호작용 ========================= */
+    let draggingDiscountRow = null;
+
+    function attachDiscountRowDnD(row, list) {
+      if (!row || !list) return;
+      row.addEventListener("dragstart", () => {
+        draggingDiscountRow = row;
+        row.classList.add("dragging");
+      });
+      row.addEventListener("dragend", () => {
+        row.classList.remove("dragging");
+        draggingDiscountRow = null;
+      });
+      row.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        if (!draggingDiscountRow || draggingDiscountRow === row) return;
+        const rect = row.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (e.clientY < midY) {
+          list.insertBefore(draggingDiscountRow, row);
+        } else {
+          list.insertBefore(draggingDiscountRow, row.nextSibling);
+        }
+      });
+    }
+
+    function initBillingDetailControls() {
+      const rawBtn = document.querySelector('[data-role="btn-export-raw"]');
+      if (!rawBtn) return;
+      rawBtn.style.display = "inline-flex";
+    }
+
+    function syncConfirmSummary() {
+      const usageSource = document.querySelector(".meta-row [data-confirm-usage]");
+      const billingSource = document.querySelector(".meta-row [data-confirm-billing]");
+      const finalSource = document.querySelector(".billing-total-final-row [data-confirm-final]");
+      const usage = (usageSource?.textContent || "").trim();
+      const billing = (billingSource?.textContent || "").trim();
+      const final = (finalSource?.textContent || "").trim();
+      document.querySelectorAll("[data-confirm-usage]").forEach((el) => el.textContent = usage || "-");
+      document.querySelectorAll("[data-confirm-billing]").forEach((el) => el.textContent = billing || "-");
+      document.querySelectorAll("[data-confirm-final]").forEach((el) => el.textContent = final || "-");
+    }
+
+    function setConfirmContract(contractId) {
+      currentConfirmContractId = contractId || null;
+      const contract = CONTRACT_LIST.find((c) => c.id === currentConfirmContractId);
+
+      const detailSection = document.querySelector('[data-role="billing-main-section"]');
+      if (detailSection) {
+        detailSection.style.display = contract ? "block" : "none";
+      }
+
+      const label = document.querySelector("[data-confirm-contract]");
+      if (label) {
+        const icon = contract ? renderContractStatusIcon(contract.status) : "";
+        label.innerHTML = contract ? `${escapeHtml(contract.name)} ${icon}` : "-";
+      }
+      const numLabel = document.querySelector("[data-confirm-contract-number]");
+      if (numLabel) {
+        numLabel.textContent = contract ? (contract.number || "-") : "-";
+      }
+
+      document.querySelectorAll("[data-role='contract-card']").forEach((card) => {
+        const id = card.getAttribute("data-contract-id");
+        card.classList.toggle("active", id === currentConfirmContractId);
+      });
+    }
+
+    function getApprovalGroup(groupId) {
+      if (!Array.isArray(APPROVAL_GROUPS)) return null;
+      if (groupId) {
+        const found = APPROVAL_GROUPS.find((g) => g.id === groupId);
+        if (found) return found;
+      }
+      return APPROVAL_GROUPS[0] || null;
+    }
+
+    function getSelectedApprovalGroup() {
+      const selected = document.querySelector("[data-role='approval-group-select']");
+      const id = selected?.value;
+      return getApprovalGroup(id);
+    }
+
+    function updateApprovalLineOrder() {
+      const body = document.querySelector("[data-role='approval-line-body']");
+      if (!body) return;
+      const rows = Array.from(body.querySelectorAll("tr"));
+      let order = 1;
+      rows.forEach((row) => {
+        const isFinal = row.getAttribute("data-final-line") === "true";
+        const orderSpan = row.querySelector("[data-role='approval-line-order']");
+        if (!orderSpan) return;
+        if (isFinal) {
+          orderSpan.textContent = "최종";
+        } else {
+          orderSpan.textContent = order;
+          order += 1;
+        }
+      });
+    }
+
+    function initApprovalLineDnD() {
+      const body = document.querySelector("[data-role='approval-line-body']");
+      if (!body) return;
+      let dragRow = null;
+
+      body.addEventListener("dragstart", (e) => {
+        const row = e.target.closest("[data-approval-line-row]");
+        if (!row || row.getAttribute("data-final-line") === "true") return;
+        dragRow = row;
+        row.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", "drag");
+      });
+
+      body.addEventListener("dragend", () => {
+        const dragging = body.querySelector(".dragging");
+        if (dragging) dragging.classList.remove("dragging");
+        dragRow = null;
+        updateApprovalLineOrder();
+      });
+
+      body.addEventListener("dragover", (e) => {
+        if (!dragRow) return;
+        e.preventDefault();
+        const targetRow = e.target.closest("[data-approval-line-row]");
+        if (!targetRow || targetRow === dragRow || targetRow.getAttribute("data-final-line") === "true") return;
+        const rect = targetRow.getBoundingClientRect();
+        const offset = e.clientY - rect.top;
+        const shouldInsertBefore = offset < rect.height / 2;
+        if (shouldInsertBefore) {
+          body.insertBefore(dragRow, targetRow);
+        } else {
+          body.insertBefore(targetRow, dragRow);
+        }
+      });
+    }
+
+    function getApprovalLineSummary(groupId) {
+      const group = getApprovalGroup(groupId) || getSelectedApprovalGroup();
+      return group ? `${group.name}` : "";
+    }
+
+    function buildApprovalLineStates(defaultStatus, groupId) {
+      const group = getApprovalGroup(groupId) || getSelectedApprovalGroup();
+      if (group && group.members && group.members.length) {
+        return group.members.map((member) => ({
+          order: member.order,
+          role: member.role,
+          name: member.name,
+          contact: member.contact,
+          status: defaultStatus,
+        }));
+      }
+      const body = document.querySelector("[data-role='approval-line-body']");
+      if (!body) return [];
+      const rows = Array.from(body.querySelectorAll("[data-approval-line-row]"));
+      return rows.map((row, idx) => {
+        const name = row.querySelector("input")?.value?.trim() || "결재자";
+        const contact = (row.querySelector(".field-note")?.textContent || "").trim();
+        const order = row.getAttribute("data-final-line") === "true" ? "최종" : (idx + 1);
+        return {
+          order,
+          role: idx === 0 ? "기안" : "승인",
+          name,
+          contact,
+          status: defaultStatus,
+        };
+      });
+    }
+
+    function initBillingMainTabs() {
+      const tabButtons = document.querySelectorAll(".billing-main-tab");
+      const panels = document.querySelectorAll("[data-billing-main-panel]");
+      if (!tabButtons.length || !panels.length) return;
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const target = btn.getAttribute("data-billing-main-tab");
+          tabButtons.forEach((b) => b.classList.toggle("active", b === btn));
+          panels.forEach((panel) => {
+            const key = panel.getAttribute("data-billing-main-panel");
+            panel.style.display = key === target ? "block" : "none";
+          });
+        });
+      });
+    }
+
+    function renderBillingStatusBadge(status) {
+      let cls = "billing-status-issued";
+      if (status === "송금") cls = "billing-status-remitted";
+      else if (status === "부분 수납") cls = "billing-status-partial";
+      else if (status === "완납") cls = "billing-status-paid";
+      return `<span class="badge-billing ${cls}" data-billing-status="${status}">${status}</span>`;
+    }
+
+    function renderApprovalStatusBadge(status) {
+      const map = {
+        "대기중": { cls: "pending", text: "승인 대기" },
+        "임시저장": { cls: "draft", text: "임시저장" },
+        "승인": { cls: "approved", text: "승인" },
+        "반려": { cls: "rejected", text: "반려" },
+      };
+      const item = map[status] || map["대기중"];
+      return `<span class="badge-status ${item.cls}" data-approval-status="${status}">${item.text}</span>`;
+    }
+
+    function getTodayString() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function getApprovalGroupLabel(groupId) {
+      const group = Array.isArray(APPROVAL_GROUPS) ? APPROVAL_GROUPS.find((g) => g.id === groupId) : null;
+      return group ? group.name : "";
+    }
+
+    function getManagementGroupLabel() {
+      return getApprovalGroupLabel("management") || "관리 그룹";
+    }
+
+    function renderApprovalTables(customerName) {
+      const submittedBody = document.querySelector("[data-role='approval-submitted-body']");
+      const pendingBody = document.querySelector("[data-role='approval-pending-body']");
+      const submittedEmpty = document.querySelector("[data-role='approval-submitted-empty']");
+      const pendingEmpty = document.querySelector("[data-role='approval-pending-empty']");
+
+      const filtered = approvalRequests.filter((req) => req.customer === (customerName || req.customer));
+      const submittedRows = filtered
+        .map((req) => {
+          return `
+            <tr data-role="approval-row" data-approval-id="${req.id}">
+              <td>${renderApprovalStatusBadge(req.status)}</td>
+              <td>${getApprovalGroupLabel(req.groupId)}</td>
+              <td>${req.usageMonth}</td>
+              <td>${req.billingMonth}</td>
+              <td>${req.customer}</td>
+              <td>${req.finalAmount}</td>
+              <td>${req.id}</td>
+              <td>${req.submittedAt}</td>
+              <td>${req.decidedAt}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      const pendingRows = filtered
+        .filter((req) => req.status === "대기중")
+        .map((req) => {
+          const pendingGroupLabel = getManagementGroupLabel();
+          return `
+            <tr data-role="approval-row" data-approval-id="${req.id}">
+              <td>${renderApprovalStatusBadge(req.status)}</td>
+              <td>${pendingGroupLabel}</td>
+              <td>${req.usageMonth}</td>
+              <td>${req.billingMonth}</td>
+              <td>${req.customer}</td>
+              <td>${req.finalAmount}</td>
+              <td>${req.id}</td>
+              <td>${req.submittedAt}</td>
+              <td>${req.decidedAt}</td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      if (submittedBody) submittedBody.innerHTML = submittedRows || "";
+      if (pendingBody) pendingBody.innerHTML = pendingRows || "";
+      if (submittedEmpty) submittedEmpty.style.display = submittedRows ? "none" : "block";
+      if (pendingEmpty) pendingEmpty.style.display = pendingRows ? "none" : "block";
+
+      if (!pendingRows) {
+        const detailCard = document.querySelector("[data-role='approval-detail-card']");
+        if (detailCard) detailCard.style.display = "none";
+        currentApprovalSelection = null;
+      }
+
+      updateApprovalLineOrder();
+    }
+
+    function selectApprovalRow(approvalId) {
+      currentApprovalSelection = approvalId;
+      const rows = document.querySelectorAll("[data-role='approval-row']");
+      rows.forEach((row) => row.classList.toggle("approval-row-active", row.getAttribute("data-approval-id") === approvalId));
+
+      const approval = approvalRequests.find((req) => req.id === approvalId);
+      const detailCard = document.querySelector("[data-role='approval-detail-card']");
+      if (!approval || !detailCard) return;
+
+      const setText = (selector, value) => {
+        const el = detailCard.querySelector(selector);
+        if (el) el.textContent = value || "-";
+      };
+      setText("[data-role='approval-detail-usage']", approval.usageMonth);
+      setText("[data-role='approval-detail-billing']", approval.billingMonth);
+      setText("[data-role='approval-detail-customer']", approval.customer);
+      setText("[data-role='approval-detail-amount']", approval.finalAmount);
+      setText("[data-role='approval-detail-id']", approval.id);
+      setText("[data-role='approval-detail-submitter']", approval.submittedBy);
+      const detailGroupLabel = approval.status === "대기중" ? getManagementGroupLabel() : getApprovalGroupLabel(approval.groupId);
+      setText("[data-role='approval-detail-group']", detailGroupLabel);
+      const lineEl = detailCard.querySelector("[data-role='approval-detail-line']");
+      if (lineEl) {
+        const lineText = approval.status === "대기중"
+          ? (getApprovalLineSummary("management") || getManagementGroupLabel())
+          : (approval.line || getApprovalLineSummary(approval.groupId));
+        lineEl.textContent = lineText;
+        lineEl.classList.toggle("approval-line-chip", !!lineText);
+        lineEl.style.display = lineText ? "inline-flex" : "none";
+      }
+      const lineStepsEl = detailCard.querySelector("[data-role='approval-line-steps']");
+      if (lineStepsEl) {
+        const group = approval.status === "대기중" ? getApprovalGroup("management") : getApprovalGroup(approval.groupId);
+        const statusBadge = renderApprovalStatusBadge(approval.status || "대기중");
+        lineStepsEl.innerHTML = `
+          <div class="approval-line-step">
+            <span class="step-order">그룹</span>
+            <div class="step-meta">
+              <strong>${approval.status === "대기중" ? getManagementGroupLabel() : getApprovalGroupLabel(approval.groupId)}</strong>
+              <span class="field-note">${group?.description || ""}</span>
+            </div>
+            ${statusBadge}
+          </div>
+        `;
+      }
+
+      const opinionBox = detailCard.querySelector("[data-role='approval-detail-opinion']");
+      if (opinionBox) opinionBox.textContent = approval.opinion || "-";
+
+      const breakdownBox = detailCard.querySelector("[data-role='approval-breakdown']");
+      if (breakdownBox) {
+        if (!approval.detailItems || !approval.detailItems.length) {
+          breakdownBox.innerHTML = `<div class="field-note" style="margin:0;">청구 생성 내역 정보가 없습니다.</div>`;
+        } else {
+          const order = { "반복 청구": 1, "일회성 청구": 2, "할인 적용": 3 };
+          const sorted = [...approval.detailItems].sort((a, b) => (order[a.label] || 99) - (order[b.label] || 99));
+          breakdownBox.innerHTML = sorted
+            .map((item) => {
+              return `
+                <div class="approval-breakdown-row">
+                  <div>
+                    <div style="font-weight:600;">${item.label}</div>
+                    <div class="field-note">${item.note || ""}</div>
+                  </div>
+                  <div style="font-weight:600;">${item.value}</div>
+                </div>
+              `;
+            })
+            .join("");
+          breakdownBox.innerHTML += `
+            <div class="approval-breakdown-total">
+              <span>청구할인 후 총 청구금액</span>
+              <span>${approval.finalAmount || "-"}</span>
+            </div>
+          `;
+        }
+      }
+
+      const reviewField = detailCard.querySelector("[data-role='approval-review-comment']");
+      if (reviewField) reviewField.value = approval.reviewComment || "";
+
+      detailCard.style.display = "block";
+      detailCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function handleApprovalSubmit() {
+      const opinionInput = document.querySelector("[data-role='approval-opinion-input']");
+      const ccInput = document.querySelector("[data-role='approval-cc-area']");
+      const usage = (document.querySelector("[data-confirm-usage]")?.textContent || "").trim() || "-";
+      const billing = (document.querySelector("[data-confirm-billing]")?.textContent || "").trim() || "-";
+      const finalAmount = (document.querySelector("[data-confirm-final]")?.textContent || "").trim() || "-";
+      const id = `billing-${billing.replace(/[^0-9]/g, "") || "new"}-${String(Date.now()).slice(-4)}`;
+      const selectedGroup = getSelectedApprovalGroup();
+      const groupId = selectedGroup?.id || "accounting";
+      const lineSummary = getApprovalLineSummary(groupId);
+      const lineStates = buildApprovalLineStates("대기중", groupId);
+      const ccValue = (ccInput?.value?.trim() || selectedGroup?.defaultCc || "");
+      const groupLabel = getApprovalGroupLabel(groupId);
+
+      approvalRequests.unshift({
+        id,
+        usageMonth: usage,
+        billingMonth: billing,
+        customer: currentBillingCustomer || "고객사",
+        finalAmount: finalAmount || "-",
+        status: "대기중",
+        submittedBy: "billing.user01",
+        submittedAt: getTodayString(),
+        decidedAt: "-",
+        opinion: opinionInput?.value?.trim() || "청구서 컨펌 건에 대한 결재를 요청드립니다.",
+        groupId,
+        line: lineSummary,
+        approvalLineStates: lineStates,
+        cc: ccValue,
+        detailItems: [
+          { label: "반복 청구", value: "USD 5,195.20", note: "월 평균 가입자, API 사용료" },
+          { label: "할인 적용", value: "-USD 1,718.52", note: "장기 이용 할인, 프로모션 크레딧" },
+          { label: "일회성 청구", value: "USD 45,000.00", note: "구축비 등 일회성 청구" },
+        ],
+      });
+
+      if (opinionInput) opinionInput.value = "";
+      if (ccInput) ccInput.value = "";
+
+      renderApprovalTables(currentBillingCustomer);
+      alert(`'${groupLabel}' 그룹으로 결재를 상신했습니다.`);
+    }
+
+    function handleApprovalDraft() {
+      const opinionInput = document.querySelector("[data-role='approval-opinion-input']");
+      const ccInput = document.querySelector("[data-role='approval-cc-area']");
+      const usage = (document.querySelector(".meta-row [data-confirm-usage]")?.textContent || "").trim() || "-";
+      const billing = (document.querySelector(".meta-row [data-confirm-billing]")?.textContent || "").trim() || "-";
+      const finalAmount = (document.querySelector(".billing-total-final-row [data-confirm-final]")?.textContent || "").trim() || "-";
+      const id = `draft-${billing.replace(/[^0-9]/g, "") || "new"}-${String(Date.now()).slice(-4)}`;
+      const selectedGroup = getSelectedApprovalGroup();
+      const groupId = selectedGroup?.id || "accounting";
+      const lineSummary = getApprovalLineSummary(groupId);
+      const lineStates = buildApprovalLineStates("대기중", groupId);
+      const ccValue = (ccInput?.value?.trim() || selectedGroup?.defaultCc || "");
+      const groupLabel = getApprovalGroupLabel(groupId);
+
+      approvalRequests.unshift({
+        id,
+        usageMonth: usage,
+        billingMonth: billing,
+        customer: currentBillingCustomer || "고객사",
+        finalAmount: finalAmount || "-",
+        status: "임시저장",
+        submittedBy: "billing.user01",
+        submittedAt: getTodayString(),
+        decidedAt: "-",
+        opinion: opinionInput?.value?.trim() || "임시 저장된 결재 의견",
+        groupId,
+        line: lineSummary,
+        approvalLineStates: lineStates,
+        cc: ccValue,
+        detailItems: [],
+      });
+
+      renderApprovalTables(currentBillingCustomer);
+      alert(`'${groupLabel}' 그룹으로 임시저장 되었습니다. (관리 그룹에는 공유되지 않습니다.)`);
+    }
+
+    function handleApprovalDecision(decision) {
+      const approval = approvalRequests.find((req) => req.id === currentApprovalSelection);
+      if (!approval) {
+        alert("대기중 결재를 선택한 후 처리하세요.");
+        return;
+      }
+      const reviewField = document.querySelector("[data-role='approval-review-comment']");
+      approval.status = decision;
+      approval.decidedAt = getTodayString();
+      approval.reviewComment = reviewField?.value || "";
+      if (approval.approvalLineStates && approval.approvalLineStates.length) {
+        approval.approvalLineStates = approval.approvalLineStates.map((s, idx) => ({
+          ...s,
+          status: decision === "승인" ? "승인" : idx === 0 ? "반려" : s.status,
+        }));
+      }
+
+      if (decision === "승인") {
+        addHistoryRowFromConfirm();
+        alert("승인 처리 예시입니다. 청구 수납 이력에 신규 청구 건이 추가됩니다. (데모)");
+      } else {
+        alert("반려 처리 예시입니다.");
+      }
+
+      renderApprovalTables(currentBillingCustomer);
+      selectApprovalRow(approval.id);
+    }
+
+    function selectBillingRow(row) {
+      const tbody = row.parentElement;
+      tbody.querySelectorAll("tr").forEach((r) => r.classList.remove("selected"));
+      row.classList.add("selected");
+
+      const cells = row.querySelectorAll("td");
+      const usage = row.dataset.usageMonth || (cells[2]?.textContent.trim() || "-");
+      const billing = row.dataset.billingMonth || (cells[3]?.textContent.trim() || "-");
+      const finalAmount = row.dataset.finalAmount || (cells[5]?.textContent.trim() || "-");
+      const contractName = row.dataset.contractName || (cells[0]?.textContent.trim() || "-");
+      const contractNumber = row.dataset.contractNumber || (cells[1]?.textContent.trim() || "-");
+      const contractStatus = row.dataset.contractStatus || "";
+      let statusText = row.dataset.status || "";
+      if (!statusText) {
+        const badge = row.querySelector("[data-billing-status]");
+        statusText = badge ? (badge.getAttribute("data-billing-status") || badge.textContent.trim()) : "";
+      }
+
+      const detailArea = document.querySelector('[data-role="billing-detail-area"]');
+      if (!detailArea) return;
+      detailArea.style.display = "block";
+
+      const setText = (selector, value) => {
+        const el = detailArea.querySelector(selector);
+        if (el) el.textContent = value || "-";
+      };
+
+      setText("[data-billing-summary-usage]", usage);
+      setText("[data-billing-summary-billing]", billing);
+      const contractEl = detailArea.querySelector("[data-billing-summary-contract]");
+      if (contractEl) {
+        const icon = contractStatus ? renderContractStatusIcon(contractStatus) : "";
+        contractEl.innerHTML = `${escapeHtml(contractName)} ${icon}`;
+      }
+      const contractNumEl = detailArea.querySelector("[data-billing-summary-contract-number]");
+      if (contractNumEl) {
+        contractNumEl.textContent = contractNumber || "-";
+      }
+      setText("[data-billing-summary-final]", finalAmount);
+
+      const statusEl = detailArea.querySelector("[data-billing-summary-status]");
+      if (statusEl) statusEl.innerHTML = renderStatusBadge(statusText);
+
+      detailArea.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // 미입력 셀 인디케이터(삼각형) 상태 동기화: 값이 없거나 0, placeholder인 경우에만 billing-cell-empty 부여
+    function updateBillingEmptyIndicators(root) {
+      const scope = root || document;
+      const cells = scope.querySelectorAll(".billing-editable, .billing-date-editable");
+      cells.forEach((cell) => {
+        const text = (cell.textContent || "").trim();
+        const isPlaceholder = cell.classList.contains("placeholder-cell");
+        const isEmpty = !text || text === "0" || isPlaceholder;
+        if (isEmpty) {
+          cell.classList.add("billing-cell-empty");
+        } else {
+          cell.classList.remove("billing-cell-empty");
+        }
+      });
+    }
+
+    function addHistoryRowFromConfirm() {
+      const usage = (document.querySelector("[data-confirm-usage]")?.textContent || "").trim() || "-";
+      const billing = (document.querySelector("[data-confirm-billing]")?.textContent || "").trim() || usage;
+      const finalAmount = (document.querySelector("[data-confirm-final]")?.textContent || "").trim() || "-";
+      const today = new Date().toISOString().slice(0, 10);
+      const contract = CONTRACT_LIST.find((c) => c.id === currentConfirmContractId);
+      billingHistoryData.unshift({
+        contractName: contract?.name || "선택 계약",
+        contractNumber: contract?.number || "-",
+        contractStatus: contract?.status || "",
+        usageMonth: usage,
+        billingMonth: billing,
+        issuedDate: today,
+        finalAmount,
+        status: "발행",
+        remit: "",
+        remitDate: "",
+        customerStatus: "",
+        receive: "",
+        receiveDate: "",
+        companyStatus: "발행",
+        entries: [],
+      });
+
+      renderPage(currentTop, currentL2, currentL3);
+    }
+
+    function initBillingInteractions() {
+      initBillingMainTabs();
+      initBillingDetailControls();
+      syncConfirmSummary();
+      initApprovalLineDnD();
+      const activeGroup = getSelectedApprovalGroup();
+      const ccField = document.querySelector("[data-role='approval-cc-area']");
+      if (ccField && activeGroup?.defaultCc) {
+        ccField.placeholder = `기본 참조: ${activeGroup.defaultCc}`;
+      }
+
+      const contractSelect = document.querySelector('[data-role="contract-select-section"]');
+      if (contractSelect) {
+        contractSelect.addEventListener("click", (e) => {
+          const card = e.target.closest('[data-role="contract-card"]');
+          if (!card) return;
+          const contractId = card.getAttribute("data-contract-id");
+          setConfirmContract(contractId);
+        });
+        const searchInput = contractSelect.querySelector('[data-role="contract-search"]');
+        if (searchInput) {
+          searchInput.addEventListener("input", () => {
+            contractSearchTerm = searchInput.value || "";
+            updateContractCards(currentBillingCustomer);
+          });
+        }
+      }
+
+      const discountList = document.querySelector("[data-discount-selected-list]");
+      if (discountList) {
+        discountList.querySelectorAll(".discount-list-row")
+          .forEach((row) => attachDiscountRowDnD(row, discountList));
+      }
+
+      renderApprovalTables(currentBillingCustomer);
+      const firstPending = document.querySelector("[data-role='approval-pending-body'] tr[data-approval-id]");
+      if (firstPending) selectApprovalRow(firstPending.getAttribute("data-approval-id"));
+
+      const historyBody = document.querySelector('[data-role="billing-history-table"] tbody');
+      if (historyBody) {
+        historyBody.addEventListener("click", (e) => {
+          const mainRow = e.target.closest('.billing-main-row');
+          if (!mainRow) return;
+          // 버튼이 아닌 경우에만 행 선택
+          if (e.target.closest('.circle-btn') || e.target.closest('[data-role="btn-add-entry"]')) return;
+          selectBillingRow(mainRow);
+        });
+      }
+
+      // 저장 버튼
+      const saveBtn = document.querySelector('[data-role="btn-save-billing"]');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          captureBillingHistoryFromDOM();
+          console.log('저장할 데이터:', structuredClone(billingHistoryData));
+          alert('청구 수납 이력이 저장되었습니다.');
+          setBillingHistoryMode("view");
+        });
+      }
+
+      // 초기 렌더링 시 미입력 셀 인디케이터 동기화
+      updateBillingEmptyIndicators();
+      
+      // 초기 렌더링 시 월 합계 계산
+      updateAllMonthTotals();
+
+      // 상태 select 색상 초기화
+      updateAllStatusColors();
+
+      // 계약 선택 상태 반영
+      setConfirmContract(currentConfirmContractId);
+    }
+
+    /* ========================= 페이지 렌더링 ========================= */
+    function renderPage(top, l2, l3) {
+      const container = document.getElementById("page-inner");
+
+      if (top === "서비스 정산" && l2 === "청구/수납") {
+        const customer = l3 || currentBillingCustomer || "Maxis";
+        currentBillingCustomer = customer;
+        container.innerHTML = getBillingPageHTML(customer);
+        renderBreadcrumb("서비스 정산", "청구/수납", customer);
+        initBillingInteractions();
+        return;
+      }
+
+      if (top === "서비스 운영" && l2 === "Support Center") {
+        if (currentBoardView === "list") {
+          container.innerHTML = getBoardListHTML(currentBoardType);
+        } else if (currentBoardView === "detail") {
+          container.innerHTML = getBoardDetailHTML(currentBoardType);
+        } else if (currentBoardView === "edit") {
+          container.innerHTML = getBoardEditHTML(currentBoardType, boardEditMode);
+        }
+        renderBreadcrumb("서비스 운영", "Support Center", "공지/SOP/FAQ");
+        return;
+      }
+
+      if (top === "서비스 운영" && l2 === "사용자 관리" && l3 === "계정 관리") {
+        container.innerHTML = ACCOUNT_PAGE_HTML;
+        renderBreadcrumb("서비스 운영", "사용자 관리", "계정 관리");
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="page-title">${l3 || l2}</div>
+        <div class="stub-card">
+          <div class="stub-title">Stub 화면 · 상세 GUI는 추후 구성 예정입니다.</div>
+          <p class="stub-desc">
+            [${top} &gt; ${l2}${l3 ? " &gt; " + l3 : ""}] 경로의 실제 기능 화면은 정책과 기능 정의 확정 후 구현됩니다.
+          </p>
+        </div>
+      `;
+      renderBreadcrumb(top, l2, l3);
+    }
+
+    /* ========================= 상단 네비 / 사이드바 ========================= */
+    function setActiveTopNav(topLabel) {
+      document.querySelectorAll(".top-nav-item").forEach((item) => {
+        const label = item.getAttribute("data-top-label");
+        item.classList.toggle("active", label === topLabel);
+      });
+    }
+
+    function renderSidebar(topLabel, selectedL2, selectedL3) {
+      const sidebarTitleEl = document.getElementById("sidebar-title");
+      const sidebarMenuEl = document.getElementById("sidebar-menu");
+      sidebarTitleEl.textContent = topLabel;
+      sidebarMenuEl.innerHTML = "";
+
+      const menus = MENU_STRUCTURE[topLabel] || {};
+      Object.keys(menus).forEach((l2Name) => {
+        const l3List = menus[l2Name];
+        const li = document.createElement("li");
+        li.className = "menu-item";
+        li.dataset.l2 = l2Name;
+
+        const isActiveL2 = l2Name === selectedL2;
+        if (isActiveL2) li.classList.add("active", "open");
+
+        const mainDiv = document.createElement("div");
+        mainDiv.className = "menu-main";
+
+        const labelDiv = document.createElement("div");
+        labelDiv.className = "menu-label";
+
+        const iconSpan = document.createElement("span");
+        iconSpan.className = "menu-icon";
+        iconSpan.textContent = "📂";
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = l2Name;
+
+        labelDiv.appendChild(iconSpan);
+        labelDiv.appendChild(textSpan);
+
+        const arrowSpan = document.createElement("span");
+        arrowSpan.className = "menu-arrow";
+        arrowSpan.textContent = "›";
+
+        mainDiv.appendChild(labelDiv);
+        mainDiv.appendChild(arrowSpan);
+
+        const subUl = document.createElement("ul");
+        subUl.className = "submenu-list";
+
+        l3List.forEach((l3Name) => {
+          const subLi = document.createElement("li");
+          subLi.className = "submenu-item";
+          subLi.dataset.l3 = l3Name;
+          subLi.textContent = l3Name;
+          if (isActiveL2 && l3Name === selectedL3) subLi.classList.add("active");
+          subUl.appendChild(subLi);
+        });
+
+        li.appendChild(mainDiv);
+        li.appendChild(subUl);
+        sidebarMenuEl.appendChild(li);
+      });
+    }
+
+    function routeTo(top, l2, l3) {
+      currentTop = top;
+      currentL2 = l2;
+      currentL3 = l3;
+
+      if (top === "서비스 운영" && l2 === "Support Center") {
+        currentBoardView = "list";
+        currentBoardType = currentBoardType || "공지사항";
+      }
+
+      if (top === "서비스 정산" && l2 === "청구/수납") {
+        currentBillingCustomer = l3 || currentBillingCustomer || "Maxis";
+      }
+
+      setActiveTopNav(top);
+      renderSidebar(top, l2, l3);
+      renderPage(top, l2, l3);
+    }
+
+    /* ========================= 이벤트 바인딩 ========================= */
+    document.addEventListener("DOMContentLoaded", () => {
+      // 초기 진입: 서비스 운영 > Support Center
+      routeTo(currentTop, currentL2, currentL3);
+
+      // 상단 GNB
+      document.querySelectorAll(".top-nav-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const topLabel = item.getAttribute("data-top-label");
+          const menus = MENU_STRUCTURE[topLabel];
+          if (!menus) return;
+          const l2Names = Object.keys(menus);
+          const firstL2 = l2Names[0];
+          const firstL3 = menus[firstL2][0];
+
+          if (topLabel === "서비스 운영" && firstL2 === "Support Center") {
+            currentBoardView = "list";
+            currentBoardType = "공지사항";
+          }
+          if (topLabel === "서비스 정산" && firstL2 === "청구/수납") {
+            currentBillingCustomer = firstL3 || "Maxis";
+          }
+          routeTo(topLabel, firstL2, firstL3);
+        });
+      });
+
+      // 사이드바
+      const sidebarMenuEl = document.getElementById("sidebar-menu");
+      sidebarMenuEl.addEventListener("click", (e) => {
+        const submenuItem = e.target.closest(".submenu-item");
+        const menuMain = e.target.closest(".menu-main");
+
+        if (submenuItem) {
+          const l3 = submenuItem.dataset.l3;
+          const l2 = submenuItem.closest(".menu-item").dataset.l2;
+
+          if (currentTop === "서비스 운영" && l2 === "Support Center") {
+            currentBoardView = "list";
+            currentBoardType = "공지사항";
+          }
+          if (currentTop === "서비스 정산" && l2 === "청구/수납") {
+            currentBillingCustomer = l3;
+          }
+          routeTo(currentTop, l2, l3);
+          return;
+        }
+
+        if (menuMain) {
+          const menuItem = menuMain.closest(".menu-item");
+          const l2 = menuItem.dataset.l2;
+          const menus = MENU_STRUCTURE[currentTop] || {};
+          const l3List = menus[l2] || [];
+          const firstL3 = l3List[0] || "";
+
+          if (menuItem.classList.contains("open") && currentL2 === l2) {
+            menuItem.classList.toggle("open");
+            return;
+          }
+
+          if (currentTop === "서비스 운영" && l2 === "Support Center") {
+            currentBoardView = "list";
+            currentBoardType = "공지사항";
+          }
+          if (currentTop === "서비스 정산" && l2 === "청구/수납") {
+            currentBillingCustomer = firstL3 || "Maxis";
+          }
+          routeTo(currentTop, l2, firstL3);
+        }
+      });
+
+      // 인라인 편집 모달 내부 이벤트
+      const inlineModal = document.querySelector('[data-role="inline-edit-modal"]');
+      if (inlineModal) {
+        const inputEl = inlineModal.querySelector('[data-edit-modal-input]');
+        const btnApply = inlineModal.querySelector('[data-role="btn-apply-inline-edit"]');
+        const btnCancel = inlineModal.querySelector('[data-role="btn-cancel-inline-edit"]');
+        const btnClose = inlineModal.querySelector('[data-role="btn-close-inline-edit"]');
+
+        if (btnApply) btnApply.addEventListener("click", () => closeInlineEditModal(true));
+        if (btnCancel) btnCancel.addEventListener("click", () => closeInlineEditModal(false));
+        if (btnClose) btnClose.addEventListener("click", () => closeInlineEditModal(false));
+
+        if (inputEl) {
+          inputEl.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter") {
+              ev.preventDefault();
+              closeInlineEditModal(true);
+            } else if (ev.key === "Escape") {
+              ev.preventDefault();
+              closeInlineEditModal(false);
+            }
+          });
+        }
+
+        inlineModal.addEventListener("click", (ev) => {
+          if (ev.target === inlineModal) closeInlineEditModal(false);
+        });
+      }
+
+      /* ========================= Billing: 다중 송금/수납 항목 추가/삭제 및 월합계 계산 ========================= */
+      function parseCurrencyToNumber(text) {
+        if (!text && text !== 0) return 0;
+        const t = String(text).trim();
+        if (!t) return 0;
+        // remove currency prefix and commas
+        const num = t.replace(/[^0-9.\-]/g, "");
+        const f = parseFloat(num);
+        return Number.isFinite(f) ? f : 0;
+      }
+
+      function formatCurrencyFromNumber(n) {
+        if (n === null || n === undefined) return "0";
+        // keep simple formatting (no locale currency symbol)
+        return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function updateMonthTotalsFor(usageMonth) {
+        const mainRow = document.querySelector(`.billing-main-row[data-usage-month="${usageMonth}"]`);
+        if (!mainRow) return;
+        // remit: main row cell + entry rows inputs
+        let remitSum = 0;
+        let receiveSum = 0;
+
+        const mainRemitCell = mainRow.querySelector('[data-role="billing-edit-remit"]');
+        if (mainRemitCell) {
+          // input 요소인 경우 .value, 그 외 .textContent
+          const value = mainRemitCell.value || mainRemitCell.textContent || mainRemitCell.innerText;
+          remitSum += parseCurrencyToNumber(value);
+        }
+        const mainReceiveCell = mainRow.querySelector('[data-role="billing-edit-receive"]');
+        if (mainReceiveCell) {
+          const value = mainReceiveCell.value || mainReceiveCell.textContent || mainReceiveCell.innerText;
+          receiveSum += parseCurrencyToNumber(value);
+        }
+
+        const entryRows = document.querySelectorAll(`.billing-entry-row[data-parent-usage="${usageMonth}"]`);
+        entryRows.forEach((r) => {
+          const inRemit = r.querySelector('[data-role="input-remit"]');
+          const inReceive = r.querySelector('[data-role="input-receive"]');
+          if (inRemit) remitSum += parseCurrencyToNumber(inRemit.value || inRemit.textContent);
+          if (inReceive) receiveSum += parseCurrencyToNumber(inReceive.value || inReceive.textContent);
+        });
+
+        let totalsRow = document.querySelector(`.billing-month-totals[data-usage-month="${usageMonth}"]`);
+        if (!totalsRow) {
+          // create totals row if missing and insert after last entry or main row
+          const mainRowLocal = mainRow;
+          const tbody = mainRowLocal.closest('tbody');
+          const existingEntries = tbody.querySelectorAll(`.billing-entry-row[data-parent-usage="${usageMonth}"]`);
+          let insertAfter = mainRowLocal;
+          if (existingEntries.length) insertAfter = existingEntries[existingEntries.length - 1];
+          totalsRow = document.createElement('tr');
+          totalsRow.className = 'billing-month-totals';
+          totalsRow.setAttribute('data-usage-month', usageMonth);
+          totalsRow.innerHTML = `
+            <td colspan="6" class="billing-total-label">합계 (송금 / 수납)</td>
+            <td class="billing-btn-cell"></td>
+            <td class="customer-entry-cell" data-role="month-sum-remit">0</td>
+            <td></td>
+            <td></td>
+            <td data-role="month-sum-receive">0</td>
+            <td></td>
+            <td></td>
+          `;
+          insertAfter.parentNode.insertBefore(totalsRow, insertAfter.nextSibling);
+        }
+        const remitCell = totalsRow.querySelector('[data-role="month-sum-remit"]');
+        const receiveCell = totalsRow.querySelector('[data-role="month-sum-receive"]');
+        if (remitCell) remitCell.textContent = formatCurrencyFromNumber(remitSum);
+        if (receiveCell) receiveCell.textContent = formatCurrencyFromNumber(receiveSum);
+      }
+
+      function updateAllMonthTotals() {
+        const mainRows = document.querySelectorAll('.billing-main-row[data-usage-month]');
+        mainRows.forEach(r => {
+          const usage = r.getAttribute('data-usage-month');
+          if (usage) updateMonthTotalsFor(usage);
+        });
+      }
+
+      // 버튼 클릭: 항목 추가 / 삭제 (위임)
+      document.body.addEventListener('click', (ev) => {
+        const btnAdd = ev.target.closest('[data-role="btn-add-entry"]');
+        const btnRemove = ev.target.closest('[data-role="btn-remove-entry"]');
+        if ((!btnAdd && !btnRemove) || billingHistoryMode !== "edit") return;
+        if (btnAdd) {
+          const mainRow = btnAdd.closest('.billing-main-row');
+          if (!mainRow) return;
+          const usage = mainRow.getAttribute('data-usage-month');
+          // find place to insert: before monthly totals row for this usage
+          const tbody = mainRow.closest('tbody');
+          const totalsRow = tbody.querySelector(`.billing-month-totals[data-usage-month="${usage}"]`);
+          
+          const tr = document.createElement('tr');
+          tr.className = 'billing-entry-row';
+          tr.setAttribute('data-parent-usage', usage);
+          tr.innerHTML = `
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="billing-btn-cell" style="text-align: center; vertical-align: middle;"><button class="circle-btn circle-btn--danger" data-role="btn-remove-entry">－</button></td>
+            <td class="customer-entry-cell" style="padding: 0;"><input class="field-input" data-role="input-remit" placeholder="0" style="margin: 0; border-radius: 0;" /></td>
+            <td class="customer-entry-cell" style="padding: 0;"><input class="field-input" type="date" data-role="input-remit-date" style="margin: 0; border-radius: 0;" /></td>
+            <td class="customer-entry-cell" style="padding: 0;"><select class="field-input field-select" data-role="input-customer-status" style="margin: 0; border-radius: 0;"><option value="">선택</option><option value="발행">발행</option><option value="송금">송금</option><option value="부분 수납">부분 수납</option><option value="완납">완납</option></select></td>
+            <td style="padding: 0;"><input class="field-input" data-role="input-receive" placeholder="0" style="margin: 0; border-radius: 0;" /></td>
+            <td style="padding: 0;"><input class="field-input" type="date" data-role="input-receive-date" style="margin: 0; border-radius: 0;" /></td>
+            <td style="padding: 0;"><select class="field-input field-select" data-role="input-company-status" style="margin: 0; border-radius: 0;"><option value="">선택</option><option value="발행">발행</option><option value="송금">송금</option><option value="부분 수납">부분 수납</option><option value="완납">완납</option></select></td>
+          `;
+          
+          if (totalsRow) {
+            totalsRow.parentNode.insertBefore(tr, totalsRow);
+          } else {
+            const existingEntries = tbody.querySelectorAll(`.billing-entry-row[data-parent-usage="${usage}"]`);
+            let insertAfter = mainRow;
+            if (existingEntries.length) insertAfter = existingEntries[existingEntries.length - 1];
+            insertAfter.parentNode.insertBefore(tr, insertAfter.nextSibling);
+          }
+          
+          // attach input listeners (delegation also handles but immediate update)
+          tr.querySelectorAll('[data-role="input-remit"], [data-role="input-receive"]').forEach(inp => {
+            inp.addEventListener('input', () => updateMonthTotalsFor(usage));
+          });
+          
+          // 새로 생성된 행의 상태 select에 색상 적용
+          tr.querySelectorAll('[data-role*="status"]').forEach(select => {
+            updateStatusBadgeColor(select);
+          });
+          
+          updateMonthTotalsFor(usage);
+          return;
+        }
+
+        if (btnRemove) {
+          const row = btnRemove.closest('.billing-entry-row');
+          if (!row) return;
+          const usage = row.getAttribute('data-parent-usage');
+          row.remove();
+          if (usage) updateMonthTotalsFor(usage);
+          return;
+        }
+      });
+
+      // 입력 변경(날짜/금액 인라인)도 월합계 갱신
+      document.body.addEventListener('input', (ev) => {
+        const inp = ev.target.closest('[data-role="input-remit"], [data-role="input-receive"]');
+        if (!inp) return;
+        const row = inp.closest('.billing-entry-row');
+        const usage = row ? row.getAttribute('data-parent-usage') : null;
+        if (usage) updateMonthTotalsFor(usage);
+      });
+
+      // 상태 select 변경 시 색상 업데이트
+      document.body.addEventListener('change', (ev) => {
+        const select = ev.target.closest('[data-role*="status"]');
+        if (select) {
+          updateStatusBadgeColor(select);
+          return;
+        }
+        const groupSelect = ev.target.closest('[data-role="approval-group-select"]');
+        if (groupSelect) {
+          const group = getApprovalGroup(groupSelect.value);
+          const ccField = document.querySelector("[data-role='approval-cc-area']");
+          if (ccField) {
+            ccField.placeholder = group?.defaultCc ? `기본 참조: ${group.defaultCc}` : "";
+          }
+        }
+      });
+
+      function updateStatusBadgeColor(selectEl) {
+        const value = selectEl.value;
+        const statusKey = value.replace(/ /g, ''); // "부분 수납" -> "부분수납"
+        selectEl.style.backgroundColor = getStatusBgColor(statusKey);
+        selectEl.style.color = getStatusTextColor(statusKey);
+      }
+
+      function updateAllStatusColors(root) {
+        const scope = root || document;
+        scope.querySelectorAll('[data-role*="status"]').forEach((select) => {
+          updateStatusBadgeColor(select);
+        });
+      }
+
+      function getStatusBgColor(statusKey) {
+        const colors = {
+          발행: '#fef3c7',
+          송금: '#dbeafe',
+          부분수납: '#fed7aa',
+          완납: '#d1fae5'
+        };
+        return colors[statusKey] || 'transparent';
+      }
+
+      function getStatusTextColor(statusKey) {
+        const colors = {
+          발행: '#b45309',
+          송금: '#0c4a6e',
+          부분수납: '#92400e',
+          완납: '#065f46'
+        };
+        return colors[statusKey] || 'inherit';
+      }
+
+      // 페이지 로드 시 기존 상태 색상 적용
+      updateAllStatusColors();
+
+      // 본문 공통 이벤트
+      document.body.addEventListener("click", (e) => {
+        const boardTab = e.target.closest(".board-tab");
+        if (boardTab) {
+          const board = boardTab.getAttribute("data-board");
+          if (board) {
+            currentBoardType = board;
+            currentBoardView = "list";
+            renderPage(currentTop, currentL2, currentL3);
+          }
+          return;
+        }
+
+        const target = e.target.closest("[data-role]");
+        if (!target) return;
+        const role = target.getAttribute("data-role");
+        const isBillingEditMode = billingHistoryMode === "edit";
+
+        /* Support Center */
+        if (role === "btn-create") {
+          currentBoardView = "edit";
+          boardEditMode = "create";
+          renderPage(currentTop, currentL2, currentL3);
+          return;
+        }
+        if (role === "link-detail") {
+          currentBoardView = "detail";
+          renderPage(currentTop, currentL2, currentL3);
+          return;
+        }
+        if (role === "btn-list") {
+          currentBoardView = "list";
+          renderPage(currentTop, currentL2, currentL3);
+          return;
+        }
+        if (role === "btn-edit") {
+          currentBoardView = "edit";
+          boardEditMode = "edit";
+          renderPage(currentTop, currentL2, currentL3);
+          return;
+        }
+        if (role === "btn-delete") {
+          alert("삭제는 실제 서비스 구현 시 별도 확인 모달 후 처리됩니다. (데모)");
+          return;
+        }
+        if (role === "btn-download" || role === "btn-download-all") {
+          alert("파일 다운로드 예시입니다. (실제 구현 시 다운로드 API/URL 연동)");
+          return;
+        }
+        if (role === "btn-cancel") {
+          currentBoardView = "list";
+          renderPage(currentTop, currentL2, currentL3);
+          return;
+        }
+        if (role === "btn-draft") {
+          alert("임시저장 예시입니다. (실제 구현 시 드래프트 저장 API 연동)");
+          return;
+        }
+        if (role === "btn-submit") {
+          alert(boardEditMode === "edit" ? "수정 완료 예시입니다." : "등록 완료 예시입니다.");
+          currentBoardView = "list";
+          renderPage(currentTop, currentL2, currentL3);
+          return;
+        }
+        if (role === "link-prev" || role === "link-next") {
+          alert("이전/다음 글 상세 이동 예시입니다. (실제 구현 시 해당 글 ID로 이동)");
+          return;
+        }
+
+        /* Billing – 결재/예측/할인 패널 */
+        if (role === "btn-approval-submit") { handleApprovalSubmit(); return; }
+        if (role === "btn-approval-draft") { handleApprovalDraft(); return; }
+        if (role === "btn-approval-approve") { handleApprovalDecision("승인"); return; }
+        if (role === "btn-approval-reject") { handleApprovalDecision("반려"); return; }
+        if (role === "approval-group-select") {
+          const selectEl = target;
+          const group = getApprovalGroup(selectEl.value);
+          const ccField = document.querySelector("[data-role='approval-cc-area']");
+          if (ccField) {
+            ccField.placeholder = group?.defaultCc ? `기본 참조: ${group.defaultCc}` : "";
+          }
+          return;
+        }
+        if (role === "approval-line-add") {
+          const body = document.querySelector("[data-role='approval-line-body']");
+          if (!body) return;
+          const finalRow = body.querySelector("[data-final-line='true']");
+          const tr = document.createElement("tr");
+          tr.setAttribute("data-approval-line-row", "true");
+          tr.setAttribute("draggable", "true");
+        tr.innerHTML = `
+            <td><div style="display:flex; align-items:center; gap:6px;"><span class="approval-line-handle" aria-hidden="true">☰</span><span data-role="approval-line-order"></span></div></td>
+            <td><span>승인</span></td>
+            <td><input class="field-input" type="text" placeholder="결재자 이름" value="결재자 이름" style="font-size:12px;" /></td>
+            <td><span class="field-note">sample@uplus.co.kr / 010-0000-0000</span></td>
+            <td style="text-align:center;">
+              <button class="btn-ghost" type="button" data-role="approval-line-delete" aria-label="결재자 행 삭제" style="font-size:13px; padding:2px 6px;">
+                <span class="icon-delete-circle">×</span>
+              </button>
+            </td>
+          `;
+          if (finalRow) {
+            body.insertBefore(tr, finalRow);
+          } else {
+            body.appendChild(tr);
+          }
+          updateApprovalLineOrder();
+          return;
+        }
+        if (role === "approval-line-delete") {
+          const row = target.closest("[data-approval-line-row]");
+          if (!row || row.getAttribute("data-final-line") === "true") return;
+          row.remove();
+          updateApprovalLineOrder();
+          return;
+        }
+        if (role === "approval-tab") {
+          const targetTab = target.getAttribute("data-approval-tab");
+          const tabButtons = document.querySelectorAll("[data-approval-tab]");
+          const panels = document.querySelectorAll("[data-approval-panel]");
+          tabButtons.forEach((btn) => btn.classList.toggle("active", btn === target));
+          panels.forEach((panel) => {
+            const key = panel.getAttribute("data-approval-panel");
+            panel.style.display = key === targetTab ? "block" : "none";
+          });
+          if (targetTab === "management") {
+            const first = document.querySelector("[data-role='approval-pending-body'] tr[data-approval-id]");
+            if (first) selectApprovalRow(first.getAttribute("data-approval-id"));
+          }
+          if (targetTab === "accounting") {
+            const detailCard = document.querySelector("[data-role='approval-detail-card']");
+            if (detailCard) detailCard.style.display = "none";
+          }
+          return;
+        }
+        if (role === "approval-row") {
+          const approvalId = target.getAttribute("data-approval-id") || target.closest("[data-approval-id]")?.getAttribute("data-approval-id");
+          const isManagement = !!target.closest("[data-approval-panel='management']");
+          if (approvalId && isManagement) selectApprovalRow(approvalId);
+          return;
+        }
+
+        if (role === "btn-export-raw") {
+          alert("반복성 청구 계산에 사용된 기초데이터(raw)를 CSV로 추출하는 예시입니다.");
+          return;
+        }
+
+        if (role === "btn-discount-panel-open") {
+          const backdrop = document.querySelector('[data-role="discount-panel-backdrop"]');
+          if (backdrop) backdrop.classList.add("open");
+          return;
+        }
+        if (role === "btn-discount-panel-close") {
+          const backdrop = document.querySelector('[data-role="discount-panel-backdrop"]');
+          if (backdrop) backdrop.classList.remove("open");
+          return;
+        }
+        if (role === "btn-discount-new-toggle") {
+          const section = document.querySelector("[data-discount-new-section]");
+          if (section) {
+            const isHidden = section.style.display === "none" || !section.style.display;
+            section.style.display = isHidden ? "block" : "none";
+          }
+          return;
+        }
+
+        if (role === "billing-history-edit") {
+          setBillingHistoryMode("edit");
+          return;
+        }
+
+        if (role === "discount-select-existing") {
+          const list = document.querySelector("[data-discount-selected-list]");
+          if (list) {
+            const name = target.dataset.name || "";
+            const meta = target.dataset.meta || "";
+            const amount = target.dataset.amount || "";
+            const row = document.createElement("div");
+            row.className = "discount-list-row";
+            row.setAttribute("draggable", "true");
+            row.innerHTML = `
+              <div style="display:flex; align-items:flex-start; gap:4px;">
+                <span class="discount-handle">☰</span>
+                <div class="discount-main">
+                  <div class="discount-name">${name}</div>
+                  <div class="discount-meta">${meta}</div>
+                </div>
+              </div>
+              <div class="discount-right">
+                <span>${amount}</span>
+                <span class="field-note">추가 적용</span>
+                <button class="btn-ghost" type="button" data-role="discount-delete" style="font-size:13px; padding:3px 6px; margin-top:4px;" aria-label="할인요소 삭제">
+                  <span class="icon-delete-circle">×</span>
+                </button>
+              </div>
+            `;
+            list.appendChild(row);
+            attachDiscountRowDnD(row, list);
+          }
+          alert("선택한 할인요소를 현재 청구에 추가했습니다. (데모)");
+          updateBillingEmptyIndicators();
+          updateAllMonthTotals();
+          return;
+        }
+
+        if (role === "discount-delete") {
+          const row = target.closest(".discount-list-row");
+          if (row) row.remove();
+          return;
+        }
+
+        if (role === "discount-save-new") {
+          const nameEl = document.querySelector("[data-discount-new-name]");
+          const typeEl = document.querySelector("[data-discount-new-type]");
+          const formEl = document.querySelector("[data-discount-new-form]");
+          const valEl = document.querySelector("[data-discount-new-value]");
+          const condEl = document.querySelector("[data-discount-new-condition]");
+          const name = nameEl?.value?.trim() || "(신규 할인요소)";
+          const type = typeEl?.value || "";
+          const form = formEl?.value || "";
+          const val = valEl?.value || "";
+          const cond = condEl?.value || "";
+          const list = document.querySelector("[data-discount-selected-list]");
+          if (list) {
+            const row = document.createElement("div");
+            row.className = "discount-list-row";
+            row.setAttribute("draggable", "true");
+            row.innerHTML = `
+              <div style="display:flex; align-items:flex-start; gap:4px;">
+                <span class="discount-handle">☰</span>
+                <div class="discount-main">
+                  <div class="discount-name">${name}</div>
+                  <div class="discount-meta">
+                    할인 유형: ${type} · 할인 형태: ${form} · 할인액/률: ${val || "-"} · 적용 조건: ${cond || "조건 미기입"}
+                  </div>
+                </div>
+              </div>
+              <div class="discount-right">
+                <span>${val || "- 금액/률 미기입"}</span>
+                <span class="field-note">신규 등록</span>
+                <button class="btn-ghost" type="button" data-role="discount-delete" style="font-size:13px; padding:3px 6px; margin-top:4px;" aria-label="할인요소 삭제">
+                  <span class="icon-delete-circle">×</span>
+                </button>
+              </div>
+            `;
+            list.appendChild(row);
+            attachDiscountRowDnD(row, list);
+          }
+          const backdrop = document.querySelector('[data-role="discount-panel-backdrop"]');
+          if (backdrop) backdrop.classList.remove("open");
+          alert("신규 할인요소가 추가되었습니다. (데모)");
+          return;
+        }
+
+        // 일회성 청구 항목 추가
+        if (role === "btn-onetime-add") {
+          const tbody = document.querySelector('[data-role="onetime-table"] tbody');
+          if (!tbody) return;
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="billing-editable placeholder-cell" data-role="onetime-edit" data-field="name" data-placeholder="true">항목명 입력</td>
+            <td class="billing-editable" data-role="onetime-edit" data-field="amount-before">0</td>
+            <td class="billing-editable" data-role="onetime-edit" data-field="credit">0</td>
+            <td class="billing-editable" data-role="onetime-edit" data-field="amount-after">0</td>
+            <td class="billing-editable placeholder-cell" data-role="onetime-edit" data-field="note" data-placeholder="true">입력</td>
+            <td style="text-align:center;">
+              <button class="btn-ghost" type="button" data-role="onetime-delete" aria-label="일회성 청구행 삭제">
+                <span class="icon-delete-circle">×</span>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+          updateBillingEmptyIndicators();
+          updateAllMonthTotals();
+          return;
+        }
+
+        // 일회성 청구 리스트 삭제
+        if (role === "onetime-delete") {
+          const row = target.closest("tr");
+          if (row) row.remove();
+          return;
+        }
+
+        // 일회성 청구 셀 편집 (커스텀 모달)
+        if (role === "onetime-edit") {
+          const cell = target.closest('[data-role="onetime-edit"]');
+          if (!cell) return;
+          const field = cell.getAttribute("data-field") || "";
+          const isPlaceholder = cell.getAttribute("data-placeholder") === "true";
+          const current = isPlaceholder ? "" : cell.textContent.trim();
+
+          let title = "값 입력";
+          let label = "값";
+          let note = "";
+
+          if (field === "name") {
+            title = "청구항목 입력";
+            label = "청구항목";
+            note = "예: 초기 구축비, 추가 라이선스 비용 등";
+          } else if (field === "amount-before") {
+            title = "금액 입력";
+            label = "금액 (크레딧 차감 전)";
+            note = "예: USD 50,000.00";
+          } else if (field === "credit") {
+            title = "크레딧 차감액 입력";
+            label = "크레딧 차감액";
+            note = "예: USD 5,000.00";
+          } else if (field === "amount-after") {
+            title = "금액 입력";
+            label = "금액 (크레딧 차감 후)";
+            note = "예: USD 45,000.00";
+          } else if (field === "note") {
+            title = "비고 입력";
+            label = "비고";
+            note = "필요 시 청구 사유나 참고 메모를 입력합니다.";
+          }
+
+          openInlineEditModal({
+            title,
+            label,
+            note,
+            initialValue: current,
+            type: "text",
+            onApply(value) {
+              const text = (value || "").trim();
+              if (!text) {
+                if (field === "name") {
+                  cell.textContent = "항목명 입력";
+                  cell.classList.add("placeholder-cell");
+                  cell.setAttribute("data-placeholder", "true");
+                } else if (field === "note") {
+                  cell.textContent = "입력";
+                  cell.classList.add("placeholder-cell");
+                  cell.setAttribute("data-placeholder", "true");
+                } else {
+                  cell.textContent = "0";
+                  cell.classList.remove("placeholder-cell");
+                  cell.removeAttribute("data-placeholder");
+                }
+              } else {
+                cell.textContent = text;
+                cell.classList.remove("placeholder-cell");
+                cell.removeAttribute("data-placeholder");
+              }
+              updateBillingEmptyIndicators();
+              updateAllMonthTotals();
+            }
+          });
+          return;
+        }
+
+        // Billing – 송금/수납 금액 편집 (커스텀 모달)
+        if (role === "billing-edit-remit" || role === "billing-edit-receive") {
+          if (!isBillingEditMode || target.matches("input, select, textarea")) return;
+          const cell = target;
+          const current = cell.textContent.trim();
+          const isRemit = role === "billing-edit-remit";
+
+          openInlineEditModal({
+            title: isRemit ? "송금 금액 입력" : "수납 금액 입력",
+            label: isRemit ? "송금 금액" : "수납 금액",
+            note: "예: USD 3,210.40 와 같이 통화단위 포함 가능",
+            initialValue: current === "0" ? "" : current,
+            type: "text",
+            onApply(value) {
+              const text = (value || "").trim();
+              cell.textContent = text || "0";
+              const row = cell.closest("tr");
+              if (row) {
+                if (isRemit) {
+                  const dateCell = row.querySelector("[data-col-remit-date]");
+                  if (dateCell && !dateCell.textContent.trim()) {
+                    dateCell.textContent = new Date().toISOString().slice(0, 10);
+                  }
+                  const statusCell = row.querySelector('[data-role="billing-edit-status"]');
+                  if (statusCell) {
+                    const badge = statusCell.querySelector("[data-billing-status]");
+                    const currentStatus = badge ? (badge.getAttribute("data-billing-status") || badge.textContent.trim()) : "발행";
+                    if (currentStatus === "발행" && text) {
+                      statusCell.innerHTML = renderBillingStatusBadge("송금");
+                    }
+                  }
+                } else {
+                  const dateCell = row.querySelector("[data-col-receive-date]");
+                  if (dateCell && !dateCell.textContent.trim() && text) {
+                    dateCell.textContent = new Date().toISOString().slice(0, 10);
+                  }
+                }
+              }
+              updateBillingEmptyIndicators();
+            }
+          });
+          return;
+        }
+
+        // Billing – 상태 드롭다운
+        if (role === "billing-edit-status") {
+          if (!isBillingEditMode || target.matches("input, select, textarea")) return;
+          const cell = target.closest('[data-role="billing-edit-status"]') || target;
+          if (!cell || cell.dataset.editing === "1") return;
+
+          const badge = cell.querySelector("[data-billing-status]");
+          const currentStatus = badge ? (badge.getAttribute("data-billing-status") || badge.textContent.trim()) : (cell.textContent.trim() || "발행");
+
+          const originalHtml = cell.innerHTML;
+          cell.dataset.editing = "1";
+          cell.dataset.originalHtml = originalHtml;
+
+          const select = document.createElement("select");
+          select.className = "field-select";
+          select.style.width = "100%";
+          select.style.minWidth = "90px";
+          const statuses = ["발행", "송금", "부분 수납", "완납"];
+          statuses.forEach((st) => {
+            const opt = document.createElement("option");
+            opt.value = st;
+            opt.textContent = st;
+            if (st === currentStatus) opt.selected = true;
+            select.appendChild(opt);
+          });
+
+          cell.innerHTML = "";
+          cell.appendChild(select);
+          select.focus();
+
+          const finishStatusEdit = (apply) => {
+            if (apply) {
+              const status = select.value;
+              cell.innerHTML = renderBillingStatusBadge(status);
+              const row = cell.closest("tr");
+              if (row) {
+                const remitDateCell = row.querySelector("[data-col-remit-date]");
+                const receiveDateCell = row.querySelector("[data-col-receive-date]");
+                const today = new Date().toISOString().slice(0, 10);
+                if (status === "송금" && remitDateCell && !remitDateCell.textContent.trim()) {
+                  remitDateCell.textContent = today;
+                }
+                if ((status === "부분 수납" || status === "완납") && receiveDateCell && !receiveDateCell.textContent.trim()) {
+                  receiveDateCell.textContent = today;
+                }
+              }
+            } else {
+              cell.innerHTML = originalHtml;
+            }
+            delete cell.dataset.editing;
+            delete cell.dataset.originalHtml;
+            updateBillingEmptyIndicators();
+          };
+
+          select.addEventListener("change", () => finishStatusEdit(true));
+          select.addEventListener("blur", () => finishStatusEdit(true));
+          select.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter") {
+              ev.preventDefault();
+              finishStatusEdit(true);
+            } else if (ev.key === "Escape") {
+              ev.preventDefault();
+              finishStatusEdit(false);
+            }
+          });
+
+          return;
+        }
+
+        // Billing – 송금일/수납일 날짜 입력 (셀 내 date picker 인라인 편집)
+        if (role === "billing-edit-remit-date" || role === "billing-edit-receive-date") {
+          if (!isBillingEditMode || target.matches("input, select, textarea")) return;
+          const cell = target.closest("td");
+          if (!cell || cell.dataset.editing === "1") return;
+
+          const current = cell.textContent.trim();
+          const original = current;
+
+          cell.dataset.editing = "1";
+
+          const input = document.createElement("input");
+          input.type = "date";
+          input.className = "field-input";
+          input.style.fontSize = "12px";
+          input.style.padding = "4px 8px";
+
+          if (/^\d{4}-\d{2}-\d{2}$/.test(current)) {
+            input.value = current;
+          }
+
+          cell.innerHTML = "";
+          cell.appendChild(input);
+          input.focus();
+
+          const finish = (apply) => {
+            const value = (input.value || "").trim();
+            if (apply && value) {
+              cell.textContent = value;
+            } else {
+              cell.textContent = original;
+            }
+            delete cell.dataset.editing;
+            updateBillingEmptyIndicators();
+          };
+
+          input.addEventListener("change", () => finish(true));
+          input.addEventListener("blur", () => finish(true));
+          input.addEventListener("keydown", (ev) => {
+            if (ev.key === "Enter") {
+              ev.preventDefault();
+              finish(true);
+            } else if (ev.key === "Escape") {
+              ev.preventDefault();
+              finish(false);
+            }
+          });
+
+          return;
+        }
+
+        // 당월 청구금액 예상 모달
+        if (role === "btn-open-monthly-forecast") {
+          const modal = document.querySelector('[data-role="monthly-forecast-modal"]');
+          if (modal) modal.classList.add("open");
+          return;
+        }
+        if (role === "btn-close-monthly-forecast") {
+          const modal = document.querySelector('[data-role="monthly-forecast-modal"]');
+          if (modal) modal.classList.remove("open");
+          return;
+        }
+      });
+
+      // ESC 로 모달 닫기
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          const forecastModal = document.querySelector('[data-role="monthly-forecast-modal"].open');
+          if (forecastModal) {
+            forecastModal.classList.remove("open");
+            return;
+          }
+          const inlineModalOpen = document.querySelector('[data-role="inline-edit-modal"].open');
+          if (inlineModalOpen) {
+            closeInlineEditModal(false);
+            return;
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
