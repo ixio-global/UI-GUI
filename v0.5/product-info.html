@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 기준 정보 - ixi-O O&M Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .product-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .info-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            width: 140px;
+            font-size: 13px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        .price-table th,
+        .price-table td {
+            text-align: right;
+        }
+
+        .price-table th:first-child,
+        .price-table td:first-child {
+            text-align: left;
+        }
+
+        .version-timeline {
+            padding-left: 20px;
+            border-left: 2px solid var(--border-soft);
+        }
+
+        .version-item {
+            position: relative;
+            padding: 16px 0 16px 24px;
+        }
+
+        .version-item::before {
+            content: "";
+            position: absolute;
+            left: -7px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--brand-main);
+            border: 2px solid var(--surface);
+        }
+
+        .version-item.past::before {
+            background: var(--border-soft);
+        }
+
+        .version-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .version-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .version-desc {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .feature-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-chip {
+            padding: 6px 12px;
+            background: var(--accent-chip-bg);
+            color: var(--accent-chip-text);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="../index.html" class="home-btn" title="버전 선택으로 돌아가기"
+                style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; margin-right: 12px; text-decoration: none; transition: all 0.2s;">🏠</a>
+            <div class="logo"><a href="index.html">ixi-O O&M</a></div>
+            <span
+                style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 20px; font-size: 11px; font-weight: 600; color: #fbbf24; margin-left: 12px;">📦
+                v0.5 물리취합</span>
+            <nav class="top-nav"></nav>
+        </div>
+        <div class="header-right">
+            <div class="avatar">A</div>
+            <div class="header-user-info">
+                <span class="header-user-name">관리자</span>
+                <span class="header-user-role">Super Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section-title" id="sidebar-title">상품 운영</div>
+            <ul class="menu-list" id="sidebar-menu"></ul>
+        </aside>
+
+        <main class="main">
+            <div class="breadcrumb" id="breadcrumb"></div>
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">상품 기준 정보</h1>
+                    <p class="page-subtitle">서비스 상품 및 요금제 정보를 관리합니다.</p>
+                </div>
+                <div class="product-actions">
+                    <button class="btn btn-secondary">📥 엑셀 다운로드</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-product')">+ 상품 등록</button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="search-box">
+                    <input type="text" class="form-input" placeholder="상품명, 상품코드 검색...">
+                </div>
+                <select class="filter-select">
+                    <option value="">상품 유형 전체</option>
+                    <option>기본 요금제</option>
+                    <option>프리미엄 요금제</option>
+                    <option>부가서비스</option>
+                </select>
+                <select class="filter-select">
+                    <option value="">상태 전체</option>
+                    <option>판매중</option>
+                    <option>판매중지</option>
+                    <option>준비중</option>
+                </select>
+            </div>
+
+            <!-- Products Table -->
+            <div class="card">
+                <div class="table-container">
+                    <table id="product-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" onchange="AdminApp.selectAllRows(this, 'product-table')">
+                                </th>
+                                <th>상품코드</th>
+                                <th>상품명</th>
+                                <th>유형</th>
+                                <th>기본가(월)</th>
+                                <th>상태</th>
+                                <th>적용일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" onchange="AdminApp.toggleRowSelection(this)"></td>
+                                <td>PRD-001</td>
+                                <td class="text-link" onclick="showProductDetail('PRD-001')">ixi-O Basic</td>
+                                <td>기본 요금제</td>
+                                <td>$5.00</td>
+                                <td><span class="badge badge-green">판매중</span></td>
+                                <td>2024-01-01</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">수정</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" onchange="AdminApp.toggleRowSelection(this)"></td>
+                                <td>PRD-002</td>
+                                <td class="text-link" onclick="showProductDetail('PRD-002')">ixi-O Premium</td>
+                                <td>프리미엄 요금제</td>
+                                <td>$15.00</td>
+                                <td><span class="badge badge-green">판매중</span></td>
+                                <td>2024-01-01</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">수정</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" onchange="AdminApp.toggleRowSelection(this)"></td>
+                                <td>PRD-003</td>
+                                <td class="text-link" onclick="showProductDetail('PRD-003')">ixi-O Enterprise</td>
+                                <td>프리미엄 요금제</td>
+                                <td>$50.00</td>
+                                <td><span class="badge badge-green">판매중</span></td>
+                                <td>2024-03-01</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">수정</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" onchange="AdminApp.toggleRowSelection(this)"></td>
+                                <td>PRD-004</td>
+                                <td class="text-link" onclick="showProductDetail('PRD-004')">AI 통역 서비스</td>
+                                <td>부가서비스</td>
+                                <td>$3.00</td>
+                                <td><span class="badge badge-green">판매중</span></td>
+                                <td>2024-06-01</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">수정</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" onchange="AdminApp.toggleRowSelection(this)"></td>
+                                <td>PRD-005</td>
+                                <td class="text-link" onclick="showProductDetail('PRD-005')">AI 녹취록 Pro</td>
+                                <td>부가서비스</td>
+                                <td>$5.00</td>
+                                <td><span class="badge badge-yellow">준비중</span></td>
+                                <td>2025-01-01</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">수정</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" onchange="AdminApp.toggleRowSelection(this)"></td>
+                                <td>PRD-006</td>
+                                <td class="text-link" onclick="showProductDetail('PRD-006')">Legacy Plan A</td>
+                                <td>기본 요금제</td>
+                                <td>$4.00</td>
+                                <td><span class="badge badge-gray">판매중지</span></td>
+                                <td>2023-01-01</td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary">수정</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="pagination"></div>
+            </div>
+
+            <!-- Product Detail Section (Hidden by default) -->
+            <div id="product-detail" class="hidden mt-24">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <h3 class="card-title">ixi-O Premium</h3>
+                            <p class="card-subtitle">PRD-002 · 프리미엄 요금제</p>
+                        </div>
+                        <div class="flex gap-12">
+                            <button class="btn btn-secondary">수정</button>
+                            <button class="btn btn-danger">판매중지</button>
+                        </div>
+                    </div>
+
+                    <div class="product-detail-grid">
+                        <div>
+                            <h4 style="font-size: 14px; margin: 0 0 16px 0;">기본 정보</h4>
+                            <div class="info-row">
+                                <div class="info-label">상품코드</div>
+                                <div class="info-value">PRD-002</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">상품명</div>
+                                <div class="info-value">ixi-O Premium</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">상품 유형</div>
+                                <div class="info-value">프리미엄 요금제</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">상태</div>
+                                <div class="info-value"><span class="badge badge-green">판매중</span></div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">판매 시작일</div>
+                                <div class="info-value">2024-01-01</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">제공 기능</div>
+                                <div class="info-value">
+                                    <div class="feature-list">
+                                        <span class="feature-chip">AI 통화</span>
+                                        <span class="feature-chip">AI 통역</span>
+                                        <span class="feature-chip">AI 녹취록</span>
+                                        <span class="feature-chip">우선 지원</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 style="font-size: 14px; margin: 0 0 16px 0;">고객사별 가격 정보</h4>
+                            <div class="table-container">
+                                <table class="price-table">
+                                    <thead>
+                                        <tr>
+                                            <th>고객사</th>
+                                            <th>기본가</th>
+                                            <th>할인율</th>
+                                            <th>적용가</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Maxis</td>
+                                            <td>$15.00</td>
+                                            <td>10%</td>
+                                            <td><strong>$13.50</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Telkomsel</td>
+                                            <td>$15.00</td>
+                                            <td>5%</td>
+                                            <td><strong>$14.25</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>AIS</td>
+                                            <td>$15.00</td>
+                                            <td>0%</td>
+                                            <td><strong>$15.00</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-24">
+                    <div class="card-header">
+                        <h3 class="card-title">변경 이력</h3>
+                    </div>
+                    <div class="version-timeline">
+                        <div class="version-item">
+                            <div class="version-date">2024-11-15 14:30</div>
+                            <div class="version-title">가격 정책 변경</div>
+                            <div class="version-desc">Maxis 할인율 5% → 10% 변경 (관리자: ops_admin)</div>
+                        </div>
+                        <div class="version-item past">
+                            <div class="version-date">2024-06-01 09:00</div>
+                            <div class="version-title">기능 추가</div>
+                            <div class="version-desc">AI 녹취록 기능 추가 (관리자: product_mgr)</div>
+                        </div>
+                        <div class="version-item past">
+                            <div class="version-date">2024-01-01 00:00</div>
+                            <div class="version-title">상품 출시</div>
+                            <div class="version-desc">ixi-O Premium 상품 최초 등록</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Product Registration Modal -->
+    <div class="modal-overlay" id="modal-product">
+        <div class="modal" style="max-width: 640px;">
+            <div class="modal-header">
+                <h2 class="modal-title">상품 등록</h2>
+                <span class="modal-close" onclick="closeModal('modal-product')">×</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">상품코드 <span class="required">*</span></label>
+                        <input type="text" class="form-input" placeholder="PRD-XXX">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상품명 <span class="required">*</span></label>
+                        <input type="text" class="form-input" placeholder="상품명을 입력하세요">
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">상품 유형 <span class="required">*</span></label>
+                        <select class="form-select">
+                            <option value="">선택하세요</option>
+                            <option>기본 요금제</option>
+                            <option>프리미엄 요금제</option>
+                            <option>부가서비스</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">기본가 (월) <span class="required">*</span></label>
+                        <input type="text" class="form-input" placeholder="$0.00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">상품 설명</label>
+                    <textarea class="form-textarea" placeholder="상품 설명을 입력하세요"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">판매 시작일</label>
+                    <input type="date" class="form-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-product')">취소</button>
+                <button class="btn btn-primary">등록</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        AdminApp.init("상품 운영", "상품 관리", "상품 기준 정보");
+
+        function showProductDetail(code) {
+            document.getElementById('product-detail').classList.remove('hidden');
+            document.getElementById('product-detail').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+    </script>
+</body>
+
+</html>

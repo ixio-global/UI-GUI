@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 - ixi-O O&M Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Login specific styles */
+        .login-tabs {
+            display: flex;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-soft);
+        }
+        
+        .login-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all var(--transition-fast);
+        }
+        
+        .login-tab:hover {
+            color: var(--text-main);
+        }
+        
+        .login-tab.active {
+            color: var(--brand-main);
+            border-bottom-color: var(--brand-main);
+        }
+        
+        .login-panel {
+            display: none;
+        }
+        
+        .login-panel.active {
+            display: block;
+        }
+        
+        .otp-setup {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .qr-placeholder {
+            width: 180px;
+            height: 180px;
+            background: var(--surface-soft);
+            border: 2px dashed var(--border-soft);
+            border-radius: var(--radius-md);
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        
+        .otp-input-group {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 24px 0;
+        }
+        
+        .otp-input {
+            width: 48px;
+            height: 56px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            border: 2px solid var(--border-input);
+            border-radius: var(--radius-md);
+            transition: border-color var(--transition-fast);
+        }
+        
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--brand-main);
+        }
+        
+        .password-requirements {
+            background: var(--surface-soft);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+        }
+        
+        .password-requirements h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+            color: var(--text-sub);
+        }
+        
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        
+        .requirement-item.valid {
+            color: var(--badge-green-text);
+        }
+        
+        .requirement-icon {
+            font-size: 14px;
+        }
+        
+        .forgot-link {
+            display: block;
+            text-align: right;
+            font-size: 13px;
+            color: var(--accent-link);
+            margin-top: 8px;
+            cursor: pointer;
+        }
+        
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+        
+        .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 16px;
+            line-height: 1.6;
+        }
+        
+        .help-text a {
+            color: var(--accent-link);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-logo">ixi-O O&M</div>
+            <div class="login-subtitle">운영 관리자 포털</div>
+            
+            <!-- Login Tabs -->
+            <div class="login-tabs">
+                <div class="login-tab active" data-tab="login" onclick="switchLoginTab('login')">로그인</div>
+                <div class="login-tab" data-tab="otp" onclick="switchLoginTab('otp')">OTP 설정</div>
+                <div class="login-tab" data-tab="reset" onclick="switchLoginTab('reset')">비밀번호 재설정</div>
+            </div>
+            
+            <!-- Login Panel -->
+            <div id="panel-login" class="login-panel active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">아이디 (이메일)</label>
+                        <input type="email" class="form-input" placeholder="admin@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">비밀번호</label>
+                        <input type="password" class="form-input" placeholder="비밀번호를 입력하세요" required>
+                        <a class="forgot-link" onclick="switchLoginTab('reset')">비밀번호를 잊으셨나요?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 16px;">
+                        로그인
+                    </button>
+                </form>
+                
+                <p class="help-text">
+                    아이디 / 비밀번호 찾기 문의<br>
+                    <a href="mailto:ixio-support@lguplus.co.kr">ixio-support@lguplus.co.kr</a>
+                </p>
+            </div>
+            
+            <!-- OTP Setup Panel -->
+            <div id="panel-otp" class="login-panel">
+                <div class="otp-setup">
+                    <h3 style="margin: 0 0 8px 0; font-size: 18px;">OTP 인증 설정</h3>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                        Google Authenticator를 사용해 QR 코드를 스캔하세요.
+                    </p>
+                    
+                    <div class="qr-placeholder">📱</div>
+                    
+                    <p style="font-size: 12px; color: var(--text-muted);">
+                        Google Authenticator 앱에서<br>"QR 코드 스캔"으로 계정을 등록하세요.
+                    </p>
+                    
+                    <div class="login-divider">인증번호 입력</div>
+                    
+                    <div class="otp-input-group">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 5)">
+                        <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 6)">
+                    </div>
+                    
+                    <button class="btn btn-primary btn-lg" style="width: 100%;" onclick="verifyOTP()">
+                        OTP 설정 완료
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Password Reset Panel -->
+            <div id="panel-reset" class="login-panel">
+                <form onsubmit="handlePasswordReset(event)">
+                    <div class="form-group">
+                        <label class="form-label">새 비밀번호</label>
+                        <input type="password" id="new-password" class="form-input" 
+                               placeholder="새 비밀번호를 입력하세요" 
+                               oninput="checkPasswordStrength(this.value)" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">비밀번호 확인</label>
+                        <input type="password" id="confirm-password" class="form-input" 
+                               placeholder="비밀번호를 다시 입력하세요" required>
+                    </div>
+                    
+                    <div class="password-requirements">
+                        <h4>비밀번호 요구사항</h4>
+                        <div class="requirement-item" id="req-length">
+                            <span class="requirement-icon">○</span>
+                            8~20자 이상
+                        </div>
+                        <div class="requirement-item" id="req-letter">
+                            <span class="requirement-icon">○</span>
+                            영문 포함
+                        </div>
+                        <div class="requirement-item" id="req-number">
+                            <span class="requirement-icon">○</span>
+                            숫자 포함
+                        </div>
+                        <div class="requirement-item" id="req-special">
+                            <span class="requirement-icon">○</span>
+                            특수문자 포함
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 24px;">
+                        비밀번호 재설정
+                    </button>
+                </form>
+            </div>
+            
+            <div class="login-footer">
+                © 2024 ixi-O Global. All rights reserved.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
+            
+            document.querySelector(`.login-tab[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(`panel-${tab}`).classList.add('active');
+        }
+        
+        // OTP input auto-focus
+        function moveToNext(input, index) {
+            if (input.value.length === 1) {
+                const inputs = document.querySelectorAll('.otp-input');
+                if (index < inputs.length) {
+                    inputs[index].focus();
+                }
+            }
+        }
+        
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            const requirements = {
+                'req-length': password.length >= 8 && password.length <= 20,
+                'req-letter': /[a-zA-Z]/.test(password),
+                'req-number': /[0-9]/.test(password),
+                'req-special': /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+            
+            Object.entries(requirements).forEach(([id, valid]) => {
+                const el = document.getElementById(id);
+                if (valid) {
+                    el.classList.add('valid');
+                    el.querySelector('.requirement-icon').textContent = '●';
+                } else {
+                    el.classList.remove('valid');
+                    el.querySelector('.requirement-icon').textContent = '○';
+                }
+            });
+        }
+        
+        // Form handlers (demo)
+        function handleLogin(e) {
+            e.preventDefault();
+            // Demo: redirect to dashboard
+            window.location.href = 'index.html';
+        }
+        
+        function verifyOTP() {
+            alert('OTP 설정이 완료되었습니다.');
+            switchLoginTab('login');
+        }
+        
+        function handlePasswordReset(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('new-password').value;
+            const confirmPass = document.getElementById('confirm-password').value;
+            
+            if (newPass !== confirmPass) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+            
+            alert('비밀번호가 재설정되었습니다.');
+            switchLoginTab('login');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드 - ixi-O O&M Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .chart-card {
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .chart-placeholder {
+            height: 240px;
+            background: linear-gradient(135deg, var(--surface-soft) 0%, var(--accent-chip-bg) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            padding: 20px;
+        }
+
+        .chart-bar {
+            width: 40px;
+            background: linear-gradient(180deg, var(--brand-main) 0%, var(--brand-grad-from) 100%);
+            border-radius: 6px 6px 0 0;
+            position: relative;
+            transition: height 0.5s ease;
+        }
+
+        .chart-bar::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .chart-bar::before {
+            content: attr(data-value);
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .quick-link-card {
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .quick-link-card:hover {
+            border-color: var(--brand-main);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .quick-link-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .quick-link-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-sub);
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--surface-soft);
+            border-radius: var(--radius-md);
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--accent-chip-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .activity-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .tenant-table td:first-child {
+            font-weight: 500;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-links {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="../index.html" class="home-btn" title="버전 선택으로 돌아가기"
+                style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 8px; margin-right: 12px; text-decoration: none; transition: all 0.2s;">🏠</a>
+            <div class="logo"><a href="index.html">ixi-O O&M</a></div>
+            <span
+                style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 20px; font-size: 11px; font-weight: 600; color: #fbbf24; margin-left: 12px;">📦
+                v0.5 물리취합</span>
+            <nav class="top-nav"></nav>
+        </div>
+        <div class="header-right">
+            <div class="avatar">A</div>
+            <div class="header-user-info">
+                <span class="header-user-name">관리자</span>
+                <span class="header-user-role">Super Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section-title" id="sidebar-title">상품 운영</div>
+            <ul class="menu-list" id="sidebar-menu"></ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="breadcrumb" id="breadcrumb"></div>
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">대시보드</h1>
+                    <p class="page-subtitle">사업 실적 및 운영 현황을 한눈에 확인하세요.</p>
+                </div>
+                <div class="flex gap-12">
+                    <select class="filter-select">
+                        <option>2024년 12월</option>
+                        <option>2024년 11월</option>
+                        <option>2024년 10월</option>
+                    </select>
+                    <button class="btn btn-secondary">📥 보고서 다운로드</button>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="quick-links">
+                <a href="product-info.html" class="quick-link-card">
+                    <div class="quick-link-icon">📦</div>
+                    <div class="quick-link-label">상품 기준 정보</div>
+                </a>
+                <a href="cloud-ai.html" class="quick-link-card">
+                    <div class="quick-link-icon">🤖</div>
+                    <div class="quick-link-label">Cloud AI 기능</div>
+                </a>
+                <a href="integration.html" class="quick-link-card">
+                    <div class="quick-link-icon">🔗</div>
+                    <div class="quick-link-label">서비스 연동 관리</div>
+                </a>
+                <a href="billing.html" class="quick-link-card">
+                    <div class="quick-link-icon">💰</div>
+                    <div class="quick-link-label">서비스 정산</div>
+                </a>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-content">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">활성 고객사</div>
+                        <div class="stat-change positive">▲ 2 신규 (이번 달)</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📱</div>
+                    <div class="stat-content">
+                        <div class="stat-value">847,293</div>
+                        <div class="stat-label">총 가입자 수</div>
+                        <div class="stat-change positive">▲ 12.5% (전월 대비)</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-value">2.4M</div>
+                        <div class="stat-label">월간 API 호출</div>
+                        <div class="stat-change positive">▲ 8.3%</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💵</div>
+                    <div class="stat-content">
+                        <div class="stat-value">₩128.5M</div>
+                        <div class="stat-label">예상 월 매출</div>
+                        <div class="stat-change positive">▲ 15.2%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Monthly Trend Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">월별 가입자 추이</h3>
+                        <span class="badge badge-blue">최근 6개월</span>
+                    </div>
+                    <div class="chart-bars">
+                        <div class="chart-bar" style="height: 60%;" data-label="7월" data-value="512K"></div>
+                        <div class="chart-bar" style="height: 70%;" data-label="8월" data-value="598K"></div>
+                        <div class="chart-bar" style="height: 65%;" data-label="9월" data-value="642K"></div>
+                        <div class="chart-bar" style="height: 80%;" data-label="10월" data-value="721K"></div>
+                        <div class="chart-bar" style="height: 85%;" data-label="11월" data-value="789K"></div>
+                        <div class="chart-bar" style="height: 95%;" data-label="12월" data-value="847K"></div>
+                    </div>
+                </div>
+
+                <!-- Revenue Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">월별 매출 현황</h3>
+                        <span class="badge badge-green">성장중</span>
+                    </div>
+                    <div class="chart-bars">
+                        <div class="chart-bar"
+                            style="height: 55%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
+                            data-label="7월" data-value="₩82M"></div>
+                        <div class="chart-bar"
+                            style="height: 62%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
+                            data-label="8월" data-value="₩91M"></div>
+                        <div class="chart-bar"
+                            style="height: 68%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
+                            data-label="9월" data-value="₩98M"></div>
+                        <div class="chart-bar"
+                            style="height: 75%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
+                            data-label="10월" data-value="₩108M"></div>
+                        <div class="chart-bar"
+                            style="height: 82%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
+                            data-label="11월" data-value="₩117M"></div>
+                        <div class="chart-bar"
+                            style="height: 92%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
+                            data-label="12월" data-value="₩128M"></div>
+                    </div>
+                </div>
+
+                <!-- Tenant Status -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">고객사별 현황</h3>
+                        <a href="#" class="text-link">전체 보기 →</a>
+                    </div>
+                    <div class="table-container">
+                        <table class="tenant-table">
+                            <thead>
+                                <tr>
+                                    <th>고객사</th>
+                                    <th>가입자</th>
+                                    <th>상태</th>
+                                    <th>계약</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Maxis (말레이시아)</td>
+                                    <td>423,150</td>
+                                    <td><span class="badge badge-green">운영중</span></td>
+                                    <td>2025.12.31</td>
+                                </tr>
+                                <tr>
+                                    <td>Telkomsel (인도네시아)</td>
+                                    <td>298,420</td>
+                                    <td><span class="badge badge-green">운영중</span></td>
+                                    <td>2025.06.30</td>
+                                </tr>
+                                <tr>
+                                    <td>AIS (태국)</td>
+                                    <td>125,723</td>
+                                    <td><span class="badge badge-yellow">검수중</span></td>
+                                    <td>2025.03.31</td>
+                                </tr>
+                                <tr>
+                                    <td>Globe (필리핀)</td>
+                                    <td>-</td>
+                                    <td><span class="badge badge-blue">준비중</span></td>
+                                    <td>협의중</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">최근 활동</h3>
+                        <a href="support.html" class="text-link">전체 보기 →</a>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">🤖</div>
+                            <div class="activity-content">
+                                <div class="activity-title">Cloud AI 모델 업데이트 배포</div>
+                                <div class="activity-meta">Gemini 2.5 Flash → Maxis Prod • 10분 전</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">👤</div>
+                            <div class="activity-content">
+                                <div class="activity-title">신규 관리자 계정 생성</div>
+                                <div class="activity-meta">ops_admin@maxis.com • 2시간 전</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">📋</div>
+                            <div class="activity-content">
+                                <div class="activity-title">상품 기준 정보 수정</div>
+                                <div class="activity-meta">프리미엄 요금제 가격 변경 • 3시간 전</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">💬</div>
+                            <div class="activity-content">
+                                <div class="activity-title">고객사 문의 티켓 등록</div>
+                                <div class="activity-meta">Maxis - API 연동 문의 • 5시간 전</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Initialize the app
+        AdminApp.init("상품 운영", "대시보드", "사업 실적");
+    </script>
+</body>
+
+</html>

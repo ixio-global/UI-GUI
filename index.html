@@ -4,412 +4,457 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>대시보드 - ixi-O O&M Admin</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>ixi-O O&M Admin - 버전 선택</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
-        /* Dashboard specific styles */
-        .dashboard-grid {
+        :root {
+            --brand-main: #1a3a5c;
+            --brand-light: #2d5a87;
+            --brand-dark: #0f2439;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --surface: #ffffff;
+            --background: #0a1628;
+            --text-white: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(26, 58, 92, 0.3) 0%, transparent 70%);
+            animation: bgPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(-5%, -5%) scale(1.1);
+            }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+        }
+
+        /* Logo */
+        .logo-container {
+            margin-bottom: 48px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            text-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .logo-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* Version Selection Title */
+        .section-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        /* Version Cards */
+        .version-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 24px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .chart-card {
-            background: var(--surface);
-            border: 1px solid var(--border-soft);
-            border-radius: var(--radius-lg);
-            padding: 24px;
+        .version-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 32px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
         }
 
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .version-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(145deg, rgba(59, 130, 246, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
-        .chart-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin: 0;
+        .version-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3),
+                0 0 40px rgba(59, 130, 246, 0.1);
         }
 
-        .chart-placeholder {
-            height: 240px;
-            background: linear-gradient(135deg, var(--surface-soft) 0%, var(--accent-chip-bg) 100%);
-            border-radius: var(--radius-md);
+        .version-card:hover::before {
+            opacity: 1;
+        }
+
+        .version-card.v05:hover {
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.2),
+                0 0 40px rgba(251, 191, 36, 0.1);
+        }
+
+        .version-card.v05:hover::before {
+            background: linear-gradient(145deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+        }
+
+        .version-card.v06:hover {
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2),
+                0 0 40px rgba(16, 185, 129, 0.1);
+        }
+
+        .version-card.v06:hover::before {
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .version-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .chart-bars {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            height: 200px;
-            padding: 20px;
-        }
-
-        .chart-bar {
-            width: 40px;
-            background: linear-gradient(180deg, var(--brand-main) 0%, var(--brand-grad-from) 100%);
-            border-radius: 6px 6px 0 0;
-            position: relative;
-            transition: height 0.5s ease;
-        }
-
-        .chart-bar::after {
-            content: attr(data-label);
-            position: absolute;
-            bottom: -24px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 11px;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
-
-        .chart-bar::before {
-            content: attr(data-value);
-            position: absolute;
-            top: -24px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .quick-links {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .quick-link-card {
-            background: var(--surface);
-            border: 1px solid var(--border-soft);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .quick-link-card:hover {
-            border-color: var(--brand-main);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .quick-link-icon {
             font-size: 32px;
+            margin: 0 auto 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .v05 .version-icon {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .v06 .version-icon {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .version-card:hover .version-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .version-number {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 8px;
         }
 
-        .quick-link-label {
-            font-size: 13px;
+        .v05 .version-number {
+            color: #fbbf24;
+        }
+
+        .v06 .version-number {
+            color: #10b981;
+        }
+
+        .version-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 12px;
+        }
+
+        .version-description {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 500;
-            color: var(--text-sub);
         }
 
-        .activity-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .v05 .version-badge {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
         }
 
-        .activity-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px;
-            background: var(--surface-soft);
-            border-radius: var(--radius-md);
+        .v06 .version-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
-        .activity-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-sm);
-            background: var(--accent-chip-bg);
+        /* Arrow indicator */
+        .arrow-indicator {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
         }
 
-        .activity-content {
-            flex: 1;
+        .version-card:hover .arrow-indicator {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        .activity-title {
+        .arrow-indicator svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-white);
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .footer-text {
             font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 4px;
+            color: rgba(255, 255, 255, 0.4);
         }
 
-        .activity-meta {
-            font-size: 12px;
-            color: var(--text-muted);
+        .footer-text a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: color 0.2s;
         }
 
-        .tenant-table td:first-child {
-            font-weight: 500;
+        .footer-text a:hover {
+            color: var(--text-white);
         }
 
-        @media (max-width: 1200px) {
-            .dashboard-grid {
+        /* Responsive */
+        @media (max-width: 768px) {
+            .version-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 0 16px;
             }
 
-            .quick-links {
-                grid-template-columns: repeat(2, 1fr);
+            .logo {
+                font-size: 36px;
+            }
+
+            .version-card {
+                padding: 32px 24px;
+            }
+
+            .version-title {
+                font-size: 20px;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-left">
-            <div class="logo"><a href="index.html">ixi-O O&M</a></div>
-            <nav class="top-nav"></nav>
-        </div>
-        <div class="header-right">
-            <div class="avatar">A</div>
-            <div class="header-user-info">
-                <span class="header-user-name">관리자</span>
-                <span class="header-user-role">Super Admin</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Layout -->
-    <div class="layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-section-title" id="sidebar-title">상품 운영</div>
-            <ul class="menu-list" id="sidebar-menu"></ul>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main">
-            <div class="breadcrumb" id="breadcrumb"></div>
-
-            <div class="page-header">
-                <div>
-                    <h1 class="page-title">대시보드</h1>
-                    <p class="page-subtitle">사업 실적 및 운영 현황을 한눈에 확인하세요.</p>
-                </div>
-                <div class="flex gap-12">
-                    <select class="filter-select">
-                        <option>2024년 12월</option>
-                        <option>2024년 11월</option>
-                        <option>2024년 10월</option>
-                    </select>
-                    <button class="btn btn-secondary">📥 보고서 다운로드</button>
-                </div>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="quick-links">
-                <a href="product-info.html" class="quick-link-card">
-                    <div class="quick-link-icon">📦</div>
-                    <div class="quick-link-label">상품 기준 정보</div>
-                </a>
-                <a href="cloud-ai.html" class="quick-link-card">
-                    <div class="quick-link-icon">🤖</div>
-                    <div class="quick-link-label">Cloud AI 기능</div>
-                </a>
-                <a href="integration.html" class="quick-link-card">
-                    <div class="quick-link-icon">🔗</div>
-                    <div class="quick-link-label">서비스 연동 관리</div>
-                </a>
-                <a href="billing.html" class="quick-link-card">
-                    <div class="quick-link-icon">💰</div>
-                    <div class="quick-link-label">서비스 정산</div>
-                </a>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">🏢</div>
-                    <div class="stat-content">
-                        <div class="stat-value">12</div>
-                        <div class="stat-label">활성 고객사</div>
-                        <div class="stat-change positive">▲ 2 신규 (이번 달)</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📱</div>
-                    <div class="stat-content">
-                        <div class="stat-value">847,293</div>
-                        <div class="stat-label">총 가입자 수</div>
-                        <div class="stat-change positive">▲ 12.5% (전월 대비)</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📊</div>
-                    <div class="stat-content">
-                        <div class="stat-value">2.4M</div>
-                        <div class="stat-label">월간 API 호출</div>
-                        <div class="stat-change positive">▲ 8.3%</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💵</div>
-                    <div class="stat-content">
-                        <div class="stat-value">₩128.5M</div>
-                        <div class="stat-label">예상 월 매출</div>
-                        <div class="stat-change positive">▲ 15.2%</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dashboard Grid -->
-            <div class="dashboard-grid">
-                <!-- Monthly Trend Chart -->
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">월별 가입자 추이</h3>
-                        <span class="badge badge-blue">최근 6개월</span>
-                    </div>
-                    <div class="chart-bars">
-                        <div class="chart-bar" style="height: 60%;" data-label="7월" data-value="512K"></div>
-                        <div class="chart-bar" style="height: 70%;" data-label="8월" data-value="598K"></div>
-                        <div class="chart-bar" style="height: 65%;" data-label="9월" data-value="642K"></div>
-                        <div class="chart-bar" style="height: 80%;" data-label="10월" data-value="721K"></div>
-                        <div class="chart-bar" style="height: 85%;" data-label="11월" data-value="789K"></div>
-                        <div class="chart-bar" style="height: 95%;" data-label="12월" data-value="847K"></div>
-                    </div>
-                </div>
-
-                <!-- Revenue Chart -->
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">월별 매출 현황</h3>
-                        <span class="badge badge-green">성장중</span>
-                    </div>
-                    <div class="chart-bars">
-                        <div class="chart-bar"
-                            style="height: 55%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
-                            data-label="7월" data-value="₩82M"></div>
-                        <div class="chart-bar"
-                            style="height: 62%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
-                            data-label="8월" data-value="₩91M"></div>
-                        <div class="chart-bar"
-                            style="height: 68%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
-                            data-label="9월" data-value="₩98M"></div>
-                        <div class="chart-bar"
-                            style="height: 75%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
-                            data-label="10월" data-value="₩108M"></div>
-                        <div class="chart-bar"
-                            style="height: 82%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
-                            data-label="11월" data-value="₩117M"></div>
-                        <div class="chart-bar"
-                            style="height: 92%; background: linear-gradient(180deg, #16a34a 0%, #166534 100%);"
-                            data-label="12월" data-value="₩128M"></div>
-                    </div>
-                </div>
-
-                <!-- Tenant Status -->
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">고객사별 현황</h3>
-                        <a href="#" class="text-link">전체 보기 →</a>
-                    </div>
-                    <div class="table-container">
-                        <table class="tenant-table">
-                            <thead>
-                                <tr>
-                                    <th>고객사</th>
-                                    <th>가입자</th>
-                                    <th>상태</th>
-                                    <th>계약</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Maxis (말레이시아)</td>
-                                    <td>423,150</td>
-                                    <td><span class="badge badge-green">운영중</span></td>
-                                    <td>2025.12.31</td>
-                                </tr>
-                                <tr>
-                                    <td>Telkomsel (인도네시아)</td>
-                                    <td>298,420</td>
-                                    <td><span class="badge badge-green">운영중</span></td>
-                                    <td>2025.06.30</td>
-                                </tr>
-                                <tr>
-                                    <td>AIS (태국)</td>
-                                    <td>125,723</td>
-                                    <td><span class="badge badge-yellow">검수중</span></td>
-                                    <td>2025.03.31</td>
-                                </tr>
-                                <tr>
-                                    <td>Globe (필리핀)</td>
-                                    <td>-</td>
-                                    <td><span class="badge badge-blue">준비중</span></td>
-                                    <td>협의중</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3 class="chart-title">최근 활동</h3>
-                        <a href="support.html" class="text-link">전체 보기 →</a>
-                    </div>
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <div class="activity-icon">🤖</div>
-                            <div class="activity-content">
-                                <div class="activity-title">Cloud AI 모델 업데이트 배포</div>
-                                <div class="activity-meta">Gemini 2.5 Flash → Maxis Prod • 10분 전</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">👤</div>
-                            <div class="activity-content">
-                                <div class="activity-title">신규 관리자 계정 생성</div>
-                                <div class="activity-meta">ops_admin@maxis.com • 2시간 전</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">📋</div>
-                            <div class="activity-content">
-                                <div class="activity-title">상품 기준 정보 수정</div>
-                                <div class="activity-meta">프리미엄 요금제 가격 변경 • 3시간 전</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon">💬</div>
-                            <div class="activity-content">
-                                <div class="activity-title">고객사 문의 티켓 등록</div>
-                                <div class="activity-meta">Maxis - API 연동 문의 • 5시간 전</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <!-- Particles will be added by JS -->
     </div>
 
-    <script src="js/app.js"></script>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <div class="logo">ixi-O O&M</div>
+            <div class="logo-subtitle">운영 관리 시스템 Admin Dashboard</div>
+        </div>
+
+        <!-- Section Title -->
+        <p class="section-title">버전을 선택하세요</p>
+
+        <!-- Version Cards -->
+        <div class="version-grid">
+            <!-- Version 0.5 -->
+            <a href="v0.5/index.html" class="version-card v05">
+                <div class="card-content">
+                    <div class="version-icon">📋</div>
+                    <div class="version-number">Version 0.5</div>
+                    <div class="version-title">물리취합</div>
+                    <div class="version-description">
+                        업로드된 개별 페이지를 물리적으로 취합한 버전입니다.
+                        원본 디자인을 기반으로 합니다.
+                    </div>
+                    <span class="version-badge">
+                        <span>📦</span> Original
+                    </span>
+                </div>
+                <div class="arrow-indicator">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </div>
+            </a>
+
+            <!-- Version 0.6 -->
+            <a href="v0.6/index.html" class="version-card v06">
+                <div class="card-content">
+                    <div class="version-icon">🤖</div>
+                    <div class="version-number">Version 0.6</div>
+                    <div class="version-title">AI 통합</div>
+                    <div class="version-description">
+                        AI를 활용하여 통합 및 재구성된 버전입니다.
+                        Navy Blue 디자인 시스템이 적용되었습니다.
+                    </div>
+                    <span class="version-badge">
+                        <span>✨</span> Latest
+                    </span>
+                </div>
+                <div class="arrow-indicator">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">
+            ixio-global &copy; 2024 |
+            작성자: <a href="#">안현정</a>, <a href="#">이창용</a>
+        </p>
+    </footer>
+
     <script>
-        // Initialize the app
-        AdminApp.init("상품 운영", "대시보드", "사업 실적");
+        // Create floating particles
+        function createParticles() {
+            const bg = document.querySelector('.bg-animation');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particle.style.width = (2 + Math.random() * 4) + 'px';
+                particle.style.height = particle.style.width;
+                bg.appendChild(particle);
+            }
+        }
+
+        createParticles();
     </script>
 </body>
 
