@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서비스 정산 - ixi-O O&M Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .billing-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .billing-card {
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .billing-card-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .billing-card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .billing-card-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .billing-card.highlight {
+            background: linear-gradient(135deg, var(--brand-grad-from), var(--brand-grad-to));
+            color: white;
+        }
+
+        .billing-card.highlight .billing-card-label,
+        .billing-card.highlight .billing-card-value,
+        .billing-card.highlight .billing-card-sub {
+            color: white;
+        }
+
+        .forecast-banner {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .forecast-banner-icon {
+            font-size: 24px;
+        }
+
+        .forecast-banner-content {
+            flex: 1;
+        }
+
+        .forecast-banner-title {
+            font-weight: 600;
+            color: #9a3412;
+        }
+
+        .forecast-banner-desc {
+            font-size: 13px;
+            color: #c2410c;
+        }
+
+        .billing-tabs-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .tenant-filter {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tenant-chip {
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .tenant-chip:hover {
+            border-color: var(--brand-main);
+        }
+
+        .tenant-chip.active {
+            background: var(--brand-main);
+            color: white;
+            border-color: var(--brand-main);
+        }
+
+        .billing-table .amount {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .billing-table .total-row {
+            background: var(--surface-soft);
+            font-weight: 600;
+        }
+
+        .billing-detail-grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 24px;
+        }
+
+        .invoice-preview {
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--brand-main);
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .invoice-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--brand-main);
+        }
+
+        .invoice-title {
+            text-align: right;
+        }
+
+        .invoice-title h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .invoice-number {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .invoice-parties {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 32px;
+        }
+
+        .invoice-party h4 {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin: 0 0 8px 0;
+        }
+
+        .invoice-party-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .invoice-party-detail {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.6;
+        }
+
+        .invoice-items {
+            margin-bottom: 24px;
+        }
+
+        .invoice-items table {
+            width: 100%;
+        }
+
+        .invoice-items th {
+            background: var(--surface-soft);
+            padding: 10px 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .invoice-items td {
+            padding: 12px;
+        }
+
+        .invoice-summary {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .invoice-summary-table {
+            width: 250px;
+        }
+
+        .invoice-summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .invoice-summary-row.total {
+            border-bottom: none;
+            border-top: 2px solid var(--text-main);
+            padding-top: 12px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .status-flow {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+        }
+
+        .status-step {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: var(--surface-soft);
+            font-size: 12px;
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        .status-step:first-child {
+            border-radius: var(--radius-md) 0 0 var(--radius-md);
+        }
+
+        .status-step:last-child {
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .status-step.completed {
+            background: var(--badge-green-bg);
+            color: var(--badge-green-text);
+        }
+
+        .status-step.current {
+            background: var(--brand-main);
+            color: white;
+        }
+
+        @media (max-width: 1200px) {
+            .billing-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .billing-detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .billing-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo"><a href="index.html">ixi-O O&M</a></div>
+            <nav class="top-nav"></nav>
+        </div>
+        <div class="header-right">
+            <div class="avatar">A</div>
+            <div class="header-user-info">
+                <span class="header-user-name">관리자</span>
+                <span class="header-user-role">Super Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section-title" id="sidebar-title">서비스 정산</div>
+            <ul class="menu-list" id="sidebar-menu"></ul>
+        </aside>
+
+        <main class="main">
+            <div class="breadcrumb" id="breadcrumb"></div>
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">서비스 정산</h1>
+                    <p class="page-subtitle">고객사별 청구 및 수납 현황을 관리합니다.</p>
+                </div>
+                <div class="flex gap-12">
+                    <select class="filter-select">
+                        <option>2024년 12월</option>
+                        <option>2024년 11월</option>
+                        <option>2024년 10월</option>
+                    </select>
+                    <button class="btn btn-secondary">📥 청구서 다운로드</button>
+                    <button class="btn btn-primary">청구서 발행</button>
+                </div>
+            </div>
+
+            <!-- Forecast Banner -->
+            <div class="forecast-banner">
+                <span class="forecast-banner-icon">📊</span>
+                <div class="forecast-banner-content">
+                    <div class="forecast-banner-title">예상 청구금액 안내</div>
+                    <div class="forecast-banner-desc">
+                        현재 기준 당월 가입자·사용량 추이를 기반으로 월말 기준 예상 청구금액을 제공합니다.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Billing Summary -->
+            <div class="billing-summary">
+                <div class="billing-card highlight">
+                    <div class="billing-card-label">이번 달 예상 매출</div>
+                    <div class="billing-card-value">$128,450</div>
+                    <div class="billing-card-sub">전월 대비 +15.2%</div>
+                </div>
+                <div class="billing-card">
+                    <div class="billing-card-label">수납 완료</div>
+                    <div class="billing-card-value">$98,200</div>
+                    <div class="billing-card-sub">3개 고객사</div>
+                </div>
+                <div class="billing-card">
+                    <div class="billing-card-label">미수금</div>
+                    <div class="billing-card-value">$30,250</div>
+                    <div class="billing-card-sub">1개 고객사</div>
+                </div>
+                <div class="billing-card">
+                    <div class="billing-card-label">총 가입자</div>
+                    <div class="billing-card-value">847,293</div>
+                    <div class="billing-card-sub">활성 사용자 기준</div>
+                </div>
+            </div>
+
+            <!-- Tenant Filter -->
+            <div class="billing-tabs-container">
+                <div class="tenant-filter">
+                    <div class="tenant-chip active">전체</div>
+                    <div class="tenant-chip">Maxis</div>
+                    <div class="tenant-chip">Telkomsel</div>
+                    <div class="tenant-chip">AIS</div>
+                </div>
+                <div class="search-box" style="max-width: 240px;">
+                    <input type="text" class="form-input" placeholder="검색...">
+                </div>
+            </div>
+
+            <!-- Billing Table -->
+            <div class="card mb-24">
+                <div class="card-header">
+                    <h3 class="card-title">청구 내역</h3>
+                </div>
+                <div class="table-container">
+                    <table class="billing-table">
+                        <thead>
+                            <tr>
+                                <th>청구번호</th>
+                                <th>고객사</th>
+                                <th>청구월</th>
+                                <th>가입자 수</th>
+                                <th class="amount">기본료</th>
+                                <th class="amount">부가서비스</th>
+                                <th class="amount">할인</th>
+                                <th class="amount">청구금액</th>
+                                <th>상태</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a class="text-link" onclick="showInvoiceDetail()">INV-2024-1201</a></td>
+                                <td>Maxis</td>
+                                <td>2024년 12월</td>
+                                <td>423,150</td>
+                                <td class="amount">$63,472.50</td>
+                                <td class="amount">$8,463.00</td>
+                                <td class="amount">-$7,193.55</td>
+                                <td class="amount"><strong>$64,741.95</strong></td>
+                                <td><span class="badge badge-green">수납완료</span></td>
+                                <td><button class="btn btn-sm btn-secondary">상세</button></td>
+                            </tr>
+                            <tr>
+                                <td><a class="text-link">INV-2024-1202</a></td>
+                                <td>Telkomsel</td>
+                                <td>2024년 12월</td>
+                                <td>298,420</td>
+                                <td class="amount">$44,763.00</td>
+                                <td class="amount">$5,968.40</td>
+                                <td class="amount">-$2,536.57</td>
+                                <td class="amount"><strong>$48,194.83</strong></td>
+                                <td><span class="badge badge-yellow">청구중</span></td>
+                                <td><button class="btn btn-sm btn-secondary">상세</button></td>
+                            </tr>
+                            <tr>
+                                <td><a class="text-link">INV-2024-1203</a></td>
+                                <td>AIS</td>
+                                <td>2024년 12월</td>
+                                <td>125,723</td>
+                                <td class="amount">$12,572.30</td>
+                                <td class="amount">$2,514.46</td>
+                                <td class="amount">$0.00</td>
+                                <td class="amount"><strong>$15,086.76</strong></td>
+                                <td><span class="badge badge-gray">준비중</span></td>
+                                <td><button class="btn btn-sm btn-secondary">상세</button></td>
+                            </tr>
+                            <tr class="total-row">
+                                <td colspan="4">합계</td>
+                                <td class="amount">$120,807.80</td>
+                                <td class="amount">$16,945.86</td>
+                                <td class="amount">-$9,730.12</td>
+                                <td class="amount"><strong>$128,023.54</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Invoice Detail (Initially Hidden) -->
+            <div id="invoice-detail" class="hidden">
+                <div class="billing-detail-grid">
+                    <div class="invoice-preview">
+                        <div class="invoice-header">
+                            <div class="invoice-logo">ixi-O Global</div>
+                            <div class="invoice-title">
+                                <h2>청구서 (Invoice)</h2>
+                                <div class="invoice-number">INV-2024-1201</div>
+                            </div>
+                        </div>
+
+                        <div class="invoice-parties">
+                            <div class="invoice-party">
+                                <h4>발행처</h4>
+                                <div class="invoice-party-name">LG U+ ixi-O Global</div>
+                                <div class="invoice-party-detail">
+                                    서울특별시 용산구 한강대로 32<br>
+                                    사업자등록번호: 123-45-67890<br>
+                                    billing@ixio-global.com
+                                </div>
+                            </div>
+                            <div class="invoice-party">
+                                <h4>청구처</h4>
+                                <div class="invoice-party-name">Maxis Berhad</div>
+                                <div class="invoice-party-detail">
+                                    Level 18, Menara Maxis<br>
+                                    Kuala Lumpur City Centre<br>
+                                    50088 Kuala Lumpur, Malaysia
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="invoice-items">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>항목</th>
+                                        <th style="text-align: right;">수량</th>
+                                        <th style="text-align: right;">단가</th>
+                                        <th style="text-align: right;">금액</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ixi-O Premium 월정액</td>
+                                        <td style="text-align: right;">423,150</td>
+                                        <td style="text-align: right;">$0.15</td>
+                                        <td style="text-align: right;">$63,472.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AI 통역 서비스 (부가)</td>
+                                        <td style="text-align: right;">282,100</td>
+                                        <td style="text-align: right;">$0.03</td>
+                                        <td style="text-align: right;">$8,463.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>볼륨 할인 (10%)</td>
+                                        <td style="text-align: right;">-</td>
+                                        <td style="text-align: right;">-</td>
+                                        <td style="text-align: right;">-$7,193.55</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="invoice-summary">
+                            <div class="invoice-summary-table">
+                                <div class="invoice-summary-row">
+                                    <span>소계</span>
+                                    <span>$71,935.50</span>
+                                </div>
+                                <div class="invoice-summary-row">
+                                    <span>할인</span>
+                                    <span>-$7,193.55</span>
+                                </div>
+                                <div class="invoice-summary-row">
+                                    <span>세금 (0%)</span>
+                                    <span>$0.00</span>
+                                </div>
+                                <div class="invoice-summary-row total">
+                                    <span>총 청구금액</span>
+                                    <span>$64,741.95</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="card mb-16">
+                            <div class="card-header">
+                                <h3 class="card-title">처리 현황</h3>
+                            </div>
+                            <div class="status-flow">
+                                <div class="status-step completed">생성</div>
+                                <div class="status-step completed">검토</div>
+                                <div class="status-step completed">발행</div>
+                                <div class="status-step current">수납</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">납부 기한</label>
+                                <p style="font-size: 14px;">2024년 12월 31일</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">수납 일자</label>
+                                <p style="font-size: 14px;">2024년 12월 15일</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">관련 문서</h3>
+                            </div>
+                            <div class="flex flex-1" style="flex-direction: column; gap: 8px;">
+                                <a class="text-link">📄 청구서 PDF 다운로드</a>
+                                <a class="text-link">📊 상세 명세서 (Excel)</a>
+                                <a class="text-link">🧾 입금 확인서</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        AdminApp.init("서비스 정산", "청구/수납", "정산 현황");
+
+        // Tenant filter
+        document.querySelectorAll('.tenant-chip').forEach(chip => {
+            chip.addEventListener('click', function () {
+                document.querySelectorAll('.tenant-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function showInvoiceDetail() {
+            document.getElementById('invoice-detail').classList.toggle('hidden');
+            if (!document.getElementById('invoice-detail').classList.contains('hidden')) {
+                document.getElementById('invoice-detail').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+
+</html>
