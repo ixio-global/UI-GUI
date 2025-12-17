@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="User & Permission Management - SaaS O&M Admin">
+    <title>Users & Permissions - SaaS O&M Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">S</div>
+            <div class="sidebar-logo-text">O&M Admin</div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+                <a href="dashboard.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="customers.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🏢</span>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="users.html" class="sidebar-nav-link active">
+                    <span class="sidebar-nav-icon">👥</span>
+                    <span>Users & Permissions</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="policies.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">⚙️</span>
+                    <span>Policies</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="billing.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="support.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🎫</span>
+                    <span>Support</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="monitoring.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📈</span>
+                    <span>Monitoring</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="settings.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🔧</span>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h1 class="header-title">Users & Permissions</h1>
+                <p style="color: var(--text-secondary); margin-top: var(--space-2);">
+                    Manage users, roles, and access control
+                </p>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="openPermissionModal()">
+                    🔒 Manage Roles
+                </button>
+                <button class="btn btn-primary" onclick="openUserModal()">
+                    ➕ Add User
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="grid grid-4" style="margin-bottom: var(--space-6);">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Total Users</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(220, 70%, 50%, 0.2); color: var(--primary-400);">👥</div>
+                </div>
+                <div class="stat-card-value">12,458</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Active Today</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(140, 70%, 55%, 0.2); color: var(--status-success);">✓</div>
+                </div>
+                <div class="stat-card-value">8,234</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Admins</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(270, 75%, 65%, 0.2); color: var(--accent-purple);">⭐</div>
+                </div>
+                <div class="stat-card-value">156</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">MFA Enabled</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(180, 80%, 55%, 0.2); color: var(--accent-cyan);">🔐</div>
+                </div>
+                <div class="stat-card-value">94%</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: var(--space-6);">
+            <div class="flex gap-4" style="flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <input type="text" class="form-input" placeholder="🔍 Search users by name, email, or ID..."
+                        id="searchInput">
+                </div>
+
+                <select class="form-select" style="min-width: 150px;" id="companyFilter">
+                    <option value="">All Companies</option>
+                    <option value="CUST-001">Acme Corporation</option>
+                    <option value="CUST-002">TechStart Inc.</option>
+                    <option value="CUST-003">Global Solutions</option>
+                </select>
+
+                <select class="form-select" style="min-width: 150px;" id="roleFilter">
+                    <option value="">All Roles</option>
+                    <option value="super_admin">Super Admin</option>
+                    <option value="company_admin">Company Admin</option>
+                    <option value="user">User</option>
+                </select>
+
+                <select class="form-select" style="min-width: 150px;" id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="suspended">Suspended</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- User Table -->
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Company</th>
+                        <th>Role</th>
+                        <th>MFA</th>
+                        <th>Last Login</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- Users will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-between items-center" style="margin-top: var(--space-6);">
+            <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+                Showing <span id="showingCount">10</span> of <span id="totalCount">12,458</span> users
+            </div>
+
+            <div class="flex gap-2">
+                <button class="btn btn-secondary btn-sm">← Previous</button>
+                <button class="btn btn-secondary btn-sm">Next →</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit User Modal -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New User</h2>
+                <button class="modal-close" onclick="closeUserModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="userName">Full Name *</label>
+                            <input type="text" id="userName" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="userEmail">Email Address *</label>
+                            <input type="email" id="userEmail" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="userCompany">Company *</label>
+                            <select id="userCompany" class="form-select" required>
+                                <option value="">Select Company</option>
+                                <option value="CUST-001">Acme Corporation</option>
+                                <option value="CUST-002">TechStart Inc.</option>
+                                <option value="CUST-003">Global Solutions</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="userPhone">Phone Number</label>
+                            <input type="tel" id="userPhone" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="userRole">Role & Permissions *</label>
+                        <select id="userRole" class="form-select" required>
+                            <option value="">Select Role</option>
+                            <option value="super_admin">Super Admin - Full system access</option>
+                            <option value="company_admin">Company Admin - Manage own company</option>
+                            <option value="contract_manager">Contract Manager - Billing & contracts</option>
+                            <option value="support_manager">Support Manager - Technical support</option>
+                            <option value="user">User - Basic access</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Security Settings</label>
+                        <div
+                            style="display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-2);">
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" id="requireMfa" checked>
+                                <span>Require Multi-Factor Authentication (MFA)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" id="requirePasswordChange">
+                                <span>Require password change on first login</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" id="sendWelcomeEmail" checked>
+                                <span>Send welcome email with login instructions</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="userNotes">Notes</label>
+                        <textarea id="userNotes" class="form-textarea" rows="3"
+                            placeholder="Optional notes about this user..."></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeUserModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveUser()">Create User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Management Modal -->
+    <div class="modal-overlay" id="permissionModal">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Role & Permission Management</h2>
+                <button class="modal-close" onclick="closePermissionModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <span style="font-size: var(--text-xl);">ℹ️</span>
+                    <div>
+                        <strong>Permission Groups (Presets)</strong>
+                        <div style="font-size: var(--text-sm); margin-top: var(--space-1);">
+                            Only Super Admins can create or modify role groups. Sub-accounts cannot change their own
+                            permissions.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: var(--space-6);">
+                    <h3 style="margin-bottom: var(--space-4);">Available Roles</h3>
+
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Role Name</th>
+                                    <th>Users</th>
+                                    <th>Permissions</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Super Admin</strong></td>
+                                    <td>12</td>
+                                    <td><span class="badge badge-success">Full Access</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="viewPermissions('super_admin')">View Details</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Company Admin</strong></td>
+                                    <td>144</td>
+                                    <td><span class="badge badge-info">Company Management</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="viewPermissions('company_admin')">View Details</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Contract Manager</strong></td>
+                                    <td>45</td>
+                                    <td><span class="badge badge-warning">Billing & Contracts</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="viewPermissions('contract_manager')">View Details</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Support Manager</strong></td>
+                                    <td>89</td>
+                                    <td><span class="badge"
+                                            style="background: hsla(270, 75%, 65%, 0.2); color: var(--accent-purple);">Technical
+                                            Support</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-sm"
+                                            onclick="viewPermissions('support_manager')">View Details</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>User</strong></td>
+                                    <td>12,168</td>
+                                    <td><span class="badge">Basic Access</span></td>
+                                    <td>
+                                        <button class="btn btn-secondary btn-sm" onclick="viewPermissions('user')">View
+                                            Details</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top: var(--space-6);">
+                        <button class="btn btn-primary">➕ Create New Role</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePermissionModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample user data
+        const users = [
+            { id: 'USR-0001', name: 'John Smith', email: 'john.smith@acme.com', company: 'Acme Corporation', role: 'company_admin', mfa: true, lastLogin: '2024-12-17 08:30', status: 'active' },
+            { id: 'USR-0002', name: 'Sarah Johnson', email: 'sarah.j@techstart.com', company: 'TechStart Inc.', role: 'user', mfa: true, lastLogin: '2024-12-17 09:15', status: 'active' },
+            { id: 'USR-0003', name: 'Michael Chen', email: 'm.chen@global.com', company: 'Global Solutions', role: 'super_admin', mfa: true, lastLogin: '2024-12-17 10:05', status: 'active' },
+            { id: 'USR-0004', name: 'Emma Wilson', email: 'emma.w@acme.com', company: 'Acme Corporation', role: 'user', mfa: false, lastLogin: '2024-12-16 14:20', status: 'active' },
+            { id: 'USR-0005', name: 'David Lee', email: 'david.lee@techstart.com', company: 'TechStart Inc.', role: 'company_admin', mfa: true, lastLogin: '2024-12-17 07:45', status: 'active' },
+            { id: 'USR-0006', name: 'Lisa Anderson', email: 'l.anderson@global.com', company: 'Global Solutions', role: 'contract_manager', mfa: true, lastLogin: '2024-12-15 16:30', status: 'inactive' },
+            { id: 'USR-0007', name: 'James Brown', email: 'j.brown@acme.com', company: 'Acme Corporation', role: 'support_manager', mfa: true, lastLogin: '2024-12-17 09:50', status: 'active' },
+            { id: 'USR-0008', name: 'Maria Garcia', email: 'maria.g@techstart.com', company: 'TechStart Inc.', role: 'user', mfa: false, lastLogin: '2024-12-10 11:20', status: 'suspended' },
+            { id: 'USR-0009', name: 'Robert Taylor', email: 'r.taylor@global.com', company: 'Global Solutions', role: 'user', mfa: true, lastLogin: '2024-12-17 08:15', status: 'active' },
+            { id: 'USR-0010', name: 'Jennifer White', email: 'jen.white@acme.com', company: 'Acme Corporation', role: 'user', mfa: true, lastLogin: '2024-12-17 10:30', status: 'active' }
+        ];
+
+        function renderUsers() {
+            const tbody = document.getElementById('userTableBody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+
+                const roleLabels = {
+                    'super_admin': '<span class="badge badge-error">Super Admin</span>',
+                    'company_admin': '<span class="badge badge-warning">Company Admin</span>',
+                    'contract_manager': '<span class="badge badge-info">Contract Manager</span>',
+                    'support_manager': '<span class="badge" style="background: hsla(270, 75%, 65%, 0.2); color: var(--accent-purple);">Support Manager</span>',
+                    'user': '<span class="badge">User</span>'
+                };
+
+                const statusLabels = {
+                    'active': '<span class="badge badge-success">Active</span>',
+                    'inactive': '<span class="badge">Inactive</span>',
+                    'suspended': '<span class="badge badge-error">Suspended</span>'
+                };
+
+                row.innerHTML = `
+          <td style="font-family: var(--font-mono); font-size: var(--text-sm);">${user.id}</td>
+          <td><strong>${user.name}</strong></td>
+          <td style="color: var(--text-secondary);">${user.email}</td>
+          <td>${user.company}</td>
+          <td>${roleLabels[user.role]}</td>
+          <td>${user.mfa ? '<span class="badge badge-success">✓ Enabled</span>' : '<span class="badge badge-warning">✗ Disabled</span>'}</td>
+          <td style="font-size: var(--text-sm); color: var(--text-tertiary);">${user.lastLogin}</td>
+          <td>${statusLabels[user.status]}</td>
+          <td>
+            <div style="display: flex; gap: var(--space-2);">
+              <button class="btn btn-secondary btn-sm" onclick="editUser('${user.id}')" title="Edit">✏️</button>
+              <button class="btn btn-secondary btn-sm" onclick="resetMfa('${user.id}')" title="Reset MFA">🔐</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteUser('${user.id}')" title="Delete">🗑️</button>
+            </div>
+          </td>
+        `;
+
+                tbody.appendChild(row);
+            });
+        }
+
+        function openUserModal() {
+            document.getElementById('userModal').classList.add('active');
+        }
+
+        function closeUserModal() {
+            document.getElementById('userModal').classList.remove('active');
+        }
+
+        function saveUser() {
+            const form = document.getElementById('userForm');
+            if (!form.checkValidity()) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            alert('User created successfully!\n\nWelcome email has been sent with login instructions.');
+            closeUserModal();
+        }
+
+        function openPermissionModal() {
+            document.getElementById('permissionModal').classList.add('active');
+        }
+
+        function closePermissionModal() {
+            document.getElementById('permissionModal').classList.remove('active');
+        }
+
+        function editUser(id) {
+            alert(`Edit user: ${id}\n\nThis would open the edit modal.`);
+        }
+
+        function resetMfa(id) {
+            if (confirm(`Reset MFA for user ${id}?\n\nThe user will need to set up MFA again on their next login.`)) {
+                alert('MFA has been reset successfully.');
+            }
+        }
+
+        function deleteUser(id) {
+            if (confirm(`Delete user ${id}?\n\nThis action cannot be undone.`)) {
+                alert('User deleted successfully.');
+            }
+        }
+
+        function viewPermissions(role) {
+            alert(`View permissions for role: ${role}\n\nThis would show detailed permission matrix.`);
+        }
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Initial render
+        renderUsers();
+
+        // Check authentication
+        if (!sessionStorage.getItem('isAuthenticated')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

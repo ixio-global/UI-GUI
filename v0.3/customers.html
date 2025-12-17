@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Customer Management - SaaS O&M Admin">
+    <title>Customers - SaaS O&M Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">S</div>
+            <div class="sidebar-logo-text">O&M Admin</div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+                <a href="dashboard.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="customers.html" class="sidebar-nav-link active">
+                    <span class="sidebar-nav-icon">🏢</span>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="users.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">👥</span>
+                    <span>Users & Permissions</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="policies.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">⚙️</span>
+                    <span>Policies</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="billing.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="support.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🎫</span>
+                    <span>Support</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="monitoring.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📈</span>
+                    <span>Monitoring</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="settings.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🔧</span>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h1 class="header-title">Customer Management</h1>
+                <p style="color: var(--text-secondary); margin-top: var(--space-2);">
+                    Manage customer companies, contracts, and configurations
+                </p>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="openCustomerModal()">
+                    ➕ Add Customer
+                </button>
+            </div>
+        </header>
+
+        <!-- Search and Filters -->
+        <div class="card" style="margin-bottom: var(--space-6);">
+            <div class="flex gap-4" style="flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <input type="text" class="form-input" placeholder="🔍 Search customers by name, ID, or email..."
+                        id="searchInput">
+                </div>
+
+                <select class="form-select" style="min-width: 150px;" id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="trial">Trial</option>
+                    <option value="suspended">Suspended</option>
+                    <option value="expired">Expired</option>
+                </select>
+
+                <select class="form-select" style="min-width: 150px;" id="planFilter">
+                    <option value="">All Plans</option>
+                    <option value="enterprise">Enterprise</option>
+                    <option value="business">Business</option>
+                    <option value="starter">Starter</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Customer List -->
+        <div class="table-wrapper">
+            <table class="table" id="customerTable">
+                <thead>
+                    <tr>
+                        <th>Company ID</th>
+                        <th>Company Name</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>Users</th>
+                        <th>Monthly Revenue</th>
+                        <th>Contract End</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="customerTableBody">
+                    <!-- Customer rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-between items-center" style="margin-top: var(--space-6);">
+            <div style="color: var(--text-secondary); font-size: var(--text-sm);">
+                Showing <span id="showingCount">10</span> of <span id="totalCount">248</span> customers
+            </div>
+
+            <div class="flex gap-2">
+                <button class="btn btn-secondary btn-sm" id="prevBtn">← Previous</button>
+                <button class="btn btn-secondary btn-sm" id="nextBtn">Next →</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Customer Modal -->
+    <div class="modal-overlay" id="customerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add New Customer</h2>
+                <button class="modal-close" onclick="closeCustomerModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="customerForm">
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="companyId">Company ID *</label>
+                            <input type="text" id="companyId" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="companyName">Company Name *</label>
+                            <input type="text" id="companyName" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="contactEmail">Contact Email *</label>
+                            <input type="email" id="contactEmail" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="contactPhone">Contact Phone</label>
+                            <input type="tel" id="contactPhone" class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="plan">Subscription Plan *</label>
+                            <select id="plan" class="form-select" required>
+                                <option value="">Select Plan</option>
+                                <option value="enterprise">Enterprise</option>
+                                <option value="business">Business</option>
+                                <option value="starter">Starter</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="maxUsers">Max Users</label>
+                            <input type="number" id="maxUsers" class="form-input" value="10">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="contractStart">Contract Start Date *</label>
+                            <input type="date" id="contractStart" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="contractEnd">Contract End Date *</label>
+                            <input type="date" id="contractEnd" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="address">Business Address</label>
+                        <textarea id="address" class="form-textarea" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="features">Enabled Features</label>
+                        <div style="display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-2);">
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" id="featureAI" checked>
+                                <span>AI Services</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" id="featureAnalytics" checked>
+                                <span>Analytics</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" id="featureAPI">
+                                <span>API Access</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" id="featureSupport" checked>
+                                <span>Priority Support</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="notes">Notes</label>
+                        <textarea id="notes" class="form-textarea" rows="3"
+                            placeholder="Additional notes or comments..."></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCustomerModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCustomer()">Save Customer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample customer data
+        const customers = [
+            { id: 'CUST-001', name: 'Acme Corporation', plan: 'enterprise', status: 'active', users: 245, revenue: 12500, contractEnd: '2025-12-31' },
+            { id: 'CUST-002', name: 'TechStart Inc.', plan: 'business', status: 'active', users: 89, revenue: 2450, contractEnd: '2025-08-15' },
+            { id: 'CUST-003', name: 'Global Solutions Ltd', plan: 'enterprise', status: 'active', users: 412, revenue: 18900, contractEnd: '2026-03-20' },
+            { id: 'CUST-004', name: 'Innovation Labs', plan: 'starter', status: 'trial', users: 12, revenue: 0, contractEnd: '2024-12-30' },
+            { id: 'CUST-005', name: 'Data Systems Co.', plan: 'business', status: 'active', users: 156, revenue: 4200, contractEnd: '2025-06-10' },
+            { id: 'CUST-006', name: 'Cloud Services Inc', plan: 'enterprise', status: 'active', users: 324, revenue: 15600, contractEnd: '2025-11-28' },
+            { id: 'CUST-007', name: 'Digital Dynamics', plan: 'business', status: 'suspended', users: 67, revenue: 0, contractEnd: '2024-12-01' },
+            { id: 'CUST-008', name: 'Future Tech', plan: 'starter', status: 'active', users: 24, revenue: 890, contractEnd: '2025-02-14' },
+            { id: 'CUST-009', name: 'Enterprise Solutions', plan: 'enterprise', status: 'active', users: 567, revenue: 22400, contractEnd: '2026-01-15' },
+            { id: 'CUST-010', name: 'Smart Systems LLC', plan: 'business', status: 'active', users: 98, revenue: 3100, contractEnd: '2025-09-22' }
+        ];
+
+        let currentPage = 1;
+        let filteredCustomers = [...customers];
+
+        // Render customer table
+        function renderCustomers() {
+            const tbody = document.getElementById('customerTableBody');
+            tbody.innerHTML = '';
+
+            filteredCustomers.forEach(customer => {
+                const row = document.createElement('tr');
+
+                const statusClass = {
+                    'active': 'success',
+                    'trial': 'info',
+                    'suspended': 'warning',
+                    'expired': 'error'
+                }[customer.status] || 'info';
+
+                const planBadge = {
+                    'enterprise': '<span class="badge badge-info">Enterprise</span>',
+                    'business': '<span class="badge badge-success">Business</span>',
+                    'starter': '<span class="badge" style="background: hsla(270, 75%, 65%, 0.2); color: var(--accent-purple);">Starter</span>'
+                }[customer.plan];
+
+                row.innerHTML = `
+          <td style="font-family: var(--font-mono); font-size: var(--text-sm);">${customer.id}</td>
+          <td><strong>${customer.name}</strong></td>
+          <td>${planBadge}</td>
+          <td><span class="badge badge-${statusClass}">${customer.status}</span></td>
+          <td>${customer.users.toLocaleString()}</td>
+          <td>$${customer.revenue.toLocaleString()}</td>
+          <td>${customer.contractEnd}</td>
+          <td>
+            <div style="display: flex; gap: var(--space-2);">
+              <button class="btn btn-secondary btn-sm" onclick="viewCustomer('${customer.id}')" title="View Details">👁️</button>
+              <button class="btn btn-secondary btn-sm" onclick="editCustomer('${customer.id}')" title="Edit">✏️</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteCustomer('${customer.id}')" title="Delete">🗑️</button>
+            </div>
+          </td>
+        `;
+
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('showingCount').textContent = filteredCustomers.length;
+            document.getElementById('totalCount').textContent = customers.length;
+        }
+
+        // Filter customers
+        function filterCustomers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const planFilter = document.getElementById('planFilter').value;
+
+            filteredCustomers = customers.filter(customer => {
+                const matchesSearch = customer.name.toLowerCase().includes(searchTerm) ||
+                    customer.id.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || customer.status === statusFilter;
+                const matchesPlan = !planFilter || customer.plan === planFilter;
+
+                return matchesSearch && matchesStatus && matchesPlan;
+            });
+
+            renderCustomers();
+        }
+
+        // Event listeners for filters
+        document.getElementById('searchInput').addEventListener('input', filterCustomers);
+        document.getElementById('statusFilter').addEventListener('change', filterCustomers);
+        document.getElementById('planFilter').addEventListener('change', filterCustomers);
+
+        // Modal functions
+        function openCustomerModal() {
+            document.getElementById('customerModal').classList.add('active');
+            document.getElementById('modalTitle').textContent = 'Add New Customer';
+            document.getElementById('customerForm').reset();
+        }
+
+        function closeCustomerModal() {
+            document.getElementById('customerModal').classList.remove('active');
+        }
+
+        function saveCustomer() {
+            // Validate form
+            const form = document.getElementById('customerForm');
+            if (!form.checkValidity()) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // In real app, send to backend
+            alert('Customer saved successfully!');
+            closeCustomerModal();
+
+            // Refresh table (in real app, reload from backend)
+            renderCustomers();
+        }
+
+        // Customer actions
+        function viewCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (customer) {
+                alert(`Customer Details:\n\nID: ${customer.id}\nName: ${customer.name}\nPlan: ${customer.plan}\nStatus: ${customer.status}\nUsers: ${customer.users}\nRevenue: $${customer.revenue}\nContract End: ${customer.contractEnd}`);
+            }
+        }
+
+        function editCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (customer) {
+                openCustomerModal();
+                document.getElementById('modalTitle').textContent = 'Edit Customer';
+                document.getElementById('companyId').value = customer.id;
+                document.getElementById('companyName').value = customer.name;
+                // Populate other fields as needed
+            }
+        }
+
+        function deleteCustomer(id) {
+            if (confirm(`Are you sure you want to delete customer ${id}?`)) {
+                const index = customers.findIndex(c => c.id === id);
+                if (index > -1) {
+                    customers.splice(index, 1);
+                    filterCustomers();
+                    alert('Customer deleted successfully');
+                }
+            }
+        }
+
+        // Close modal on overlay click
+        document.getElementById('customerModal').addEventListener('click', (e) => {
+            if (e.target.id === 'customerModal') {
+                closeCustomerModal();
+            }
+        });
+
+        // Initial render
+        renderCustomers();
+
+        // Check authentication
+        if (!sessionStorage.getItem('isAuthenticated')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

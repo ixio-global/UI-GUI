@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SaaS O&M Admin - Secure Login Portal with Multi-Factor Authentication">
+  <title>Login - SaaS O&M Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Login-specific styles */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+      position: relative;
+    }
+    
+    .login-box {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-2xl);
+      padding: var(--space-10);
+      max-width: 480px;
+      width: 100%;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-2xl);
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    .login-header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+    
+    .login-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto var(--space-4);
+      background: linear-gradient(135deg, var(--primary-600), var(--accent-cyan));
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      box-shadow: 0 8px 24px hsla(220, 70%, 50%, 0.4);
+    }
+    
+    .login-title {
+      font-size: var(--text-2xl);
+      margin-bottom: var(--space-2);
+      background: linear-gradient(135deg, var(--text-primary), var(--primary-400));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .login-subtitle {
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+    }
+    
+    .login-step {
+      display: none;
+    }
+    
+    .login-step.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+    }
+    
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      transition: all var(--transition-base);
+    }
+    
+    .step-dot.active {
+      width: 24px;
+      background: linear-gradient(135deg, var(--primary-500), var(--accent-cyan));
+      border-radius: var(--radius-full);
+    }
+    
+    .terms-list {
+      max-height: 200px;
+      overflow-y: auto;
+      background: var(--bg-secondary);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    
+    .term-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      margin-bottom: var(--space-2);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+    }
+    
+    .term-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    
+    .mfa-code-input {
+      display: flex;
+      gap: var(--space-3);
+      justify-content: center;
+      margin: var(--space-6) 0;
+    }
+    
+    .mfa-digit {
+      width: 50px;
+      height: 60px;
+      text-align: center;
+      font-size: var(--text-2xl);
+      font-weight: 600;
+      border: 2px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      transition: all var(--transition-fast);
+    }
+    
+    .mfa-digit:focus {
+      outline: none;
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 3px hsla(220, 70%, 50%, 0.2);
+    }
+    
+    .qr-code-container {
+      text-align: center;
+      padding: var(--space-6);
+      background: white;
+      border-radius: var(--radius-lg);
+      margin: var(--space-4) 0;
+    }
+    
+    .qr-code-placeholder {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, var(--primary-100), var(--accent-cyan));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-sm);
+      color: var(--primary-900);
+    }
+    
+    .manual-key {
+      background: var(--bg-tertiary);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      text-align: center;
+      margin-top: var(--space-4);
+      word-break: break-all;
+    }
+    
+    .login-footer {
+      margin-top: var(--space-6);
+      text-align: center;
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--glass-border);
+    }
+    
+    .login-footer a {
+      color: var(--primary-400);
+      font-size: var(--text-sm);
+    }
+    
+    .error-message {
+      background: hsla(0, 75%, 60%, 0.15);
+      border: 1px solid hsla(0, 75%, 60%, 0.3);
+      color: var(--status-error);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+      font-size: var(--text-sm);
+      display: none;
+    }
+    
+    .error-message.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <!-- Header -->
+      <div class="login-header">
+        <div class="login-logo">S</div>
+        <h1 class="login-title">SaaS O&M Admin</h1>
+        <p class="login-subtitle">Secure Enterprise Management Portal</p>
+      </div>
+      
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step-dot active" data-step="1"></div>
+        <div class="step-dot" data-step="2"></div>
+        <div class="step-dot" data-step="3"></div>
+      </div>
+      
+      <!-- Error Message -->
+      <div class="error-message" id="errorMessage"></div>
+      
+      <!-- Step 1: Basic Login -->
+      <div class="login-step active" id="step1">
+        <form id="loginForm">
+          <div class="form-group">
+            <label class="form-label" for="companyId">Company ID</label>
+            <input 
+              type="text" 
+              id="companyId" 
+              class="form-input" 
+              placeholder="Enter your company ID"
+              required
+            >
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="userId">User ID</label>
+            <input 
+              type="text" 
+              id="userId" 
+              class="form-input" 
+              placeholder="Enter your user ID"
+              required
+            >
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              class="form-input" 
+              placeholder="Enter your password"
+              required
+            >
+          </div>
+          
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            Continue →
+          </button>
+        </form>
+      </div>
+      
+      <!-- Step 2: Terms Agreement -->
+      <div class="login-step" id="step2">
+        <h3 style="margin-bottom: var(--space-4);">Terms & Conditions</h3>
+        <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-4);">
+          Please review and accept the following terms to continue.
+        </p>
+        
+        <div class="terms-list">
+          <div class="term-item">
+            <input type="checkbox" id="term1" class="term-checkbox">
+            <label for="term1" style="font-size: var(--text-sm); cursor: pointer;">
+              <strong>Service Terms of Use</strong> (Required)
+            </label>
+          </div>
+          
+          <div class="term-item">
+            <input type="checkbox" id="term2" class="term-checkbox">
+            <label for="term2" style="font-size: var(--text-sm); cursor: pointer;">
+              <strong>Privacy Policy</strong> (Required)
+            </label>
+          </div>
+          
+          <div class="term-item">
+            <input type="checkbox" id="term3" class="term-checkbox">
+            <label for="term3" style="font-size: var(--text-sm); cursor: pointer;">
+              <strong>Data Processing Agreement</strong> (Required)
+            </label>
+          </div>
+          
+          <div class="term-item">
+            <input type="checkbox" id="term4" class="term-checkbox">
+            <label for="term4" style="font-size: var(--text-sm); cursor: pointer;">
+              Marketing Communications (Optional)
+            </label>
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: var(--space-3);">
+          <button type="button" class="btn btn-secondary" onclick="goToStep(1)" style="flex: 1;">
+            ← Back
+          </button>
+          <button type="button" class="btn btn-primary" id="acceptTermsBtn" style="flex: 2;" disabled>
+            Accept & Continue →
+          </button>
+        </div>
+      </div>
+      
+      <!-- Step 3: MFA Setup/Verification -->
+      <div class="login-step" id="step3">
+        <!-- First-time MFA Setup -->
+        <div id="mfaSetup" style="display: none;">
+          <h3 style="margin-bottom: var(--space-4);">Setup Two-Factor Authentication</h3>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-4);">
+            Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.)
+          </p>
+          
+          <div class="qr-code-container">
+            <div class="qr-code-placeholder">
+              [QR Code Here]
+            </div>
+            <div class="manual-key">
+              <div style="color: var(--text-secondary); font-size: var(--text-xs); margin-bottom: var(--space-2);">
+                Manual Entry Key:
+              </div>
+              <strong id="manualKey">JBSWY3DPEHPK3PXP</strong>
+            </div>
+          </div>
+        </div>
+        
+        <!-- MFA Verification -->
+        <div id="mfaVerify">
+          <h3 style="margin-bottom: var(--space-4);">Two-Factor Authentication</h3>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm); margin-bottom: var(--space-2);">
+            Enter the 6-digit code from your authenticator app
+          </p>
+          
+          <div class="mfa-code-input">
+            <input type="text" maxlength="1" class="mfa-digit" data-index="0">
+            <input type="text" maxlength="1" class="mfa-digit" data-index="1">
+            <input type="text" maxlength="1" class="mfa-digit" data-index="2">
+            <input type="text" maxlength="1" class="mfa-digit" data-index="3">
+            <input type="text" maxlength="1" class="mfa-digit" data-index="4">
+            <input type="text" maxlength="1" class="mfa-digit" data-index="5">
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: var(--space-3);">
+          <button type="button" class="btn btn-secondary" onclick="goToStep(2)" style="flex: 1;">
+            ← Back
+          </button>
+          <button type="button" class="btn btn-primary" id="verifyMfaBtn" style="flex: 2;">
+            Verify & Login →
+          </button>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="login-footer">
+        <a href="#" id="forgotLink">Forgot ID or Password?</a> • 
+        <a href="#" id="resetMfaLink">Reset MFA</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Login flow state
+    let currentStep = 1;
+    let isFirstLogin = false;
+    
+    // Step navigation
+    function goToStep(step) {
+      // Hide all steps
+      document.querySelectorAll('.login-step').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      // Show target step
+      document.getElementById(`step${step}`).classList.add('active');
+      
+      // Update step indicator
+      document.querySelectorAll('.step-dot').forEach((dot, index) => {
+        if (index + 1 === step) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+      
+      currentStep = step;
+      hideError();
+    }
+    
+    // Error handling
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.classList.add('show');
+    }
+    
+    function hideError() {
+      document.getElementById('errorMessage').classList.remove('show');
+    }
+    
+    // Step 1: Basic Login
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const companyId = document.getElementById('companyId').value;
+      const userId = document.getElementById('userId').value;
+      const password = document.getElementById('password').value;
+      
+      // Simulate authentication
+      if (companyId && userId && password) {
+        // Check if first login (simulate with random)
+        isFirstLogin = Math.random() > 0.5;
+        
+        // Store credentials (in real app, this would be handled server-side)
+        sessionStorage.setItem('companyId', companyId);
+        sessionStorage.setItem('userId', userId);
+        
+        goToStep(2);
+      } else {
+        showError('Please fill in all fields');
+      }
+    });
+    
+    // Step 2: Terms Agreement
+    const termCheckboxes = document.querySelectorAll('.term-checkbox');
+    const acceptTermsBtn = document.getElementById('acceptTermsBtn');
+    
+    termCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        // Check if all required terms are accepted (first 3)
+        const term1 = document.getElementById('term1').checked;
+        const term2 = document.getElementById('term2').checked;
+        const term3 = document.getElementById('term3').checked;
+        
+        acceptTermsBtn.disabled = !(term1 && term2 && term3);
+      });
+    });
+    
+    acceptTermsBtn.addEventListener('click', () => {
+      // Show MFA setup for first-time users, otherwise show verification
+      if (isFirstLogin) {
+        document.getElementById('mfaSetup').style.display = 'block';
+        document.getElementById('mfaVerify').style.display = 'block';
+      } else {
+        document.getElementById('mfaSetup').style.display = 'none';
+        document.getElementById('mfaVerify').style.display = 'block';
+      }
+      
+      goToStep(3);
+    });
+    
+    // Step 3: MFA Code Input
+    const mfaDigits = document.querySelectorAll('.mfa-digit');
+    
+    mfaDigits.forEach((digit, index) => {
+      digit.addEventListener('input', (e) => {
+        const value = e.target.value;
+        
+        // Only allow numbers
+        if (!/^\d$/.test(value)) {
+          e.target.value = '';
+          return;
+        }
+        
+        // Auto-focus next digit
+        if (value && index < mfaDigits.length - 1) {
+          mfaDigits[index + 1].focus();
+        }
+      });
+      
+      digit.addEventListener('keydown', (e) => {
+        // Handle backspace
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          mfaDigits[index - 1].focus();
+        }
+      });
+      
+      // Handle paste
+      digit.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasteData = e.clipboardData.getData('text').slice(0, 6);
+        
+        if (/^\d+$/.test(pasteData)) {
+          pasteData.split('').forEach((char, i) => {
+            if (i < mfaDigits.length) {
+              mfaDigits[i].value = char;
+            }
+          });
+          
+          if (pasteData.length < 6) {
+            mfaDigits[pasteData.length].focus();
+          }
+        }
+      });
+    });
+    
+    // Verify MFA and login
+    document.getElementById('verifyMfaBtn').addEventListener('click', () => {
+      const code = Array.from(mfaDigits).map(d => d.value).join('');
+      
+      if (code.length !== 6) {
+        showError('Please enter a 6-digit code');
+        return;
+      }
+      
+      // Simulate verification
+      if (code === '123456' || /^\d{6}$/.test(code)) {
+        // Successful login - redirect to dashboard
+        sessionStorage.setItem('isAuthenticated', 'true');
+        window.location.href = 'dashboard.html';
+      } else {
+        showError('Invalid code. Please try again.');
+        mfaDigits.forEach(d => d.value = '');
+        mfaDigits[0].focus();
+      }
+    });
+    
+    // Forgot/Reset links
+    document.getElementById('forgotLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Password recovery would be initiated via email verification.\n\nIn the MVP, this redirects to a recovery flow.');
+    });
+    
+    document.getElementById('resetMfaLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('MFA reset requires admin approval.\n\nIn the MVP, this would create a support ticket.');
+    });
+    
+    // Auto-focus first input on load
+    document.getElementById('companyId').focus();
+  </script>
+</body>
+</html>

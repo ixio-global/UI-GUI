@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Billing & Invoicing - SaaS O&M Admin">
+    <title>Billing - SaaS O&M Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">S</div>
+            <div class="sidebar-logo-text">O&M Admin</div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+                <a href="dashboard.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="customers.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🏢</span>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="users.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">👥</span>
+                    <span>Users & Permissions</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="policies.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">⚙️</span>
+                    <span>Policies</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="billing.html" class="sidebar-nav-link active">
+                    <span class="sidebar-nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="support.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🎫</span>
+                    <span>Support</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="monitoring.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📈</span>
+                    <span>Monitoring</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="settings.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🔧</span>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h1 class="header-title">Billing & Invoicing</h1>
+                <p style="color: var(--text-secondary); margin-top: var(--space-2);">
+                    Manage billing, invoices, and revenue reports (All amounts in USD)
+                </p>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="exportReport()">
+                    📊 Export Report
+                </button>
+                <button class="btn btn-primary" onclick="openInvoiceModal()">
+                    ➕ Create Invoice
+                </button>
+            </div>
+        </header>
+
+        <!-- Revenue Stats -->
+        <div class="grid grid-4" style="margin-bottom: var(--space-6);">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">This Month</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(220, 70%, 50%, 0.2); color: var(--primary-400);">💰</div>
+                </div>
+                <div class="stat-card-value">$184.2K</div>
+                <div class="stat-card-change positive">
+                    <span>↑ 23.5%</span>
+                    <span style="color: var(--text-tertiary);">vs last month</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Annual Revenue</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(140, 70%, 55%, 0.2); color: var(--status-success);">📈</div>
+                </div>
+                <div class="stat-card-value">$1.85M</div>
+                <div class="stat-card-change positive">
+                    <span>↑ 18.2%</span>
+                    <span style="color: var(--text-tertiary);">vs last year</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Outstanding</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(45, 90%, 60%, 0.2); color: var(--status-warning);">⏳</div>
+                </div>
+                <div class="stat-card-value">$42.8K</div>
+                <div class="stat-card-change">
+                    <span style="color: var(--text-tertiary);">15 invoices</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Overdue</div>
+                    <div class="stat-card-icon" style="background: hsla(0, 75%, 60%, 0.2); color: var(--status-error);">
+                        ⚠️</div>
+                </div>
+                <div class="stat-card-value">$8.5K</div>
+                <div class="stat-card-change negative">
+                    <span style="color: var(--status-error);">3 invoices</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: var(--space-6);">
+            <div class="flex gap-4" style="flex-wrap: wrap;">
+                <select class="form-select" style="min-width: 150px;">
+                    <option value="">All Customers</option>
+                    <option value="CUST-001">Acme Corporation</option>
+                    <option value="CUST-002">TechStart Inc.</option>
+                    <option value="CUST-003">Global Solutions</option>
+                </select>
+
+                <select class="form-select" style="min-width: 150px;">
+                    <option value="">All Statuses</option>
+                    <option value="paid">Paid</option>
+                    <option value="pending">Pending</option>
+                    <option value="overdue">Overdue</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+
+                <select class="form-select" style="min-width: 150px;">
+                    <option value="2024-12">December 2024</option>
+                    <option value="2024-11">November 2024</option>
+                    <option value="2024-10">October 2024</option>
+                    <option value="2024-09">September 2024</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Invoice Table -->
+        <div class="card" style="margin-bottom: var(--space-6);">
+            <div class="card-header">
+                <div class="card-title">Invoices</div>
+                <div class="card-description">Recent billing invoices and payment status</div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Invoice ID</th>
+                            <th>Customer</th>
+                            <th>Issue Date</th>
+                            <th>Due Date</th>
+                            <th>Amount (USD)</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-family: var(--font-mono);">INV-2024-1201</td>
+                            <td><strong>Acme Corporation</strong></td>
+                            <td>2024-12-01</td>
+                            <td>2024-12-31</td>
+                            <td><strong>$12,500.00</strong></td>
+                            <td><span class="badge badge-success">Paid</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" onclick="viewInvoice('INV-2024-1201')">📄
+                                    View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-family: var(--font-mono);">INV-2024-1202</td>
+                            <td><strong>TechStart Inc.</strong></td>
+                            <td>2024-12-01</td>
+                            <td>2024-12-31</td>
+                            <td><strong>$2,450.00</strong></td>
+                            <td><span class="badge badge-info">Pending</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" onclick="viewInvoice('INV-2024-1202')">📄
+                                    View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-family: var(--font-mono);">INV-2024-1203</td>
+                            <td><strong>Global Solutions</strong></td>
+                            <td>2024-12-01</td>
+                            <td>2024-12-31</td>
+                            <td><strong>$18,900.00</strong></td>
+                            <td><span class="badge badge-success">Paid</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" onclick="viewInvoice('INV-2024-1203')">📄
+                                    View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-family: var(--font-mono);">INV-2024-1104</td>
+                            <td><strong>Innovation Labs</strong></td>
+                            <td>2024-11-01</td>
+                            <td>2024-11-30</td>
+                            <td><strong>$1,890.00</strong></td>
+                            <td><span class="badge badge-error">Overdue</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" onclick="viewInvoice('INV-2024-1104')">📄
+                                    View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-family: var(--font-mono);">INV-2024-1105</td>
+                            <td><strong>Data Systems Co.</strong></td>
+                            <td>2024-11-01</td>
+                            <td>2024-11-30</td>
+                            <td><strong>$4,200.00</strong></td>
+                            <td><span class="badge badge-success">Paid</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" onclick="viewInvoice('INV-2024-1105')">📄
+                                    View</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Usage Reports -->
+        <div class="grid grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Top Customers by Revenue</div>
+                    <div class="card-description">December 2024</div>
+                </div>
+
+                <div>
+                    <div style="padding: var(--space-4); border-bottom: 1px solid var(--glass-border);">
+                        <div class="flex justify-between items-center" style="margin-bottom: var(--space-2);">
+                            <strong>Global Solutions</strong>
+                            <span style="color: var(--primary-400); font-weight: 600;">$18,900</span>
+                        </div>
+                        <div
+                            style="height: 8px; background: var(--bg-tertiary); border-radius: var(--radius-full); overflow: hidden;">
+                            <div
+                                style="height: 100%; width: 95%; background: linear-gradient(to right, var(--primary-600), var(--accent-cyan)); border-radius: var(--radius-full);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="padding: var(--space-4); border-bottom: 1px solid var(--glass-border);">
+                        <div class="flex justify-between items-center" style="margin-bottom: var(--space-2);">
+                            <strong>Enterprise Solutions</strong>
+                            <span style="color: var(--primary-400); font-weight: 600;">$15,600</span>
+                        </div>
+                        <div
+                            style="height: 8px; background: var(--bg-tertiary); border-radius: var(--radius-full); overflow: hidden;">
+                            <div
+                                style="height: 100%; width: 78%; background: linear-gradient(to right, var(--primary-600), var(--accent-cyan)); border-radius: var(--radius-full);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="padding: var(--space-4); border-bottom: 1px solid var(--glass-border);">
+                        <div class="flex justify-between items-center" style="margin-bottom: var(--space-2);">
+                            <strong>Acme Corporation</strong>
+                            <span style="color: var(--primary-400); font-weight: 600;">$12,500</span>
+                        </div>
+                        <div
+                            style="height: 8px; background: var(--bg-tertiary); border-radius: var(--radius-full); overflow: hidden;">
+                            <div
+                                style="height: 100%; width: 63%; background: linear-gradient(to right, var(--primary-600), var(--accent-cyan)); border-radius: var(--radius-full);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="padding: var(--space-4);">
+                        <div class="flex justify-between items-center" style="margin-bottom: var(--space-2);">
+                            <strong>Cloud Services Inc</strong>
+                            <span style="color: var(--primary-400); font-weight: 600;">$8,450</span>
+                        </div>
+                        <div
+                            style="height: 8px; background: var(--bg-tertiary); border-radius: var(--radius-full); overflow: hidden;">
+                            <div
+                                style="height: 100%; width: 42%; background: linear-gradient(to right, var(--primary-600), var(--accent-cyan)); border-radius: var(--radius-full);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Payment Methods</div>
+                    <div class="card-description">Distribution of payment methods</div>
+                </div>
+
+                <div style="padding: var(--space-6);">
+                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    style="width: 40px; height: 40px; background: hsla(220, 70%, 50%, 0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                                    🏦
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Bank Transfer</div>
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">156 invoices
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-weight: 600; color: var(--primary-400);">63%</div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    style="width: 40px; height: 40px; background: hsla(140, 70%, 55%, 0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                                    💳
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Credit Card</div>
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">78 invoices
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-weight: 600; color: var(--status-success);">32%</div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    style="width: 40px; height: 40px; background: hsla(270, 75%, 65%, 0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                                    🌐
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Wire Transfer</div>
+                                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">12 invoices
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-weight: 600; color: var(--accent-purple);">5%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Invoice Modal -->
+    <div class="modal-overlay" id="invoiceModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Invoice</h2>
+                <button class="modal-close" onclick="closeInvoiceModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="invoiceForm">
+                    <div class="form-group">
+                        <label class="form-label">Customer *</label>
+                        <select class="form-select" required>
+                            <option value="">Select Customer</option>
+                            <option value="CUST-001">Acme Corporation</option>
+                            <option value="CUST-002">TechStart Inc.</option>
+                            <option value="CUST-003">Global Solutions</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Issue Date *</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Due Date *</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Amount (USD) *</label>
+                        <input type="number" class="form-input" placeholder="0.00" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" rows="3"
+                            placeholder="Monthly subscription fee for December 2024..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Wire Transfer Information</label>
+                        <textarea class="form-textarea" rows="4" placeholder="Bank Name:
+Account Number:
+SWIFT Code:
+Reference Number:"></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeInvoiceModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="createInvoice()">Create Invoice</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openInvoiceModal() {
+            document.getElementById('invoiceModal').classList.add('active');
+        }
+
+        function closeInvoiceModal() {
+            document.getElementById('invoiceModal').classList.remove('active');
+        }
+
+        function createInvoice() {
+            alert('Invoice created successfully!\n\nThe invoice will be sent to the customer email.');
+            closeInvoiceModal();
+        }
+
+        function viewInvoice(id) {
+            alert(`View Invoice: ${id}\n\nThis would open the invoice PDF or details page.`);
+        }
+
+        function exportReport() {
+            alert('Exporting billing report...\n\nCSV file will be downloaded.');
+        }
+
+        // Close modal on overlay click
+        document.getElementById('invoiceModal').addEventListener('click', (e) => {
+            if (e.target.id === 'invoiceModal') {
+                closeInvoiceModal();
+            }
+        });
+
+        // Check authentication
+        if (!sessionStorage.getItem('isAuthenticated')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

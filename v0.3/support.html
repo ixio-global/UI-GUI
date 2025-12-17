@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Support & Technical Assistance - SaaS O&M Admin">
+    <title>Support - SaaS O&M Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .ticket-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            margin-bottom: var(--space-4);
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .ticket-card:hover {
+            background: var(--bg-elevated);
+            border-color: var(--primary-500);
+            transform: translateX(4px);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-3);
+        }
+
+        .ticket-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+
+        .ticket-meta {
+            display: flex;
+            gap: var(--space-4);
+            font-size: var(--text-sm);
+            color: var(--text-tertiary);
+            flex-wrap: wrap;
+        }
+
+        .ticket-description {
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-3);
+            line-height: 1.6;
+        }
+
+        .ticket-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .comment-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin-bottom: var(--space-3);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .comment-author {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-weight: 600;
+        }
+
+        .comment-time {
+            font-size: var(--text-sm);
+            color: var(--text-tertiary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">S</div>
+            <div class="sidebar-logo-text">O&M Admin</div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+                <a href="dashboard.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="customers.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🏢</span>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="users.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">👥</span>
+                    <span>Users & Permissions</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="policies.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">⚙️</span>
+                    <span>Policies</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="billing.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="support.html" class="sidebar-nav-link active">
+                    <span class="sidebar-nav-icon">🎫</span>
+                    <span>Support</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="monitoring.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📈</span>
+                    <span>Monitoring</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="settings.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🔧</span>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h1 class="header-title">Support & Technical Assistance</h1>
+                <p style="color: var(--text-secondary); margin-top: var(--space-2);">
+                    Manage support tickets, incidents, and customer communications
+                </p>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="openAnnouncementModal()">
+                    📢 New Announcement
+                </button>
+                <button class="btn btn-primary" onclick="openTicketModal()">
+                    ➕ Create Ticket
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="grid grid-4" style="margin-bottom: var(--space-6);">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Open Tickets</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(45, 90%, 60%, 0.2); color: var(--status-warning);">🎫</div>
+                </div>
+                <div class="stat-card-value">23</div>
+                <div class="stat-card-change negative">
+                    <span>↑ 5</span>
+                    <span style="color: var(--text-tertiary);">vs yesterday</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Avg Response Time</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(140, 70%, 55%, 0.2); color: var(--status-success);">⏱️</div>
+                </div>
+                <div class="stat-card-value">2.4h</div>
+                <div class="stat-card-change positive">
+                    <span>↓ 15%</span>
+                    <span style="color: var(--text-tertiary);">improvement</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Resolved Today</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(220, 70%, 50%, 0.2); color: var(--primary-400);">✓</div>
+                </div>
+                <div class="stat-card-value">18</div>
+                <div class="stat-card-change positive">
+                    <span>78% resolution rate</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Satisfaction</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(180, 80%, 55%, 0.2); color: var(--accent-cyan);">⭐</div>
+                </div>
+                <div class="stat-card-value">4.8/5</div>
+                <div class="stat-card-change">
+                    <span style="color: var(--text-tertiary);">based on 156 ratings</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: var(--space-6);">
+            <div class="flex gap-4" style="flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <input type="text" class="form-input" placeholder="🔍 Search tickets..." id="searchInput">
+                </div>
+
+                <select class="form-select" style="min-width: 150px;" id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                </select>
+
+                <select class="form-select" style="min-width: 150px;" id="priorityFilter">
+                    <option value="">All Priorities</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+
+                <select class="form-select" style="min-width: 150px;" id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="incident">Incident</option>
+                    <option value="request">Request</option>
+                    <option value="question">Question</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Ticket List -->
+        <div class="grid grid-2" style="margin-bottom: var(--space-6);">
+            <!-- Active Tickets -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Active Tickets</div>
+                    <div class="card-description">Tickets requiring attention</div>
+                </div>
+
+                <div id="activeTickets">
+                    <div class="ticket-card" onclick="openTicketDetail('TKT-2024-1234')">
+                        <div class="ticket-header">
+                            <div>
+                                <div class="ticket-title">API latency issues in production</div>
+                                <div class="ticket-meta">
+                                    <span>🆔 TKT-2024-1234</span>
+                                    <span>🏢 Acme Corp</span>
+                                    <span>👤 John Smith</span>
+                                </div>
+                            </div>
+                            <span class="badge badge-error">Critical</span>
+                        </div>
+
+                        <div class="ticket-description">
+                            Our production API is experiencing significant latency spikes (5-10s) affecting our users.
+                            This started approximately 2 hours ago.
+                        </div>
+
+                        <div class="ticket-footer">
+                            <div style="display: flex; gap: var(--space-2);">
+                                <span class="badge badge-warning">Open</span>
+                                <span class="badge"
+                                    style="background: hsla(270, 75%, 65%, 0.2); color: var(--accent-purple);">Incident</span>
+                            </div>
+                            <span style="font-size: var(--text-sm); color: var(--text-tertiary);">2 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-card" onclick="openTicketDetail('TKT-2024-1235')">
+                        <div class="ticket-header">
+                            <div>
+                                <div class="ticket-title">Feature request: Custom webhook integration</div>
+                                <div class="ticket-meta">
+                                    <span>🆔 TKT-2024-1235</span>
+                                    <span>🏢 TechStart Inc</span>
+                                    <span>👤 Sarah Johnson</span>
+                                </div>
+                            </div>
+                            <span class="badge badge-info">Medium</span>
+                        </div>
+
+                        <div class="ticket-description">
+                            We need to integrate custom webhooks for real-time data synchronization with our CRM system.
+                        </div>
+
+                        <div class="ticket-footer">
+                            <div style="display: flex; gap: var(--space-2);">
+                                <span class="badge badge-info">In Progress</span>
+                                <span class="badge"
+                                    style="background: hsla(270, 75%, 65%, 0.2); color: var(--accent-purple);">Request</span>
+                            </div>
+                            <span style="font-size: var(--text-sm); color: var(--text-tertiary);">1 day ago</span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-card" onclick="openTicketDetail('TKT-2024-1236')">
+                        <div class="ticket-header">
+                            <div>
+                                <div class="ticket-title">User permissions not updating correctly</div>
+                                <div class="ticket-meta">
+                                    <span>🆔 TKT-2024-1236</span>
+                                    <span>🏢 Global Solutions</span>
+                                    <span>👤 Mike Chen</span>
+                                </div>
+                            </div>
+                            <span class="badge badge-warning">High</span>
+                        </div>
+
+                        <div class="ticket-description">
+                            When we update user permissions in the admin panel, changes are not reflected immediately.
+                            There seems to be a cache issue.
+                        </div>
+
+                        <div class="ticket-footer">
+                            <div style="display: flex; gap: var(--space-2);">
+                                <span class="badge badge-warning">Open</span>
+                                <span class="badge"
+                                    style="background: hsla(270, 75%, 65%, 0.2); color: var(--accent-purple);">Incident</span>
+                            </div>
+                            <span style="font-size: var(--text-sm); color: var(--text-tertiary);">3 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcements & Notices -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Announcements & Notices</div>
+                    <div class="card-description">System notices and updates</div>
+                </div>
+
+                <div>
+                    <div class="alert alert-info">
+                        <span style="font-size: var(--text-xl);">📢</span>
+                        <div>
+                            <strong>Scheduled Maintenance - Dec 25</strong>
+                            <div style="font-size: var(--text-sm); margin-top: var(--space-1);">
+                                System maintenance scheduled for Dec 25, 2:00 AM - 4:00 AM KST. Services may be
+                                temporarily unavailable.
+                            </div>
+                            <div
+                                style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2);">
+                                Posted 2 days ago
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <span style="font-size: var(--text-xl);">✨</span>
+                        <div>
+                            <strong>New Feature Release - v2.5</strong>
+                            <div style="font-size: var(--text-sm); margin-top: var(--space-1);">
+                                We've released v2.5 with improved analytics, enhanced security, and better performance.
+                            </div>
+                            <div
+                                style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2);">
+                                Posted 1 week ago
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <span style="font-size: var(--text-xl);">⚠️</span>
+                        <div>
+                            <strong>Security Update Required</strong>
+                            <div style="font-size: var(--text-sm); margin-top: var(--space-1);">
+                                Please ensure all users have updated their passwords and enabled MFA for enhanced
+                                security.
+                            </div>
+                            <div
+                                style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-2);">
+                                Posted 3 days ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Ticket Modal -->
+    <div class="modal-overlay" id="ticketModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Support Ticket</h2>
+                <button class="modal-close" onclick="closeTicketModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="ticketForm">
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Customer *</label>
+                            <select class="form-select" required>
+                                <option value="">Select Customer</option>
+                                <option value="CUST-001">Acme Corporation</option>
+                                <option value="CUST-002">TechStart Inc.</option>
+                                <option value="CUST-003">Global Solutions</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Reporter *</label>
+                            <input type="text" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Title *</label>
+                        <input type="text" class="form-input" placeholder="Brief description of the issue" required>
+                    </div>
+
+                    <div class="grid grid-3">
+                        <div class="form-group">
+                            <label class="form-label">Type *</label>
+                            <select class="form-select" required>
+                                <option value="">Select Type</option>
+                                <option value="incident">Incident</option>
+                                <option value="request">Request</option>
+                                <option value="question">Question</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Priority *</label>
+                            <select class="form-select" required>
+                                <option value="">Select Priority</option>
+                                <option value="critical">Critical</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Assignee</label>
+                            <select class="form-select">
+                                <option value="">Unassigned</option>
+                                <option value="support-1">Support Team</option>
+                                <option value="tech-1">Technical Team</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description *</label>
+                        <textarea class="form-textarea" rows="5" placeholder="Detailed description of the issue..."
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Notification Recipients</label>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" checked>
+                                <span>Notify customer</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox" checked>
+                                <span>Notify assigned team</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: var(--space-2);">
+                                <input type="checkbox">
+                                <span>Notify all admins</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeTicketModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="createTicket()">Create Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcement Modal -->
+    <div class="modal-overlay" id="announcementModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">New Announcement</h2>
+                <button class="modal-close" onclick="closeAnnouncementModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="announcementForm">
+                    <div class="form-group">
+                        <label class="form-label">Title *</label>
+                        <input type="text" class="form-input" required>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Type *</label>
+                            <select class="form-select" required>
+                                <option value="">Select Type</option>
+                                <option value="info">Information</option>
+                                <option value="warning">Warning</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="feature">New Feature</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Target Audience *</label>
+                            <select class="form-select" required>
+                                <option value="">Select Audience</option>
+                                <option value="all">All Users</option>
+                                <option value="admins">Admins Only</option>
+                                <option value="customers">Specific Customers</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Message *</label>
+                        <textarea class="form-textarea" rows="5" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: var(--space-2);">
+                            <input type="checkbox">
+                            <span>Send email notification</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAnnouncementModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="publishAnnouncement()">Publish</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ticket Detail Modal -->
+    <div class="modal-overlay" id="ticketDetailModal">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="ticketDetailTitle">Ticket Details</h2>
+                <button class="modal-close" onclick="closeTicketDetail()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div id="ticketDetailContent">
+                    <!-- Ticket details will be inserted here -->
+                </div>
+
+                <div style="margin-top: var(--space-6);">
+                    <h3 style="margin-bottom: var(--space-4);">Comments</h3>
+
+                    <div id="commentsList">
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <div class="comment-author">
+                                    <span>👤</span>
+                                    <span>Support Team</span>
+                                </div>
+                                <div class="comment-time">1 hour ago</div>
+                            </div>
+                            <div>We're investigating this issue. Our engineering team has been notified.</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Add Comment</label>
+                        <textarea class="form-textarea" rows="3" placeholder="Type your comment..."
+                            id="newComment"></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="addComment()">Post Comment</button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeTicketDetail()">Close</button>
+                <button class="btn btn-success" onclick="resolveTicket()">Mark as Resolved</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTicketModal() {
+            document.getElementById('ticketModal').classList.add('active');
+        }
+
+        function closeTicketModal() {
+            document.getElementById('ticketModal').classList.remove('active');
+        }
+
+        function createTicket() {
+            alert('Support ticket created successfully!\n\nNotifications have been sent to the selected recipients.');
+            closeTicketModal();
+        }
+
+        function openAnnouncementModal() {
+            document.getElementById('announcementModal').classList.add('active');
+        }
+
+        function closeAnnouncementModal() {
+            document.getElementById('announcementModal').classList.remove('active');
+        }
+
+        function publishAnnouncement() {
+            alert('Announcement published successfully!');
+            closeAnnouncementModal();
+        }
+
+        function openTicketDetail(ticketId) {
+            document.getElementById('ticketDetailModal').classList.add('active');
+            document.getElementById('ticketDetailTitle').textContent = `Ticket: ${ticketId}`;
+        }
+
+        function closeTicketDetail() {
+            document.getElementById('ticketDetailModal').classList.remove('active');
+        }
+
+        function addComment() {
+            const comment = document.getElementById('newComment').value;
+            if (comment.trim()) {
+                alert('Comment added successfully!');
+                document.getElementById('newComment').value = '';
+            }
+        }
+
+        function resolveTicket() {
+            if (confirm('Mark this ticket as resolved?')) {
+                alert('Ticket has been marked as resolved.');
+                closeTicketDetail();
+            }
+        }
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Check authentication
+        if (!sessionStorage.getItem('isAuthenticated')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

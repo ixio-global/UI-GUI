@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SaaS O&M Admin Dashboard - Monitor and manage your SaaS operations">
+    <title>Dashboard - SaaS O&M Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Dashboard-specific styles */
+        .notification-badge {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge::after {
+            content: '3';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--status-error), hsl(0, 75%, 50%));
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px hsla(0, 75%, 60%, 0.4);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-2) var(--space-4);
+            background: var(--bg-elevated);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .user-menu:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary-500);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-600), var(--accent-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--text-sm);
+        }
+
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: var(--space-2);
+            padding: var(--space-4);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            position: relative;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--primary-600), var(--accent-cyan));
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            position: relative;
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.02);
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--text-xs);
+            color: var(--text-tertiary);
+            white-space: nowrap;
+        }
+
+        .chart-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--glass-border);
+            transition: background var(--transition-fast);
+        }
+
+        .activity-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-lg);
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+
+        .activity-description {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+
+        .activity-time {
+            font-size: var(--text-xs);
+            color: var(--text-tertiary);
+            margin-top: var(--space-1);
+        }
+
+        .quick-action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .quick-action-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .quick-action-card:hover {
+            background: var(--bg-elevated);
+            border-color: var(--primary-500);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px hsla(0, 0%, 0%, 0.3);
+        }
+
+        .quick-action-icon {
+            font-size: var(--text-3xl);
+            margin-bottom: var(--space-3);
+        }
+
+        .quick-action-label {
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">S</div>
+            <div class="sidebar-logo-text">O&M Admin</div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+                <a href="dashboard.html" class="sidebar-nav-link active">
+                    <span class="sidebar-nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="customers.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🏢</span>
+                    <span>Customers</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="users.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">👥</span>
+                    <span>Users & Permissions</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="policies.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">⚙️</span>
+                    <span>Policies</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="billing.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">💰</span>
+                    <span>Billing</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="support.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🎫</span>
+                    <span>Support</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="monitoring.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">📈</span>
+                    <span>Monitoring</span>
+                </a>
+            </li>
+            <li class="sidebar-nav-item">
+                <a href="settings.html" class="sidebar-nav-link">
+                    <span class="sidebar-nav-icon">🔧</span>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h1 class="header-title">Dashboard</h1>
+                <p style="color: var(--text-secondary); margin-top: var(--space-2);">
+                    Welcome back, <span id="userName">Admin</span>
+                </p>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-secondary notification-badge" title="Notifications">
+                    🔔
+                </button>
+
+                <div class="user-menu">
+                    <div class="user-avatar">A</div>
+                    <span style="font-size: var(--text-sm); font-weight: 500;">Admin User</span>
+                    <span style="font-size: var(--text-sm);">▼</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-4" style="margin-bottom: var(--space-8);">
+            <!-- Total Customers -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Total Customers</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(220, 70%, 50%, 0.2); color: var(--primary-400);">
+                        🏢
+                    </div>
+                </div>
+                <div class="stat-card-value">248</div>
+                <div class="stat-card-change positive">
+                    <span>↑ 12%</span>
+                    <span style="color: var(--text-tertiary);">vs last month</span>
+                </div>
+            </div>
+
+            <!-- Active Users -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Active Users</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(140, 70%, 55%, 0.2); color: var(--status-success);">
+                        👥
+                    </div>
+                </div>
+                <div class="stat-card-value">12,458</div>
+                <div class="stat-card-change positive">
+                    <span>↑ 8.2%</span>
+                    <span style="color: var(--text-tertiary);">vs last month</span>
+                </div>
+            </div>
+
+            <!-- Monthly Revenue -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Monthly Revenue</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(180, 80%, 55%, 0.2); color: var(--accent-cyan);">
+                        💰
+                    </div>
+                </div>
+                <div class="stat-card-value">$184.2K</div>
+                <div class="stat-card-change positive">
+                    <span>↑ 23.5%</span>
+                    <span style="color: var(--text-tertiary);">vs last month</span>
+                </div>
+            </div>
+
+            <!-- Support Tickets -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-card-title">Open Tickets</div>
+                    <div class="stat-card-icon"
+                        style="background: hsla(45, 90%, 60%, 0.2); color: var(--status-warning);">
+                        🎫
+                    </div>
+                </div>
+                <div class="stat-card-value">23</div>
+                <div class="stat-card-change negative">
+                    <span>↑ 5</span>
+                    <span style="color: var(--text-tertiary);">vs yesterday</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-3" style="margin-bottom: var(--space-8);">
+            <!-- Usage Chart -->
+            <div class="card" style="grid-column: span 2;">
+                <div class="card-header">
+                    <div class="card-title">Monthly Usage Trend</div>
+                    <div class="card-description">Total API calls and service usage</div>
+                </div>
+
+                <div class="chart-container" style="margin-bottom: var(--space-8);">
+                    <div class="chart-bar" style="height: 65%;">
+                        <span class="chart-value">12.5K</span>
+                        <span class="chart-label">Jan</span>
+                    </div>
+                    <div class="chart-bar" style="height: 72%;">
+                        <span class="chart-value">14.2K</span>
+                        <span class="chart-label">Feb</span>
+                    </div>
+                    <div class="chart-bar" style="height: 58%;">
+                        <span class="chart-value">11.8K</span>
+                        <span class="chart-label">Mar</span>
+                    </div>
+                    <div class="chart-bar" style="height: 82%;">
+                        <span class="chart-value">16.4K</span>
+                        <span class="chart-label">Apr</span>
+                    </div>
+                    <div class="chart-bar" style="height: 78%;">
+                        <span class="chart-value">15.6K</span>
+                        <span class="chart-label">May</span>
+                    </div>
+                    <div class="chart-bar" style="height: 92%;">
+                        <span class="chart-value">18.9K</span>
+                        <span class="chart-label">Jun</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Quick Actions</div>
+                </div>
+
+                <div class="quick-action-grid">
+                    <div class="quick-action-card" onclick="window.location.href='customers.html'">
+                        <div class="quick-action-icon">➕</div>
+                        <div class="quick-action-label">Add Customer</div>
+                    </div>
+
+                    <div class="quick-action-card" onclick="window.location.href='users.html'">
+                        <div class="quick-action-icon">👤</div>
+                        <div class="quick-action-label">New User</div>
+                    </div>
+
+                    <div class="quick-action-card" onclick="window.location.href='billing.html'">
+                        <div class="quick-action-icon">📊</div>
+                        <div class="quick-action-label">View Reports</div>
+                    </div>
+
+                    <div class="quick-action-card" onclick="window.location.href='support.html'">
+                        <div class="quick-action-icon">🎫</div>
+                        <div class="quick-action-label">Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity & Alerts -->
+        <div class="grid grid-2">
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Recent Activity</div>
+                    <div class="card-description">Latest system events and user actions</div>
+                </div>
+
+                <div>
+                    <div class="activity-item">
+                        <div class="activity-icon"
+                            style="background: hsla(140, 70%, 55%, 0.2); color: var(--status-success);">
+                            ✓
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">New customer registered</div>
+                            <div class="activity-description">Acme Corp completed onboarding</div>
+                            <div class="activity-time">2 minutes ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"
+                            style="background: hsla(200, 80%, 60%, 0.2); color: var(--status-info);">
+                            👤
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">User permissions updated</div>
+                            <div class="activity-description">John Doe promoted to Admin role</div>
+                            <div class="activity-time">1 hour ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"
+                            style="background: hsla(270, 75%, 65%, 0.2); color: var(--accent-purple);">
+                            💰
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Invoice generated</div>
+                            <div class="activity-description">Monthly billing for TechStart Inc. ($2,450)</div>
+                            <div class="activity-time">3 hours ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon"
+                            style="background: hsla(45, 90%, 60%, 0.2); color: var(--status-warning);">
+                            ⚠️
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Service degradation</div>
+                            <div class="activity-description">AI API latency increased by 15%</div>
+                            <div class="activity-time">5 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Alerts -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">System Alerts</div>
+                    <div class="card-description">Important notifications and warnings</div>
+                </div>
+
+                <div>
+                    <div class="alert alert-warning">
+                        <span style="font-size: var(--text-xl);">⚠️</span>
+                        <div>
+                            <strong>License Expiring Soon</strong>
+                            <div style="font-size: var(--text-sm); margin-top: var(--space-1);">
+                                3 customer licenses expire within 7 days
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <span style="font-size: var(--text-xl);">ℹ️</span>
+                        <div>
+                            <strong>Maintenance Scheduled</strong>
+                            <div style="font-size: var(--text-sm); margin-top: var(--space-1);">
+                                System maintenance on Dec 25, 2:00 AM - 4:00 AM KST
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <span style="font-size: var(--text-xl);">✓</span>
+                        <div>
+                            <strong>Backup Completed</strong>
+                            <div style="font-size: var(--text-sm); margin-top: var(--space-1);">
+                                Daily backup completed successfully
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check authentication
+        if (!sessionStorage.getItem('isAuthenticated')) {
+            window.location.href = 'login.html';
+        }
+
+        // Set user name from session
+        const userId = sessionStorage.getItem('userId');
+        if (userId) {
+            document.getElementById('userName').textContent = userId;
+        }
+
+        // Animate stats on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease-out';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+
+        // User menu dropdown (simplified version)
+        document.querySelector('.user-menu').addEventListener('click', () => {
+            const confirmed = confirm('Logout?\n\nClick OK to logout or Cancel to stay.');
+            if (confirmed) {
+                sessionStorage.removeItem('isAuthenticated');
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

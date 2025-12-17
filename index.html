@@ -144,9 +144,9 @@
         /* Version Cards */
         .version-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -183,6 +183,16 @@
 
         .version-card:hover::before {
             opacity: 1;
+        }
+
+        .version-card.v03:hover {
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 20px 60px rgba(168, 85, 247, 0.2),
+                0 0 40px rgba(168, 85, 247, 0.1);
+        }
+
+        .version-card.v03:hover::before {
+            background: linear-gradient(145deg, rgba(168, 85, 247, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
         }
 
         .version-card.v05:hover {
@@ -222,6 +232,12 @@
             transition: transform 0.3s ease;
         }
 
+
+        .v03 .version-icon {
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.2) 0%, rgba(13, 110, 253, 0.1) 100%);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+
         .v05 .version-icon {
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
             border: 1px solid rgba(251, 191, 36, 0.3);
@@ -242,6 +258,11 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 8px;
+        }
+
+
+        .v03 .version-number {
+            color: #17a2b8;
         }
 
         .v05 .version-number {
@@ -274,6 +295,13 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 500;
+        }
+
+
+        .v03 .version-badge {
+            background: rgba(23, 162, 184, 0.15);
+            color: #17a2b8;
+            border: 1px solid rgba(23, 162, 184, 0.3);
         }
 
         .v05 .version-badge {
@@ -384,6 +412,27 @@
 
         <!-- Version Cards -->
         <div class="version-grid">
+            <!-- Version 0.3 -->
+            <a href="v0.3/login.html" class="version-card v03">
+                <div class="card-content">
+                    <div class="version-icon">🎨</div>
+                    <div class="version-number">Version 0.3</div>
+                    <div class="version-title">SaaS O&M Admin MVP</div>
+                    <div class="version-description">
+                        Aura 스타일 라이트 테마가 적용된 SaaS 관리자 대시보드.
+                        Teal/Cyan 색상과 깔끔한 화이트 디자인.
+                    </div>
+                    <span class="version-badge">
+                        <span>✨</span> Aura Light
+                    </span>
+                </div>
+                <div class="arrow-indicator">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </div>
+            </a>
+
             <!-- Version 0.5 -->
             <a href="v0.5/index.html" class="version-card v05">
                 <div class="card-content">
