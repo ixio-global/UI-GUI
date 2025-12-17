@@ -9,15 +9,18 @@
         rel="stylesheet">
     <style>
         :root {
-            --brand-main: #1a3a5c;
-            --brand-light: #2d5a87;
-            --brand-dark: #0f2439;
-            --accent-blue: #3b82f6;
-            --accent-green: #10b981;
-            --surface: #ffffff;
-            --background: #0a1628;
-            --text-white: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.7);
+            /* Windows Admin Center Dark Theme */
+            --brand-main: hsl(220, 20%, 10%);
+            --brand-light: hsl(220, 18%, 14%);
+            --brand-dark: hsl(220, 22%, 8%);
+            --accent-blue: hsl(208, 100%, 50%);
+            --accent-blue-light: hsl(208, 100%, 60%);
+            --accent-green: hsl(120, 61%, 50%);
+            --surface: hsl(220, 18%, 14%);
+            --background: hsl(220, 20%, 10%);
+            --text-white: hsl(0, 0%, 95%);
+            --text-muted: hsl(220, 10%, 70%);
+            --border-dark: hsl(220, 16%, 22%);
         }
 
         * {
@@ -27,7 +30,7 @@
         }
 
         body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
             background: var(--background);
             min-height: 100vh;
             display: flex;
@@ -46,19 +49,11 @@
             height: 100%;
             z-index: 0;
             overflow: hidden;
+            background: linear-gradient(180deg, hsla(208, 100%, 50%, 0.03) 0%, transparent 100%);
         }
 
         .bg-animation::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 70% 70%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(26, 58, 92, 0.3) 0%, transparent 70%);
-            animation: bgPulse 15s ease-in-out infinite;
+            display: none;
         }
 
         @keyframes bgPulse {
@@ -151,12 +146,12 @@
         }
 
         .version-card {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px 32px;
+            background: var(--surface);
+            border: 1px solid var(--border-dark);
+            border-radius: 4px;
+            padding: 32px 24px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             position: relative;
             overflow: hidden;
@@ -169,16 +164,15 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(145deg, rgba(59, 130, 246, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            background: linear-gradient(145deg, hsla(208, 100%, 50%, 0.05) 0%, transparent 100%);
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.2s ease;
         }
 
         .version-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: rgba(59, 130, 246, 0.5);
-            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3),
-                0 0 40px rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 12px hsla(0, 0%, 0%, 0.4);
         }
 
         .version-card:hover::before {
@@ -186,33 +180,27 @@
         }
 
         .version-card.v03:hover {
-            border-color: rgba(168, 85, 247, 0.5);
-            box-shadow: 0 20px 60px rgba(168, 85, 247, 0.2),
-                0 0 40px rgba(168, 85, 247, 0.1);
+            border-color: hsl(193, 100%, 50%);
         }
 
         .version-card.v03:hover::before {
-            background: linear-gradient(145deg, rgba(168, 85, 247, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+            background: linear-gradient(145deg, hsla(193, 100%, 50%, 0.05) 0%, transparent 100%);
         }
 
         .version-card.v05:hover {
-            border-color: rgba(251, 191, 36, 0.5);
-            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.2),
-                0 0 40px rgba(251, 191, 36, 0.1);
+            border-color: hsl(45, 100%, 51%);
         }
 
         .version-card.v05:hover::before {
-            background: linear-gradient(145deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+            background: linear-gradient(145deg, hsla(45, 100%, 51%, 0.05) 0%, transparent 100%);
         }
 
         .version-card.v06:hover {
-            border-color: rgba(16, 185, 129, 0.5);
-            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2),
-                0 0 40px rgba(16, 185, 129, 0.1);
+            border-color: hsl(120, 61%, 50%);
         }
 
         .version-card.v06:hover::before {
-            background: linear-gradient(145deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+            background: linear-gradient(145deg, hsla(120, 61%, 50%, 0.05) 0%, transparent 100%);
         }
 
         .card-content {
@@ -221,35 +209,35 @@
         }
 
         .version-icon {
-            width: 72px;
-            height: 72px;
-            border-radius: 16px;
+            width: 64px;
+            height: 64px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 20px;
-            transition: transform 0.3s ease;
+            font-size: 28px;
+            margin: 0 auto 16px;
+            transition: transform 0.2s ease;
         }
 
 
         .v03 .version-icon {
-            background: linear-gradient(135deg, rgba(23, 162, 184, 0.2) 0%, rgba(13, 110, 253, 0.1) 100%);
-            border: 1px solid rgba(23, 162, 184, 0.3);
+            background: hsla(193, 100%, 50%, 0.1);
+            border: 1px solid hsla(193, 100%, 50%, 0.2);
         }
 
         .v05 .version-icon {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            background: hsla(45, 100%, 51%, 0.1);
+            border: 1px solid hsla(45, 100%, 51%, 0.2);
         }
 
         .v06 .version-icon {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: hsla(120, 61%, 50%, 0.1);
+            border: 1px solid hsla(120, 61%, 50%, 0.2);
         }
 
         .version-card:hover .version-icon {
-            transform: scale(1.1) rotate(5deg);
+            transform: scale(1.05);
         }
 
         .version-number {
@@ -262,15 +250,15 @@
 
 
         .v03 .version-number {
-            color: #17a2b8;
+            color: hsl(193, 100%, 50%);
         }
 
         .v05 .version-number {
-            color: #fbbf24;
+            color: hsl(45, 100%, 51%);
         }
 
         .v06 .version-number {
-            color: #10b981;
+            color: hsl(120, 61%, 50%);
         }
 
         .version-title {
@@ -291,29 +279,29 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 4px 12px;
+            border-radius: 4px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
 
         .v03 .version-badge {
-            background: rgba(23, 162, 184, 0.15);
-            color: #17a2b8;
-            border: 1px solid rgba(23, 162, 184, 0.3);
+            background: hsla(193, 100%, 50%, 0.1);
+            color: hsl(193, 100%, 50%);
+            border: 1px solid hsla(193, 100%, 50%, 0.2);
         }
 
         .v05 .version-badge {
-            background: rgba(251, 191, 36, 0.15);
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            background: hsla(45, 100%, 51%, 0.1);
+            color: hsl(45, 100%, 51%);
+            border: 1px solid hsla(45, 100%, 51%, 0.2);
         }
 
         .v06 .version-badge {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: hsla(120, 61%, 50%, 0.1);
+            color: hsl(120, 61%, 50%);
+            border: 1px solid hsla(120, 61%, 50%, 0.2);
         }
 
         /* Arrow indicator */

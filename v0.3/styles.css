@@ -10,55 +10,57 @@
    CSS Variables - Design Tokens
    ============================================================================= */
 :root {
-    /* Color Palette - Aura Inspired Light Theme */
-    --primary-50: hsl(174, 62%, 97%);
-    --primary-100: hsl(174, 62%, 92%);
-    --primary-200: hsl(174, 58%, 80%);
-    --primary-300: hsl(174, 54%, 65%);
-    --primary-400: hsl(174, 48%, 50%);
-    --primary-500: hsl(174, 62%, 41%);
-    --primary-600: hsl(174, 70%, 35%);
-    --primary-700: hsl(174, 74%, 28%);
-    --primary-800: hsl(174, 78%, 22%);
-    --primary-900: hsl(174, 82%, 16%);
+    /* Color Palette - Windows Admin Center Dark Theme */
+    --primary-50: hsl(208, 100%, 97%);
+    --primary-100: hsl(208, 100%, 90%);
+    --primary-200: hsl(208, 100%, 80%);
+    --primary-300: hsl(208, 100%, 70%);
+    --primary-400: hsl(208, 100%, 60%);
+    --primary-500: hsl(208, 100%, 50%);
+    --primary-600: hsl(208, 100%, 42%);
+    --primary-700: hsl(208, 100%, 35%);
+    --primary-800: hsl(208, 100%, 28%);
+    --primary-900: hsl(208, 100%, 20%);
 
-    --accent-teal: hsl(174, 62%, 41%);
-    --accent-cyan: hsl(186, 95%, 55%);
-    --accent-blue: hsl(213, 94%, 68%);
-    --accent-purple: hsl(262, 83%, 58%);
-    --accent-green: hsl(142, 76%, 36%);
+    /* Microsoft Blue Accent Colors */
+    --accent-blue: hsl(208, 100%, 50%);
+    --accent-blue-light: hsl(208, 100%, 60%);
+    --accent-blue-dark: hsl(208, 100%, 42%);
+    --accent-cyan: hsl(193, 100%, 50%);
+    --accent-purple: hsl(262, 52%, 47%);
+    --accent-green: hsl(120, 61%, 40%);
 
-    /* Background Colors - Light Theme */
-    --bg-primary: hsl(0, 0%, 100%);
-    --bg-secondary: hsl(210, 40%, 98%);
-    --bg-tertiary: hsl(210, 40%, 96%);
-    --bg-elevated: hsl(0, 0%, 100%);
-    --bg-overlay: hsla(0, 0%, 0%, 0.5);
+    /* Background Colors - Dark Theme */
+    --bg-primary: hsl(220, 20%, 10%);
+    --bg-secondary: hsl(220, 18%, 14%);
+    --bg-tertiary: hsl(220, 16%, 18%);
+    --bg-elevated: hsl(220, 18%, 16%);
+    --bg-overlay: hsla(0, 0%, 0%, 0.75);
 
     /* Card & Surface */
-    --surface-white: hsl(0, 0%, 100%);
-    --surface-gray: hsl(210, 17%, 98%);
-    --border-light: hsl(214, 32%, 91%);
-    --border-medium: hsl(216, 12%, 84%);
+    --surface-dark: hsl(220, 18%, 14%);
+    --surface-darker: hsl(220, 20%, 10%);
+    --border-dark: hsl(220, 16%, 22%);
+    --border-medium: hsl(220, 14%, 28%);
 
-    /* Text Colors - Light Theme */
-    --text-primary: hsl(215, 28%, 17%);
-    --text-secondary: hsl(215, 16%, 47%);
-    --text-tertiary: hsl(216, 12%, 64%);
-    --text-muted: hsl(218, 11%, 65%);
+    /* Text Colors - Dark Theme */
+    --text-primary: hsl(0, 0%, 95%);
+    --text-secondary: hsl(220, 10%, 70%);
+    --text-tertiary: hsl(220, 10%, 55%);
+    --text-muted: hsl(220, 10%, 45%);
 
     /* Status Colors */
-    --status-success: hsl(142, 76%, 36%);
-    --status-warning: hsl(38, 92%, 50%);
-    --status-error: hsl(0, 84%, 60%);
-    --status-info: hsl(213, 94%, 68%);
+    --status-success: hsl(120, 61%, 50%);
+    --status-warning: hsl(45, 100%, 51%);
+    --status-error: hsl(0, 79%, 63%);
+    --status-info: hsl(208, 100%, 60%);
 
-    /* Shadows - Soft & Subtle */
-    --shadow-sm: 0 1px 2px hsla(0, 0%, 0%, 0.04);
-    --shadow-md: 0 4px 6px -1px hsla(0, 0%, 0%, 0.06);
-    --shadow-lg: 0 10px 15px -3px hsla(0, 0%, 0%, 0.08);
-    --shadow-xl: 0 20px 25px -5px hsla(0, 0%, 0%, 0.1);
-    --shadow-2xl: 0 25px 50px -12px hsla(0, 0%, 0%, 0.12);
+    /* Shadows - Dark Theme */
+    --shadow-sm: 0 1px 2px hsla(0, 0%, 0%, 0.3);
+    --shadow-md: 0 4px 6px -1px hsla(0, 0%, 0%, 0.4);
+    --shadow-lg: 0 10px 15px -3px hsla(0, 0%, 0%, 0.5);
+    --shadow-xl: 0 20px 25px -5px hsla(0, 0%, 0%, 0.6);
+    --shadow-2xl: 0 25px 50px -12px hsla(0, 0%, 0%, 0.7);
 
     /* Spacing Scale */
     --space-1: 0.25rem;
@@ -73,16 +75,16 @@
     --space-16: 4rem;
 
     /* Border Radius */
-    --radius-sm: 0.25rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
-    --radius-2xl: 1.5rem;
+    --radius-sm: 0.125rem;
+    --radius-md: 0.25rem;
+    --radius-lg: 0.375rem;
+    --radius-xl: 0.5rem;
+    --radius-2xl: 0.75rem;
     --radius-full: 9999px;
 
     /* Typography */
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    --font-mono: 'Consolas', 'Courier New', monospace;
 
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
@@ -122,7 +124,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Subtle background gradient for light theme */
+/* Dark subtle background pattern */
 body::before {
     content: '';
     position: fixed;
@@ -131,24 +133,9 @@ body::before {
     width: 100vw;
     height: 100vh;
     background:
-        radial-gradient(circle at 20% 20%, hsla(174, 62%, 85%, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, hsla(186, 95%, 85%, 0.2) 0%, transparent 50%),
-        linear-gradient(to bottom, hsla(210, 40%, 98%, 0.5), transparent);
+        linear-gradient(180deg, hsla(208, 100%, 50%, 0.03) 0%, transparent 100%);
     pointer-events: none;
     z-index: -1;
-    animation: gradientShift 20s ease infinite;
-}
-
-@keyframes gradientShift {
-
-    0%,
-    100% {
-        opacity: 0.6;
-    }
-
-    50% {
-        opacity: 1;
-    }
 }
 
 /* =============================================================================
@@ -288,9 +275,9 @@ a:hover {
    Card Components
    ============================================================================= */
 .card {
-    background: var(--surface-white);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
+    background: var(--surface-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
     padding: var(--space-6);
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-base);
@@ -299,7 +286,7 @@ a:hover {
 .card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
-    border-color: var(--primary-200);
+    border-color: var(--accent-blue);
 }
 
 .card-header {
@@ -341,26 +328,26 @@ a:hover {
 }
 
 .btn-primary {
-    background: var(--accent-teal);
+    background: var(--accent-blue);
     color: white;
     box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
-    background: var(--primary-600);
+    background: var(--accent-blue-light);
     box-shadow: var(--shadow-lg);
     transform: translateY(-1px);
 }
 
 .btn-secondary {
-    background: white;
+    background: var(--bg-tertiary);
     color: var(--text-primary);
     border: 1px solid var(--border-medium);
 }
 
 .btn-secondary:hover {
     background: var(--bg-secondary);
-    border-color: var(--accent-teal);
+    border-color: var(--accent-blue);
 }
 
 .btn-success {
@@ -407,10 +394,10 @@ a:hover {
     padding: var(--space-3) var(--space-4);
     font-family: var(--font-sans);
     font-size: var(--text-sm);
-    background: white;
+    background: var(--bg-tertiary);
     color: var(--text-primary);
-    border: 1px solid var(--border-medium);
-    border-radius: var(--radius-md);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
 }
 
@@ -418,8 +405,8 @@ a:hover {
 .form-select:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--accent-teal);
-    box-shadow: 0 0 0 3px hsla(174, 62%, 41%, 0.1);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px hsla(208, 100%, 50%, 0.15);
 }
 
 .form-textarea {
@@ -466,9 +453,9 @@ a:hover {
    ============================================================================= */
 .table-wrapper {
     overflow-x: auto;
-    border-radius: var(--radius-lg);
-    background: white;
-    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background: var(--surface-dark);
+    border: 1px solid var(--border-dark);
 }
 
 .table {
@@ -488,13 +475,13 @@ a:hover {
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 2px solid var(--border-dark);
 }
 
 .table td {
     padding: var(--space-4);
     font-size: var(--text-sm);
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-dark);
 }
 
 .table tbody tr {
@@ -514,9 +501,9 @@ a:hover {
     left: 0;
     width: 280px;
     height: 100vh;
-    background: white;
-    border-right: 1px solid var(--border-light);
-    box-shadow: var(--shadow-sm);
+    background: var(--surface-dark);
+    border-right: 1px solid var(--border-dark);
+    box-shadow: var(--shadow-lg);
     padding: var(--space-6);
     overflow-y: auto;
     z-index: 100;
@@ -529,14 +516,14 @@ a:hover {
     gap: var(--space-3);
     margin-bottom: var(--space-8);
     padding-bottom: var(--space-6);
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-dark);
 }
 
 .sidebar-logo-icon {
     width: 40px;
     height: 40px;
-    background: var(--accent-teal);
-    border-radius: var(--radius-lg);
+    background: var(--accent-blue);
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -548,7 +535,7 @@ a:hover {
 .sidebar-logo-text {
     font-size: var(--text-lg);
     font-weight: 700;
-    color: var(--accent-teal);
+    color: var(--accent-blue);
 }
 
 .sidebar-nav {
@@ -575,9 +562,9 @@ a:hover {
 }
 
 .sidebar-nav-link.active {
-    background: hsla(174, 62%, 41%, 0.08);
-    color: var(--accent-teal);
-    border-left: 3px solid var(--accent-teal);
+    background: hsla(208, 100%, 50%, 0.1);
+    color: var(--accent-blue);
+    border-left: 3px solid var(--accent-blue);
 }
 
 .sidebar-nav-icon {
@@ -600,7 +587,7 @@ a:hover {
     justify-content: space-between;
     margin-bottom: var(--space-8);
     padding-bottom: var(--space-6);
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-dark);
 }
 
 .header-title {
@@ -619,9 +606,9 @@ a:hover {
    Stats Card
    ============================================================================= */
 .stat-card {
-    background: white;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
+    background: var(--surface-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
     padding: var(--space-6);
     position: relative;
     overflow: hidden;
@@ -636,7 +623,7 @@ a:hover {
     right: 0;
     width: 100px;
     height: 100px;
-    background: radial-gradient(circle, hsla(174, 62%, 85%, 0.3), transparent);
+    background: radial-gradient(circle, hsla(208, 100%, 50%, 0.1), transparent);
     border-radius: 50%;
     transform: translate(30%, -30%);
 }
@@ -753,9 +740,9 @@ a:hover {
 }
 
 .modal {
-    background: white;
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-2xl);
+    background: var(--surface-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-lg);
     max-width: 600px;
     width: 90%;
     max-height: 90vh;
