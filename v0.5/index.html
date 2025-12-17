@@ -8,6 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
+        :root {
+            --brand-green: #03C75A;
+            --bg-color: #F5F6F7;
+            --text-primary: #1E1E23;
+            --text-secondary: #606060;
+            --border-color: #DADCDF;
+            --card-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,19 +24,20 @@
         }
 
         body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, "Apple SD Gothic Neo", sans-serif;
+            background: var(--bg-color);
             min-height: 100vh;
-            color: #fff;
+            color: var(--text-primary);
         }
 
+        /* Header */
         .header {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 16px 32px;
+            background: #FFFFFF;
+            padding: 16px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #E4E8EB;
         }
 
         .header-left {
@@ -40,143 +50,163 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: rgba(251, 191, 36, 0.15);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            background: #fff;
+            border: 1px solid #DADCDF;
+            border-radius: 4px;
             text-decoration: none;
             font-size: 18px;
             transition: all 0.2s;
         }
 
         .home-btn:hover {
-            background: rgba(251, 191, 36, 0.3);
-            transform: scale(1.05);
+            border-color: var(--brand-green);
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #fff;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--brand-green);
+            letter-spacing: -0.5px;
         }
 
         .version-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            background: rgba(251, 191, 36, 0.15);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #fbbf24;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 48px 32px;
-        }
-
-        .page-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .page-subtitle {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 48px;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-        }
-
-        .menu-card {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 28px;
-            text-decoration: none;
-            color: #fff;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .menu-card:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(251, 191, 36, 0.5);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .menu-icon {
-            width: 56px;
-            height: 56px;
-            background: rgba(251, 191, 36, 0.15);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-
-        .menu-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .menu-desc {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.5;
-        }
-
-        .menu-filename {
-            font-size: 11px;
-            color: rgba(251, 191, 36, 0.8);
-            background: rgba(251, 191, 36, 0.1);
             padding: 4px 10px;
-            border-radius: 20px;
-            display: inline-block;
-            align-self: flex-start;
+            background: #E8F9F0;
+            color: var(--brand-green);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .footer {
-            text-align: center;
-            padding: 32px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 13px;
+        .header-right {
+            display: flex;
+            gap: 10px;
         }
 
         .figma-btn {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(162, 89, 255, 0.15);
-            border: 1px solid rgba(162, 89, 255, 0.3);
-            border-radius: 8px;
+            gap: 6px;
+            padding: 8px 14px;
+            background: #fff;
+            border: 1px solid #DADCDF;
+            border-radius: 4px;
             text-decoration: none;
-            color: #d4b3ff;
-            font-size: 14px;
+            color: #666;
+            font-size: 13px;
             font-weight: 500;
             transition: all 0.2s;
         }
 
         .figma-btn:hover {
-            background: rgba(162, 89, 255, 0.3);
-            color: #fff;
-            transform: translateY(-1px);
+            color: var(--brand-green);
+            border-color: var(--brand-green);
+        }
+
+        /* Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 30px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .menu-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 28px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            /* Naver-style soft shadow */
+            border-color: var(--brand-green);
+            z-index: 1;
+        }
+
+        .menu-icon {
+            width: 50px;
+            height: 50px;
+            background: #F8F9FA;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .menu-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .menu-desc {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .menu-filename {
+            font-size: 11px;
+            color: #888;
+            background: #F5F6F7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            align-self: flex-start;
+            font-family: monospace;
+        }
+
+        .menu-card:hover .menu-filename {
+            color: var(--brand-green);
+            background: #E8F9F0;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            padding: 20px;
+            border-top: 1px solid #E4E8EB;
         }
     </style>
 </head>
@@ -186,17 +216,21 @@
         <div class="header-left">
             <a href="../index.html" class="home-btn" title="버전 선택으로 돌아가기">🏠</a>
             <div class="logo">ixi-O O&M</div>
-            <span class="version-badge">📦 v0.5 물리취합</span>
+            <span class="version-badge">v0.5 물리취합</span>
         </div>
-        <a href="https://www.figma.com/design/33MmSPNqS1wTJsmqfAx0PZ/ixi-O-Global-SaaS?node-id=82-4971&p=f&t=RmuBUwbCaBo2z19x-0"
-            target="_blank" class="figma-btn">
-            🎨 Figma 화면기획자료
-        </a>
+        <div class="header-right">
+            <a href="https://www.figma.com/design/33MmSPNqS1wTJsmqfAx0PZ/ixi-O-Global-SaaS?node-id=82-4971&p=f&t=RmuBUwbCaBo2z19x-0"
+                target="_blank" class="figma-btn">
+                🎨 Figma 화면기획자료
+            </a>
+        </div>
     </header>
 
     <div class="container">
-        <h1 class="page-title">물리취합 버전</h1>
-        <p class="page-subtitle">업로드된 원본 개별 페이지를 물리적으로 취합한 버전입니다. 아래 메뉴를 선택하세요.</p>
+        <div class="page-header">
+            <h1 class="page-title">물리취합 버전</h1>
+            <p class="page-subtitle">업로드된 개별 페이지를 물리적으로 취합한 버전입니다.</p>
+        </div>
 
         <div class="menu-grid">
             <a href="login.html" class="menu-card">
@@ -247,6 +281,7 @@
                 <div class="menu-desc">공지사항, SOP, FAQ 및 티켓 관리</div>
                 <span class="menu-filename">operation.html</span>
             </a>
+
             <a href="dash.html" class="menu-card">
                 <div class="menu-icon">📊</div>
                 <div class="menu-title">대시보드</div>
