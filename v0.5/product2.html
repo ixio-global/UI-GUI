@@ -1,0 +1,3161 @@
+<!DOCTYPE html>
+<!-- saved from url=(0254)file:///C:/Users/speciallon73/Downloads/SaaS_Admin/(%EA%B3%B5%EC%9C%A0)newnewnavy%EB%B0%B1%EC%97%85_%EC%95%88%ED%8B%B08_1125_%EC%83%81%ED%92%88%EA%B8%B0%EC%A4%80%EC%A0%95%EB%B3%B4(RE)_5%EC%B0%A8_%ED%94%BC%EA%B7%B8%EB%A7%88%EC%9E%91%EC%97%85%EC%9A%A9.html -->
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <title>ixi-O O&amp;M – 상품 기준 정보</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* =========================
+       Color Design Tokens
+    ========================= */
+    :root {
+      /* Base */
+      --bg-body: #f8fafc;
+      /* Slate 50 */
+      --text-main: #0f172a;
+      /* Slate 900 */
+      --text-sub: #334155;
+      /* Slate 700 */
+      --text-muted: #64748b;
+      /* Slate 500 */
+      --text-light: #94a3b8;
+      /* Slate 400 */
+
+      /* Brand / Primary (Modern Navy - Deep & Saturated) */
+      --brand-grad-from: #172554;
+      /* Blue 950 (Deepest Navy) */
+      --brand-grad-to: #1e40af;
+      /* Blue 800 (Rich Navy) */
+      --brand-main: #1e40af;
+      /* Blue 800 */
+      --brand-main-dark: #1e3a8a;
+      /* Blue 900 */
+      --brand-main-deep: #172554;
+      /* Blue 950 */
+
+      /* Surface / Border */
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      /* Slate 100 */
+      --surface-softer: #f8fafc;
+      /* Slate 50 */
+      --border-soft: #e2e8f0;
+      /* Slate 200 */
+      --border-input: #cbd5e1;
+      /* Slate 300 */
+
+      /* Sidebar / Menu */
+      --sidebar-bg: #ffffff;
+      --sidebar-title: #64748b;
+      --menu-text: #334155;
+      --submenu-dot: #cbd5e1;
+
+      /* Accents */
+      --accent-chip-bg: #eff6ff;
+      /* Blue 50 */
+      --accent-chip-bg-strong: #dbeafe;
+      /* Blue 100 */
+      --accent-chip-text: #1e40af;
+      /* Blue 800 */
+      --accent-hover: #f1f5f9;
+      /* Slate 100 */
+      --accent-row-alt: #f8fafc;
+      --accent-link: #1d4ed8;
+      /* Blue 700 */
+
+      /* Buttons */
+      --btn-primary-bg: #1e40af;
+      /* Blue 800 (Navy) */
+      --btn-primary-bg-hover: #1e3a8a;
+      /* Blue 900 (Darker) */
+      --btn-danger-border: #fca5a5;
+      --btn-danger-text: #dc2626;
+      --btn-danger-bg-hover: #fef2f2;
+
+      /* Table / Pagination */
+      --table-head-bg: #f8fafc;
+
+      /* Stub */
+      --stub-border: #e2e8f0;
+
+      /* Selected Row */
+      --row-selected-bg: #eff6ff;
+      /* Blue 50 */
+
+      /* Snapshot Banner */
+      --banner-bg: #fff7ed;
+      --banner-border: #fed7aa;
+      --banner-text: #9a3412;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", system-ui, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      accent-color: var(--brand-main);
+    }
+
+    /* =========================
+       헤더 (L1)
+    ========================= */
+    .header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, var(--brand-grad-from), var(--brand-grad-to));
+      color: #ffffff;
+      z-index: 20;
+      box-shadow: 0 4px 12px rgba(23, 37, 84, 0.4);
+      /* Deep Navy Shadow */
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 40px;
+      font-size: 15px;
+    }
+
+    .top-nav-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+
+    .top-nav-item:hover {
+      background: rgba(255, 255, 255, 0.18);
+      opacity: 1;
+    }
+
+    .top-nav-item.active {
+      background: #ffffff;
+      color: var(--brand-main-deep);
+      font-weight: 600;
+      opacity: 1;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--brand-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* =========================
+       레이아웃
+    ========================= */
+    .layout {
+      display: flex;
+      margin-top: 60px;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* =========================
+       사이드바 (L2 / L3)
+    ========================= */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-soft);
+      padding: 24px 16px;
+    }
+
+    .sidebar-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--sidebar-title);
+      margin-bottom: 12px;
+    }
+
+    .menu-list {
+      list-style: none;
+      padding: 0;
+      margin: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .menu-item {
+      border-radius: 10px;
+      color: var(--menu-text);
+    }
+
+    .menu-main {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    .menu-main:hover {
+      background: var(--accent-hover);
+    }
+
+    .menu-item.active>.menu-main {
+      background: var(--brand-main);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .menu-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: var(--accent-chip-bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--brand-main);
+    }
+
+    .menu-item.active .menu-icon {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+
+    .menu-arrow {
+      font-size: 12px;
+      transition: transform 0.15s ease-out;
+    }
+
+    .menu-item.open .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 4px 32px;
+      display: none;
+    }
+
+    .menu-item.open .submenu-list {
+      display: block;
+    }
+
+    .submenu-item {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-sub);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .submenu-item::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--submenu-dot);
+    }
+
+    .submenu-item:hover {
+      background: var(--accent-hover);
+    }
+
+    .submenu-item.active {
+      background: var(--accent-chip-bg-strong);
+      color: var(--brand-main-dark);
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .submenu-item.active::before {
+      background: var(--brand-main);
+    }
+
+    /* =========================
+       메인 컨텐츠 공통
+    ========================= */
+    .main {
+      flex: 1;
+      padding: 24px 32px 32px;
+      overflow: auto;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .breadcrumb span.current {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--text-main);
+    }
+
+    /* =========================
+       공통 카드 / 버튼 / 인풋
+    ========================= */
+    .card {
+      background: var(--surface);
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      padding: 14px 16px 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 6px 18px rgba(148, 163, 184, 0.18);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .section-desc {
+      margin: 4px 0 0 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .section-badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-chip-bg);
+      color: var(--accent-chip-text);
+    }
+
+    .section-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-primary {
+      padding: 8px 18px;
+      border-radius: 10px;
+      border: none;
+      background: var(--btn-primary-bg);
+      color: #ffffff;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-primary:hover {
+      background: var(--btn-primary-bg-hover);
+    }
+
+    .btn-secondary {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      color: var(--text-sub);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-soft);
+    }
+
+    .btn-ghost {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover {
+      background: #f3f4ff;
+    }
+
+    .btn-danger {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--btn-danger-border);
+      background: #ffffff;
+      color: var(--btn-danger-text);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-danger:hover {
+      background: var(--btn-danger-bg-hover);
+    }
+
+    .btn-group-right {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .field-input,
+    .field-select,
+    .field-textarea {
+      border-radius: 10px;
+      border: 1px solid var(--border-input);
+      background: #fafafc;
+      font-size: 13px;
+      padding: 8px 10px;
+      outline: none;
+      color: var(--text-main);
+      width: 100%;
+    }
+
+    /* Width Utilities */
+    .w-full {
+      width: 100%;
+    }
+
+    .w-xs {
+      max-width: 120px;
+    }
+
+    .w-sm {
+      max-width: 200px;
+    }
+
+    .w-md {
+      max-width: 320px;
+    }
+
+    .w-lg {
+      max-width: 480px;
+    }
+
+    .w-xl {
+      max-width: 640px;
+    }
+
+
+    .field-textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .field-input:focus,
+    .field-select:focus,
+    .field-textarea:focus {
+      border-color: var(--brand-main);
+      box-shadow: 0 0 0 1px rgba(30, 64, 175, 0.18);
+      background: #ffffff;
+    }
+
+    .field-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .form-grid-2col {
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr);
+      column-gap: 24px;
+      row-gap: 8px;
+      font-size: 13px;
+    }
+
+    .form-label {
+      padding-top: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-sub);
+    }
+
+    .form-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .inline-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* =========================
+       상단 탭 (기준정보 등록 / 조회·변경)
+    ========================= */
+    .page-tabs {
+      display: inline-flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 6px 18px rgba(148, 163, 184, 0.25);
+      margin-bottom: 16px;
+    }
+
+    .page-tab {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 18px;
+      font-size: 13px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-sub);
+    }
+
+    .page-tab.active {
+      background: #ffffff;
+      color: var(--brand-main-dark);
+      font-weight: 600;
+      box-shadow: 0 0 0 1px rgba(30, 64, 175, 0.25);
+    }
+
+    .content-tab-panel {
+      display: none;
+      animation: fadeIn 0.16s ease-out;
+    }
+
+    .content-tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =========================
+       등록 탭 – 프로세스 스텝 UI (계층 구조 시각화)
+    ========================= */
+    .process-steps {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .process-step {
+      flex: 1;
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      padding: 10px 10px 10px 24px;
+      /* Left padding for arrow shape */
+      font-size: 13px;
+      color: var(--text-sub);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      clip-path: polygon(0% 0%, 92% 0%, 100% 50%, 92% 100%, 0% 100%, 8% 50%);
+      margin-right: -14px;
+      /* Overlap for continuous look */
+      z-index: 1;
+      transition: all 0.2s;
+    }
+
+    /* First step needs flat left edge */
+    .process-step:first-child {
+      clip-path: polygon(0% 0%, 92% 0%, 100% 50%, 92% 100%, 0% 100%);
+      padding-left: 16px;
+    }
+
+    /* Last step needs flat right edge */
+    .process-step:last-child {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 8% 50%);
+      margin-right: 0;
+      padding-right: 16px;
+    }
+
+    .process-step:hover {
+      background: var(--surface-soft);
+      z-index: 2;
+    }
+
+    .process-step.active {
+      background: var(--brand-main);
+      color: #ffffff;
+      border-color: var(--brand-main);
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .step-number {
+      font-size: 10px;
+      opacity: 0.8;
+      margin-right: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       등록 탭 – 등록 대상 선택 / 타입 칩
+    ========================= */
+    .type-groups {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      /* Give more space to hierarchy steps */
+      gap: 24px;
+    }
+
+    .type-group-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-sub);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .type-chip {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--accent-chip-bg);
+      font-size: 12px;
+    }
+
+    .view-section {
+      display: none;
+      /* Default hidden */
+    }
+
+    .view-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    /* =========================
+       등록 탭 – 정책 카드 UI (과금/할인 우측 영역)
+    ========================= */
+    .policy-cards {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .policy-card {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface);
+      color: var(--text-sub);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-height: 42px;
+      /* Sync height with process steps */
+    }
+
+    .policy-card:hover {
+      background: var(--surface-soft);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .policy-card.active {
+      background: var(--brand-main);
+      /* Modern Navy brand color */
+      border-color: var(--brand-main);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+    }
+
+    .policy-card-icon {
+      font-size: 16px;
+    }
+
+    /* =========================
+               이미지/아이콘 업로드 UI (New)
+            ========================= */
+    .upload-icon-box {
+      width: 64px;
+      height: 64px;
+      border: 1px dashed #d1d5db;
+      border-radius: 8px;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #9ca3af;
+      transition: all 0.2s;
+    }
+
+    .upload-icon-box:hover {
+      border-color: #6366f1;
+      color: #6366f1;
+      background: #eef2ff;
+    }
+
+    .upload-dropzone {
+      border: 1px dashed #d1d5db;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      background: #f9fafb;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #6b7280;
+    }
+
+    .upload-dropzone:hover {
+      border-color: #6366f1;
+      background: #eef2ff;
+    }
+
+    /* Preview States */
+    .preview-container {
+      position: relative;
+      display: inline-block;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .preview-container img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .btn-remove-image {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      border: none;
+      transition: background 0.2s;
+    }
+
+    .btn-remove-image:hover {
+      background: #ef4444;
+    }
+
+    /* =========================
+       등록 탭 – 업로드/이미지용
+    ========================= */
+    .upload-dropzone {
+      border-radius: 12px;
+      border: 1px dashed var(--border-soft);
+      padding: 12px 12px;
+      background: var(--surface-softer);
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    /* =========================
+       할인 속성 그룹 박스 (Gray Box)
+    ========================= */
+    .gray-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+
+    .gray-box .form-grid-2col {
+      /* Remove default grid spacing inside box for tighter control if needed, 
+         but keeping it consistent is fine. Adjust gap slightly. */
+      column-gap: 20px;
+      row-gap: 12px;
+    }
+
+    /* 통합된 인풋 라인 스타일 */
+    .integrated-input-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .integrated-divider {
+      width: 1px;
+      height: 14px;
+      background: var(--border-soft);
+      display: inline-block;
+    }
+
+    /* =========================
+       조회/변경 탭 – 기준정보 목록
+    ========================= */
+    .table-wrap {
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: var(--table-head-bg);
+    }
+
+    th,
+    td {
+      padding: 8px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-soft);
+      white-space: nowrap;
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--text-sub);
+      font-size: 12px;
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--accent-row-alt);
+    }
+
+    tbody tr:hover {
+      background: var(--accent-hover);
+      cursor: pointer;
+    }
+
+    tbody tr.selected {
+      background: var(--row-selected-bg);
+    }
+
+    .name-link {
+      color: var(--accent-link);
+      text-decoration: underline;
+      text-decoration-thickness: 0.06em;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+
+    .help-text {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .snapshot-banner {
+      background: var(--banner-bg);
+      border: 1px solid var(--banner-border);
+      color: var(--banner-text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .snapshot-banner strong {
+      font-weight: 600;
+    }
+
+    /* =========================
+       조회/변경 탭 – 상세 정보 (A안 + 버전 정책)
+    ========================= */
+    .detail-layout {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      margin-top: 4px;
+    }
+
+    .detail-visual {
+      flex: 0 0 280px;
+    }
+
+    .feature-image {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: #e5e7eb;
+      object-fit: cover;
+      display: block;
+    }
+
+    .detail-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .detail-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 2px 0;
+    }
+
+    .detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .meta-label {
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
+
+    .detail-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 8px 0 4px 0;
+      color: var(--text-sub);
+    }
+
+    .detail-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    /* =========================
+       Stub 카드
+    ========================= */
+    .stub-card {
+      background: var(--surface);
+      border-radius: 14px;
+      border: 1px dashed var(--stub-border);
+      padding: 26px 22px;
+      text-align: left;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .stub-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    /* 상세 카드 간 간격 */
+    .detail-block+.detail-block {
+      margin-top: 10px;
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .main {
+        padding: 18px 14px 24px;
+      }
+
+      .type-groups {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-layout {
+        flex-direction: column;
+      }
+
+      .detail-visual {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .form-grid-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 상단 헤더 탭 / 사이드바: 커서+텍스트 선택 방지 */
+    .top-nav-item,
+    .top-nav-item *,
+    .menu-item,
+    .menu-main,
+    .menu-label,
+    .submenu-item,
+    .submenu-item::before,
+    .menu-icon {
+      cursor: pointer !important;
+      user-select: none;
+    }
+
+    /* =========================
+           모달 (Modal) 스타일
+        ========================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-container {
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.95);
+      transition: transform 0.2s ease;
+    }
+
+    .modal-overlay.open .modal-container {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      color: var(--text-muted);
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      background: var(--bg-body);
+      /* 폼 배경색과 맞춤 */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">ixi-O O&amp;M</div>
+      <nav class="top-nav">
+        <div class="top-nav-item active" data-top-label="상품 운영">상품 운영</div>
+        <div class="top-nav-item" data-top-label="서비스 운영">서비스 운영</div>
+        <div class="top-nav-item" data-top-label="서비스 정산">서비스 정산</div>
+        <div class="top-nav-item" data-top-label="일반">일반</div>
+      </nav>
+    </div>
+    <div class="header-right">
+      <div class="avatar">A</div>
+      <span>관리자</span>
+    </div>
+  </header>
+
+  <!-- 레이아웃 -->
+  <div class="layout">
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title" id="sidebar-title">상품 운영</div>
+      <ul class="menu-list" id="sidebar-menu">
+        <li class="menu-item active open" data-l2="상품 관리">
+          <div class="menu-main">
+            <div class="menu-label"><span class="menu-icon">📂</span><span>상품 관리</span></div><span
+              class="menu-arrow">›</span>
+          </div>
+          <ul class="submenu-list">
+            <li class="submenu-item active" data-l3="상품 기준 정보">상품 기준 정보</li>
+          </ul>
+        </li>
+        <li class="menu-item" data-l2="고객사 관리">
+          <div class="menu-main">
+            <div class="menu-label"><span class="menu-icon">📂</span><span>고객사 관리</span></div><span
+              class="menu-arrow">›</span>
+          </div>
+          <ul class="submenu-list">
+            <li class="submenu-item" data-l3="고객사 정보">고객사 정보</li>
+            <li class="submenu-item" data-l3="계약 관리">계약 관리</li>
+          </ul>
+        </li>
+        <li class="menu-item" data-l2="대시보드">
+          <div class="menu-main">
+            <div class="menu-label"><span class="menu-icon">📂</span><span>대시보드</span></div><span
+              class="menu-arrow">›</span>
+          </div>
+          <ul class="submenu-list">
+            <li class="submenu-item" data-l3="사업 실적 관리">사업 실적 관리</li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="main">
+      <div class="breadcrumb" id="breadcrumb">
+        <span>상품 운영</span>
+        <span>›</span>
+        <span>상품 관리</span>
+        <span>›</span><span class="current">상품 기준 정보</span>
+      </div>
+      <div id="page-inner">
+        <!-- 메인 View: 조회 목록 + 상세 -->
+        <div id="view-list" class="view-section active">
+          <div class="page-title">상품 기준 정보</div>
+
+          <section class="card">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title">기준정보 목록 (Snapshot)</h2>
+                <p class="section-desc">
+                  선택한 기준일자 기준으로 유효한 상품/기능그룹/기능/과금요소/할인요소를 한 번에 조회합니다.
+                </p>
+              </div>
+              <div class="btn-group-right" style="margin-top:0;">
+                <div class="btn-group-right" style="margin-top:0; gap:8px;">
+                  <button class="btn-primary" id="btn-go-register-page" style="height:36px;">
+                    + 신규 등록 (페이지)
+                  </button>
+                  <button class="btn-primary" id="btn-go-register-modal" style="height:36px; background: #4f46e5;">
+                    + 신규 등록 (모달)
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="snapshot-banner">
+                <span>📅 <strong>스냅샷 조회 모드:</strong> 현재 선택된 일자(<span id="snapshot-date-display">2025-12-09</span>) 기준으로
+                  유효한 기준정보만 표시합니다. 과거 이력을 보려면 기준일자를 변경하세요.</span>
+              </div>
+
+              <div class="inline-row" style="margin-bottom:4px; gap:8px;">
+                <div class="form-field-group" style="max-width:200px;">
+                  <input type="date" class="field-input" id="lookup-date" value="2025-12-09">
+                </div>
+                <div class="form-field-group" style="max-width:140px;">
+                  <select class="field-select" id="filter-type">
+                    <option value="ALL">전체 유형</option>
+                    <option value="상품">상품</option>
+                    <option value="기능그룹">기능그룹</option>
+                    <option value="기능">기능</option>
+                    <option value="과금요소">과금요소</option>
+                    <option value="할인요소">할인요소</option>
+                  </select>
+                </div>
+                <button class="btn-secondary" type="button" id="btn-lookup">조회</button>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>유형</th>
+                      <th>코드</th>
+                      <th>명칭</th>
+                      <th>최초 생성일자</th>
+                      <th>현 상태</th>
+                      <th style="width:60px;">이력</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reference-tbody">
+                    <tr data-code="PKG-ixi_O-BASIC" class="selected"
+                      style="background:var(--accent-chip-bg); border-left: 3px solid var(--brand-main);">
+                      <td style="font-weight:700; color:var(--brand-main);">상품</td>
+                      <td>PKG-ixi_O-BASIC</td>
+                      <td><span class="name-link" style="font-weight:600;">ixi-O 기본 패키지</span></td>
+                      <td>2025-01-01</td>
+                    </tr>
+
+                    <tr data-code="FG-CALL-EASE" class="" style="">
+                      <td style="">기능그룹</td>
+                      <td>FG-CALL-EASE</td>
+                      <td><span class="name-link" style="">통화 편의</span></td>
+                      <td>2024-12-01</td>
+                    </tr>
+
+                    <tr data-code="FT-SEE-CALL" class="" style="">
+                      <td style="">기능</td>
+                      <td>FT-SEE-CALL</td>
+                      <td><span class="name-link" style="">보이는 전화</span></td>
+                      <td>2024-11-15</td>
+                    </tr>
+
+                    <tr data-code="BG-ixi_O-01" class="" style="">
+                      <td style="">과금요소</td>
+                      <td>BG-ixi_O-01</td>
+                      <td><span class="name-link" style="">ixi-O 인당 과금(표준)</span></td>
+                      <td>2025-01-01</td>
+                    </tr>
+
+                    <tr data-code="DC-ixi_O-LAUNCH" class="" style="">
+                      <td style="">할인요소</td>
+                      <td>DC-ixi_O-LAUNCH</td>
+                      <td><span class="name-link" style="">ixi-O 런칭 3개월 50% 할인</span></td>
+                      <td>2025-01-15</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Pagination UI (PRD: 페이징 지원) -->
+              <div class="pagination-wrap"
+                style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding:8px 0;">
+                <div style="font-size:12px; color:var(--text-muted);">
+                  총 <strong id="total-count">0</strong>건 중 <strong>1-10</strong>건 표시
+                </div>
+                <div style="display:flex; gap:4px;">
+                  <button class="btn-ghost" disabled>« 처음</button>
+                  <button class="btn-ghost" disabled>‹ 이전</button>
+                  <button class="btn-ghost"
+                    style="background:var(--brand-main); color:#fff; font-weight:600;">1</button>
+                  <button class="btn-ghost">2</button>
+                  <button class="btn-ghost">3</button>
+                  <button class="btn-ghost">다음 ›</button>
+                  <button class="btn-ghost">마지막 »</button>
+                </div>
+              </div>
+
+              <p class="help-text">
+                ※ 행을 클릭하면 해당 기준정보의 상세/변경 화면이 나타납니다. 이력 버튼을 클릭하면 변경 이력을 확인할 수 있습니다.
+              </p>
+            </div>
+          </section>
+
+          <!-- 이력 조회 모달 (PRD 3.3: 기준정보 이력 및 스냅샷) -->
+          <div id="history-modal"
+            style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+            <div
+              style="background:#fff; border-radius:16px; max-width:700px; width:90%; max-height:80vh; overflow:auto; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+              <div
+                style="padding:20px 24px; border-bottom:1px solid var(--border-soft); display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; font-size:16px; font-weight:600;">변경 이력 조회</h3>
+                <button id="close-history-modal"
+                  style="border:none; background:none; font-size:20px; cursor:pointer; color:var(--text-muted);">✕</button>
+              </div>
+              <div style="padding:24px;">
+                <div style="margin-bottom:16px;">
+                  <span style="font-size:13px; color:var(--text-muted);">코드:</span>
+                  <strong id="history-modal-code" style="color:var(--brand-main);"></strong>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>일자</th>
+                        <th>작업</th>
+                        <th>담당자</th>
+                        <th>변경내용</th>
+                      </tr>
+                    </thead>
+                    <tbody id="history-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5개 상세 화면을 모두 나열하는 영역 -->
+          <div id="reference-detail-list">
+            <section class="card detail-block" id="detail-PKG-ixi_O-BASIC" style="margin-top:20px;">
+
+              <div class="section-header">
+                <div>
+                  <h2 class="section-title">상세 정보 · 변경</h2>
+                  <p class="section-desc">
+                    선택한 기준정보([PKG-ixi_O-BASIC])의 속성을 확인하고 변경합니다.
+                    아래 등록 양식을 통해 수정된 내용은 '변경 적용 기준일자'부터 유효한 신규 버전으로 생성됩니다.
+                  </p>
+                </div>
+              </div>
+
+              <div class="detail-layout" style="display:block;">
+                <!-- Version & Meta Info -->
+
+                <!-- Version Control Panel -->
+                <div style="
+                    display: flex; 
+                    flex-direction: row; 
+                    align-items: center; 
+                    justify-content: space-between; 
+                    gap: 20px; 
+                    padding: 24px; 
+                    background: #f8fafc; 
+                    border: 1px solid #e2e8f0; 
+                    border-radius: 12px;
+                    margin-bottom: 30px;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                ">
+                  <!-- Left: Current Status -->
+                  <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="
+                            width: 44px; height: 44px; 
+                            background: #eff6ff; 
+                            border-radius: 8px; 
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 20px;
+                        ">📅</div>
+                    <div>
+                      <div style="font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 4px;">현재 버전 유효기간
+                        (Valid Period)</div>
+                      <div style="font-size: 16px; font-weight: 700; color: #1e293b; letter-spacing: -0.01em;">
+                        2025-01-01 ~ 9999-12-31
+                        <span style="
+                                    display: inline-block; 
+                                    margin-left: 8px; 
+                                    padding: 2px 8px; 
+                                    background: #dcfce7; 
+                                    color: #166534; 
+                                    font-size: 11px; 
+                                    border-radius: 999px; 
+                                    vertical-align: middle;
+                                ">Active</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Divider -->
+                  <div style="width: 1px; height: 40px; background: #cbd5e1;"></div>
+
+                  <!-- Right: Action Area -->
+                  <div style="display: flex; align-items: center; gap: 16px; flex: 1;">
+                    <div style="flex: 1;">
+                      <label for="change-effective-date-PKG-ixi_O-BASIC"
+                        style="display: block; font-size: 13px; color: var(--brand-main); font-weight: 600; margin-bottom: 4px;">
+                        신규 버전 시작일 (Effective Date)
+                      </label>
+                      <input type="date" id="change-effective-date-PKG-ixi_O-BASIC" class="field-input w-sm"
+                        style="height: 38px; border-color: var(--accent-chip-bg-strong);">
+                    </div>
+                    <div style="padding-top: 20px; display: flex; gap: 8px;"> <!-- align with input box -->
+                      <button class="btn-primary" type="button" onclick="handleApplyChange(&#39;PKG-ixi_O-BASIC&#39;)"
+                        style="height: 38px; padding: 0 20px; font-weight: 600; box-shadow: 0 2px 4px rgba(30, 64, 175, 0.3);">
+                        변경사항 저장 (Version Up)
+                      </button>
+                      <button type="button" onclick="handleDelete(&#39;PKG-ixi_O-BASIC&#39;)" style="
+                                    height: 38px; 
+                                    padding: 0 12px; 
+                                    font-weight: 600; 
+                                    color: #dc2626; 
+                                    background: #fef2f2; 
+                                    border: 1px solid #fecaca; 
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                    display: flex; align-items: center; gap: 4px;
+                                " onmouseover="this.style.background=&#39;#fee2e2&#39;"
+                        onmouseout="this.style.background=&#39;#fef2f2&#39;">
+                        <span style="font-size:14px;">🗑️</span> 삭제
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- Embedded Registration Form (The "Continuous Attachment") -->
+                <div class="embedded-form-area" style="position:relative;">
+                  <div class="section-divider"
+                    style="margin:30px 0 10px; border-top:2px dashed var(--accent-chip-bg-strong);"></div>
+                  <div class="type-group-title" style="margin-bottom:15px; color:var(--brand-main-dark);">기준정보 등록 상세
+                    (상품)</div>
+
+                  <section class="card">
+                    <div class="section-header">
+                      <div>
+                        <h2 class="section-title">상품 기본 정보</h2>
+                        <p class="section-desc">
+                          고객사가 청약하는 단위인 상품을 정의합니다. 상품에는 하나 이상의 기능그룹이 포함되며,
+                          고객사는 상품 구성 자체를 임의로 변경할 수 없습니다.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="section-body form-grid-2col">
+                      <div class="form-label">상품명</div>
+                      <div class="form-field-group">
+                        <input class="field-input w-lg" type="text" placeholder="예: ixi-O 기본 패키지">
+                      </div>
+
+                      <div class="form-label">설명</div>
+                      <div class="form-field-group">
+                        <textarea class="field-textarea" placeholder="상품의 주요 대상, 포함 기능, 유의사항 등을 입력하세요."></textarea>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="card">
+                    <div class="section-header">
+                      <div>
+                        <h2 class="section-title">하위 기능그룹 구성</h2>
+                        <p class="section-desc">
+                          사전에 등록된 기능그룹 중 이 상품에 포함할 그룹을 선택합니다.
+                          동일 기능그룹은 여러 상품에 포함될 수 있습니다.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="section-body">
+                      <div class="form-field-group">
+                        <div class="field-note">※ 아래 목록은 예시입니다. 실제 구현 시 검색/필터/페이징이 적용됩니다.</div>
+                        <div class="table-wrap">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th style="width:40px;"></th>
+                                <th>코드</th>
+                                <th>기능그룹명</th>
+                                <th>설명</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><input type="checkbox" checked=""></td>
+                                <td>FG-CALL-EASE</td>
+                                <td>통화 편의</td>
+                                <td>보이는 전화, 통화 요약 등 통화 UX 향상 기능 그룹</td>
+                              </tr>
+                              <tr>
+                                <td><input type="checkbox"></td>
+                                <td>FG-SECURE</td>
+                                <td>보안</td>
+                                <td>보이스피싱 감지, 스팸 차단 등 보안 관련 기능 그룹</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <span class="field-note">※ 고객사는 상품 구성(포함 기능그룹/기능)을 직접 변경할 수 없으며, 당사에서만 변경 가능합니다.</span>
+                      </div>
+                    </div>
+
+                    <div class="btn-group-right">
+                      <button class="btn-secondary" type="button">초기화</button>
+                      <button class="btn-primary" type="button"
+                        onclick="alert(&#39;상품 등록 예시입니다. 실제 구현 시 적용 일자 선택 팝업과 연동됩니다.&#39;)">등록</button>
+                    </div>
+                  </section>
+
+                </div>
+              </div>
+
+            </section>
+          </div>
+        </div>
+
+        <!-- 등록 View: 신규 등록 폼 -->
+        <div id="view-register" class="view-section">
+          <div class="page-title">기준정보 등록</div>
+
+          <section class="card">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title">등록 대상 선택</h2>
+                <p class="section-desc">
+                  상품/기능/기능그룹, 과금/할인 요소를 하나의 화면에서 등록·관리합니다.
+                  서비스 구성(상품/기능그룹/기능)과 과금·할인 정책(과금요소/할인요소)을 시각적으로 분리해 선택합니다.
+                </p>
+              </div>
+              <div class="btn-group-right" style="margin-top:0;">
+                <button class="btn-secondary" id="btn-back-list-page" style="height:36px;">
+                  목록으로 돌아가기
+                </button>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="type-groups">
+                <div>
+                  <div class="type-group-title">서비스 구성 (등록 유형 선택)</div>
+                  <div class="process-steps" id="chip-group-service">
+                    <div class="process-step active" data-type="기능">
+                      <!-- Removed Step Number --> 기능
+                    </div>
+                    <div class="process-step" data-type="기능그룹">
+                      기능그룹
+                    </div>
+                    <div class="process-step" data-type="상품">
+                      상품
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="type-group-title">과금 / 할인 정책 (모듈)</div>
+                  <div class="policy-cards" id="chip-group-billing">
+                    <div class="policy-card" data-type="과금요소">
+                      <span class="policy-card-icon">💰</span> 과금요소
+                    </div>
+                    <div class="policy-card" data-type="할인요소">
+                      <span class="policy-card-icon">🏷️</span> 할인요소
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div id="register-tab-inner-page">
+            <section class="card">
+              <div class="section-header">
+                <div>
+                  <h2 class="section-title">기능 기본 정보</h2>
+                  <p class="section-desc">
+                    최종 사용자에게 노출되는 단위 기능입니다. 대표 스크린샷 이미지는
+                    기준정보 조회·변경 탭에서 기능 상세 확인 시 상단에 노출됩니다.
+                  </p>
+                </div>
+              </div>
+              <div class="section-body form-grid-2col">
+                <div class="form-label">기능 아이콘</div>
+                <div class="form-field-group">
+                  <input type="file" id="input-feature-icon" hidden="" accept="image/*">
+                  <div id="dropzone-feature-icon" class="upload-icon-box" title="아이콘 업로드">
+                    <span style="font-size:20px;">+</span>
+                  </div>
+                  <div id="preview-feature-icon" style="display:none;"></div>
+                  <span class="field-note" style="margin-top:6px;">앱 리스트 및 메뉴에 노출되는 아이콘 (64x64 권장)</span>
+                </div>
+
+                <div class="form-label">기능명</div>
+                <div class="form-field-group">
+                  <input class="field-input w-md" type="text" placeholder="예: 보이는 전화">
+                </div>
+
+                <div class="form-label">설명</div>
+                <div class="form-field-group">
+                  <textarea class="field-textarea" placeholder="사용자가 인지하는 기능 목적과 주요 사용 흐름을 입력하세요."></textarea>
+                </div>
+
+                <div class="form-label">대표 이미지</div>
+                <div class="form-field-group">
+                  <input type="file" id="input-feature-image" hidden="" accept="image/*">
+                  <div id="dropzone-feature-image" class="upload-dropzone">
+                    <div style="font-weight:500; margin-bottom:4px;">대표 스크린샷 업로드</div>
+                    <div>여기에 이미지를 Drag &amp; Drop 하거나, 클릭하여 파일을 선택하세요.</div>
+                    <div class="field-note" style="margin-top:4px;">
+                      PNG/JPEG, 5MB 이하 권장. 통화 앱 내 실제 화면과 최대한 유사한 이미지를 사용합니다.
+                    </div>
+                  </div>
+                  <div id="preview-feature-image" style="display:none;"></div>
+                </div>
+              </div>
+
+              <div class="btn-group-right">
+                <button class="btn-secondary" type="button">초기화</button>
+                <button class="btn-primary" type="button" onclick="alert(&#39;기능 등록 예시입니다.&#39;)">등록</button>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- 모달 컨테이너 (Hidden by default) -->
+        <div class="modal-overlay" id="modal-register">
+          <div class="modal-container">
+            <div class="modal-header">
+              <div class="modal-title">기준정보 신규 등록</div>
+              <button class="modal-close-btn" id="btn-close-modal">×</button>
+            </div>
+            <div class="modal-body">
+              <!-- 모달 내부용 컨텐츠 영역 -->
+              <section class="card" style="margin-bottom: 20px;">
+                <div class="section-header">
+                  <div>
+                    <h2 class="section-title">등록 대상 선택</h2>
+                    <p class="section-desc">
+                      등록할 기준정보 유형을 선택하세요.
+                    </p>
+                  </div>
+                </div>
+                <div class="section-body">
+                  <div class="type-groups">
+                    <div>
+                      <div class="type-group-title">서비스 구성 (등록 유형 선택)</div>
+                      <div class="process-steps" id="chip-group-service-modal">
+                        <div class="process-step active" data-type="기능">기능</div>
+                        <div class="process-step" data-type="기능그룹">기능그룹</div>
+                        <div class="process-step" data-type="상품">상품</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="type-group-title">과금 / 할인 정책 (모듈)</div>
+                      <div class="policy-cards" id="chip-group-billing-modal">
+                        <div class="policy-card" data-type="과금요소"><span class="policy-card-icon">💰</span> 과금요소</div>
+                        <div class="policy-card" data-type="할인요소"><span class="policy-card-icon">🏷️</span> 할인요소</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <div id="register-tab-inner-modal">
+                <section class="card">
+                  <div class="section-header">
+                    <div>
+                      <h2 class="section-title">기능 기본 정보</h2>
+                      <p class="section-desc">
+                        최종 사용자에게 노출되는 단위 기능입니다. 대표 스크린샷 이미지는
+                        기준정보 조회·변경 탭에서 기능 상세 확인 시 상단에 노출됩니다.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="section-body form-grid-2col">
+                    <div class="form-label">기능 아이콘</div>
+                    <div class="form-field-group">
+                      <input type="file" id="input-feature-icon" hidden="" accept="image/*">
+                      <div id="dropzone-feature-icon" class="upload-icon-box" title="아이콘 업로드">
+                        <span style="font-size:20px;">+</span>
+                      </div>
+                      <div id="preview-feature-icon" style="display:none;"></div>
+                      <span class="field-note" style="margin-top:6px;">앱 리스트 및 메뉴에 노출되는 아이콘 (64x64 권장)</span>
+                    </div>
+
+                    <div class="form-label">기능명</div>
+                    <div class="form-field-group">
+                      <input class="field-input w-md" type="text" placeholder="예: 보이는 전화">
+                    </div>
+
+                    <div class="form-label">설명</div>
+                    <div class="form-field-group">
+                      <textarea class="field-textarea" placeholder="사용자가 인지하는 기능 목적과 주요 사용 흐름을 입력하세요."></textarea>
+                    </div>
+
+                    <div class="form-label">대표 이미지</div>
+                    <div class="form-field-group">
+                      <input type="file" id="input-feature-image" hidden="" accept="image/*">
+                      <div id="dropzone-feature-image" class="upload-dropzone">
+                        <div style="font-weight:500; margin-bottom:4px;">대표 스크린샷 업로드</div>
+                        <div>여기에 이미지를 Drag &amp; Drop 하거나, 클릭하여 파일을 선택하세요.</div>
+                        <div class="field-note" style="margin-top:4px;">
+                          PNG/JPEG, 5MB 이하 권장. 통화 앱 내 실제 화면과 최대한 유사한 이미지를 사용합니다.
+                        </div>
+                      </div>
+                      <div id="preview-feature-image" style="display:none;"></div>
+                    </div>
+                  </div>
+
+                  <div class="btn-group-right">
+                    <button class="btn-secondary" type="button">초기화</button>
+                    <button class="btn-primary" type="button" onclick="alert(&#39;기능 등록 예시입니다.&#39;)">등록</button>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    /* =========================
+       메뉴 구조 정의
+    ========================= */
+    const MENU_STRUCTURE = {
+      "상품 운영": {
+        "상품 관리": ["상품 기준 정보"],
+        "고객사 관리": ["고객사 정보", "계약 관리"],
+        "대시보드": ["사업 실적 관리"]
+      },
+      "서비스 운영": {
+        "사용자 관리": ["계정 관리"],
+        "구독 관리": ["구독 현황"],
+        "DevOps": ["On-device AI 모델", "Cloud AI 기능", "서비스 연동 관리"],
+        "Support Center": ["유플러스", "A사(고객사)", "공지/SOP/FAQ"]
+      },
+      "서비스 정산": {
+        "청구/수납": ["고객사별 청구"]
+      },
+      "일반": {
+        "시스템": ["보안/컴플라이언스", "설정"],
+        "Global": ["로그인/인증", "마이페이지"]
+      }
+    };
+
+    let currentTop = "상품 운영";
+    let currentL2 = "상품 관리";
+    let currentL3 = "상품 기준 정보";
+
+    /* =========================
+       기준정보 조회용 샘플 데이터 + 버전 정보
+    ========================= */
+    const REFERENCE_ITEMS = [
+      // Order: Product -> Feature Group -> Feature -> Billing -> Discount
+      {
+        type: "상품",
+        code: "PKG-ixi_O-BASIC",
+        name: "ixi-O 기본 패키지",
+        created: "2025-01-01",
+        valid_from: "2025-01-01",
+        valid_to: "9999-12-31",
+        status: "등록",
+        history: [
+          { date: "2025-01-01", action: "생성", user: "admin", desc: "최초 등록" }
+        ]
+      },
+      {
+        type: "기능그룹",
+        code: "FG-CALL-EASE",
+        name: "통화 편의",
+        created: "2024-12-01",
+        valid_from: "2024-12-01",
+        valid_to: "9999-12-31",
+        status: "등록",
+        history: [
+          { date: "2024-12-01", action: "생성", user: "admin", desc: "최초 등록" },
+          { date: "2025-02-15", action: "변경", user: "admin", desc: "설명 수정" }
+        ]
+      },
+      {
+        type: "기능",
+        code: "FT-SEE-CALL",
+        name: "보이는 전화",
+        created: "2024-11-15",
+        valid_from: "2024-11-15",
+        valid_to: "9999-12-31",
+        status: "등록",
+        image: "https://via.placeholder.com/560x320.png?text=%EB%B3%B4%EC%9D%B4%EB%8A%94+%EC%A0%84%ED%99%94+UI",
+        history: [
+          { date: "2024-11-15", action: "생성", user: "admin", desc: "최초 등록" }
+        ]
+      },
+      {
+        type: "기능",
+        code: "FT-CALL-SUM",
+        name: "통화 요약",
+        created: "2024-11-20",
+        valid_from: "2024-11-20",
+        valid_to: "2025-06-30",
+        status: "삭제",
+        history: [
+          { date: "2024-11-20", action: "생성", user: "admin", desc: "최초 등록" },
+          { date: "2025-06-30", action: "삭제", user: "admin", desc: "서비스 종료로 삭제" }
+        ]
+      },
+      {
+        type: "과금요소",
+        code: "BG-ixi_O-01",
+        name: "ixi-O 인당 과금(표준)",
+        created: "2025-01-01",
+        valid_from: "2025-01-01",
+        valid_to: "9999-12-31",
+        status: "등록",
+        billingUnit: "인당",
+        targetProduct: "상품 가입자",
+        unitPrice: 0.50,
+        history: [
+          { date: "2025-01-01", action: "생성", user: "admin", desc: "최초 등록" }
+        ]
+      },
+      {
+        type: "할인요소",
+        code: "DC-ixi_O-LAUNCH",
+        name: "ixi-O 런칭 3개월 50% 할인",
+        created: "2025-01-15",
+        valid_from: "2025-01-15",
+        valid_to: "9999-12-31",
+        status: "등록",
+        discountTarget: "과금 할인",
+        discountType: "정률",
+        discountValue: 50,
+        condition: "기간",
+        history: [
+          { date: "2025-01-15", action: "생성", user: "admin", desc: "런칭 프로모션 등록" }
+        ]
+      }
+    ];
+    let selectedReferenceCode = null;
+
+    /* =========================
+       Breadcrumb
+    ========================= */
+    function renderBreadcrumb(top, l2, l3) {
+      const el = document.getElementById("breadcrumb");
+      el.innerHTML = `
+        <span>${top}</span>
+        <span>›</span>
+        <span>${l2}</span>
+        ${l3 ? `<span>›</span><span class="current">${l3}</span>` : ""}
+      `;
+    }
+
+    /* =========================
+       메인 페이지 렌더링
+    ========================= */
+    function renderPage(top, l2, l3) {
+      const container = document.getElementById("page-inner");
+
+      // 상품 기준 정보 – 실제 화면
+      if (top === "상품 운영" && l2 === "상품 관리" && l3 === "상품 기준 정보") {
+        container.innerHTML = getProductStandardHTML();
+        renderBreadcrumb(top, l2, l3);
+        initProductStandardPage();
+        return;
+      }
+
+      // 나머지는 Stub
+      container.innerHTML = `
+        <div class="page-title">${l3 || l2}</div>
+        <div class="stub-card">
+          <div class="stub-title">화면 상세 기획 중입니다.</div>
+          <p class="stub-desc">
+            [${top} &gt; ${l2}${l3 ? " &gt; " + l3 : ""}] 경로의 상세 기능 화면은 추후 기획/설계 후 제공될 예정입니다.
+          </p>
+        </div>
+      `;
+      renderBreadcrumb(top, l2, l3);
+    }
+
+    function getProductStandardHTML() {
+      return `
+        <!-- 메인 View: 조회 목록 + 상세 -->
+        <div id="view-list" class="view-section active">
+          <div class="page-title">상품 기준 정보</div>
+
+          <section class="card">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title">기준정보 목록 (Snapshot)</h2>
+                <p class="section-desc">
+                  선택한 기준일자 기준으로 유효한 상품/기능그룹/기능/과금요소/할인요소를 한 번에 조회합니다.
+                </p>
+              </div>
+              <div class="btn-group-right" style="margin-top:0;">
+              <div class="btn-group-right" style="margin-top:0; gap:8px;">
+                <button class="btn-primary" id="btn-go-register-page" style="height:36px;">
+                  + 신규 등록 (페이지)
+                </button>
+                <button class="btn-primary" id="btn-go-register-modal" style="height:36px; background: #4f46e5;">
+                    + 신규 등록 (모달)
+                </button>
+              </div>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="snapshot-banner">
+                <span>📅 <strong>스냅샷 조회 모드:</strong> 현재 선택된 일자(<span id="snapshot-date-display">2025-12-09</span>) 기준으로 유효한 기준정보만 표시합니다. 과거 이력을 보려면 기준일자를 변경하세요.</span>
+              </div>
+
+              <div class="inline-row" style="margin-bottom:4px; gap:8px;">
+                <div class="form-field-group" style="max-width:200px;">
+                  <input type="date" class="field-input" id="lookup-date" value="2025-12-09" />
+                </div>
+                <div class="form-field-group" style="max-width:140px;">
+                  <select class="field-select" id="filter-type">
+                    <option value="ALL">전체 유형</option>
+                    <option value="상품">상품</option>
+                    <option value="기능그룹">기능그룹</option>
+                    <option value="기능">기능</option>
+                    <option value="과금요소">과금요소</option>
+                    <option value="할인요소">할인요소</option>
+                  </select>
+                </div>
+                <button class="btn-secondary" type="button" id="btn-lookup">조회</button>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>유형</th>
+                      <th>코드</th>
+                      <th>명칭</th>
+                      <th>최초 생성일자</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reference-tbody"></tbody>
+                </table>
+              </div>
+              <p class="help-text">
+                ※ 행을 클릭하면 해당 기준정보의 상세/변경 화면이 나타납니다.
+                (상세 정보는 한 번에 하나씩 표시됩니다)
+              </p>
+            </div>
+          </section>
+
+          <!-- 5개 상세 화면을 모두 나열하는 영역 -->
+          <div id="reference-detail-list"></div>
+        </div>
+
+        <!-- 등록 View: 신규 등록 폼 -->
+        <div id="view-register" class="view-section">
+          <div class="page-title">기준정보 등록</div>
+          
+          <section class="card">
+            <div class="section-header">
+              <div>
+                <h2 class="section-title">등록 대상 선택</h2>
+                <p class="section-desc">
+                  상품/기능/기능그룹, 과금/할인 요소를 하나의 화면에서 등록·관리합니다.
+                  서비스 구성(상품/기능그룹/기능)과 과금·할인 정책(과금요소/할인요소)을 시각적으로 분리해 선택합니다.
+                </p>
+              </div>
+              <div class="btn-group-right" style="margin-top:0;">
+                <button class="btn-secondary" id="btn-back-list-page" style="height:36px;">
+                  목록으로 돌아가기
+                </button>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="type-groups">
+                <div>
+                  <div class="type-group-title">서비스 구성 (등록 유형 선택)</div>
+                  <div class="process-steps" id="chip-group-service">
+                    <div class="process-step active" data-type="기능">
+                      <!-- Removed Step Number --> 기능
+                    </div>
+                    <div class="process-step" data-type="기능그룹">
+                      기능그룹
+                    </div>
+                    <div class="process-step" data-type="상품">
+                      상품
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="type-group-title">과금 / 할인 정책 (모듈)</div>
+                  <div class="policy-cards" id="chip-group-billing">
+                    <div class="policy-card" data-type="과금요소">
+                      <span class="policy-card-icon">💰</span> 과금요소
+                    </div>
+                    <div class="policy-card" data-type="할인요소">
+                      <span class="policy-card-icon">🏷️</span> 할인요소
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div id="register-tab-inner-page"></div>
+        </div>
+
+        <!-- 모달 컨테이너 (Hidden by default) -->
+        <div class="modal-overlay" id="modal-register">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <div class="modal-title">기준정보 신규 등록</div>
+                    <button class="modal-close-btn" id="btn-close-modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <!-- 모달 내부용 컨텐츠 영역 -->
+                     <section class="card" style="margin-bottom: 20px;">
+                        <div class="section-header">
+                          <div>
+                            <h2 class="section-title">등록 대상 선택</h2>
+                            <p class="section-desc">
+                              등록할 기준정보 유형을 선택하세요.
+                            </p>
+                          </div>
+                        </div>
+                        <div class="section-body">
+                          <div class="type-groups">
+                            <div>
+                              <div class="type-group-title">서비스 구성 (등록 유형 선택)</div>
+                              <div class="process-steps" id="chip-group-service-modal">
+                                <div class="process-step active" data-type="기능">기능</div>
+                                <div class="process-step" data-type="기능그룹">기능그룹</div>
+                                <div class="process-step" data-type="상품">상품</div>
+                              </div>
+                            </div>
+                            <div>
+                              <div class="type-group-title">과금 / 할인 정책 (모듈)</div>
+                              <div class="policy-cards" id="chip-group-billing-modal">
+                                <div class="policy-card" data-type="과금요소"><span class="policy-card-icon">💰</span> 과금요소</div>
+                                <div class="policy-card" data-type="할인요소"><span class="policy-card-icon">🏷️</span> 할인요소</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    <div id="register-tab-inner-modal"></div>
+                </div>
+            </div>
+        </div>
+      `;
+    }
+
+    /* =========================
+       기준정보 등록 탭 렌더링
+    ========================= */
+    // let currentRegisterType = "기능"; // Removed duplicate
+
+    let currentRegisterType = "기능"; // 기본값: 기능 (Step 1)
+    let currentRenderTarget = "register-tab-inner-page"; // Default target
+
+    // [Modified] Accepts target ID to render into specific container (Page or Modal)
+    function renderRegisterForm(targetId = currentRenderTarget) {
+      const container = document.getElementById(targetId);
+      if (!container) return;
+
+      if (currentRegisterType === "상품") {
+        container.innerHTML = getFormProductHTML();
+      } else if (currentRegisterType === "기능그룹") {
+        container.innerHTML = getFormFeatureGroupHTML();
+      } else if (currentRegisterType === "기능") {
+        container.innerHTML = getFormFeatureHTML();
+        // Attach Upload Handlers
+        attachFeatureFormHandlers();
+      } else if (currentRegisterType === "과금요소") {
+        container.innerHTML = getFormBillingHTML();
+      } else if (currentRegisterType === "할인요소") {
+        container.innerHTML = getFormDiscountHTML();
+      }
+    }
+
+    function getFormProductHTML() {
+      return `
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">상품 기본 정보</h2>
+              <p class="section-desc">
+                고객사가 청약하는 단위인 상품을 정의합니다. 상품에는 하나 이상의 기능그룹이 포함되며,
+                고객사는 상품 구성 자체를 임의로 변경할 수 없습니다.
+              </p>
+            </div>
+          </div>
+          <div class="section-body form-grid-2col">
+            <div class="form-label">상품명</div>
+            <div class="form-field-group">
+              <input class="field-input w-lg" type="text" placeholder="예: ixi-O 기본 패키지" />
+            </div>
+
+            <div class="form-label">설명</div>
+            <div class="form-field-group">
+              <textarea class="field-textarea" placeholder="상품의 주요 대상, 포함 기능, 유의사항 등을 입력하세요."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">하위 기능그룹 구성</h2>
+              <p class="section-desc">
+                사전에 등록된 기능그룹 중 이 상품에 포함할 그룹을 선택합니다.
+                동일 기능그룹은 여러 상품에 포함될 수 있습니다.
+              </p>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="form-field-group">
+              <div class="field-note">※ 아래 목록은 예시입니다. 실제 구현 시 검색/필터/페이징이 적용됩니다.</div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width:40px;"></th>
+                      <th>코드</th>
+                      <th>기능그룹명</th>
+                      <th>설명</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input type="checkbox" checked /></td>
+                      <td>FG-CALL-EASE</td>
+                      <td>통화 편의</td>
+                      <td>보이는 전화, 통화 요약 등 통화 UX 향상 기능 그룹</td>
+                    </tr>
+                    <tr>
+                      <td><input type="checkbox" /></td>
+                      <td>FG-SECURE</td>
+                      <td>보안</td>
+                      <td>보이스피싱 감지, 스팸 차단 등 보안 관련 기능 그룹</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <span class="field-note">※ 고객사는 상품 구성(포함 기능그룹/기능)을 직접 변경할 수 없으며, 당사에서만 변경 가능합니다.</span>
+            </div>
+          </div>
+
+          <div class="btn-group-right">
+            <button class="btn-secondary" type="button">초기화</button>
+            <button class="btn-primary" type="button" onclick="alert('상품 등록 예시입니다. 실제 구현 시 적용 일자 선택 팝업과 연동됩니다.')">등록</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function getFormFeatureGroupHTML() {
+      return `
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">기능그룹 기본 정보</h2>
+              <p class="section-desc">
+                유사한 성격의 기능을 묶어 관리하기 위한 단위입니다.
+                동일 기능은 여러 기능그룹에 포함될 수 있습니다.
+              </p>
+            </div>
+          </div>
+          <div class="section-body form-grid-2col">
+            <div class="form-label">기능그룹명</div>
+            <div class="form-field-group">
+              <input class="field-input w-md" type="text" placeholder="예: 통화 편의" />
+            </div>
+
+            <div class="form-label">설명</div>
+            <div class="form-field-group">
+              <textarea class="field-textarea" placeholder="이 기능그룹에 포함되는 기능의 공통 목적과 사용 시나리오를 입력하세요."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">하위 기능 구성</h2>
+              <p class="section-desc">
+                사전에 등록된 기능 목록에서 이 기능그룹에 포함할 기능을 선택합니다.
+              </p>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:40px;"></th>
+                    <th>코드</th>
+                    <th>기능명</th>
+                    <th>설명</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="checkbox" checked /></td>
+                    <td>FT-SEE-CALL</td>
+                    <td>보이는 전화</td>
+                    <td>착신 시 발신자 정보와 화면을 함께 보여주는 기능</td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>FT-CALL-SUM</td>
+                    <td>통화 요약</td>
+                    <td>통화 종료 후 주요 내용을 요약해 보여주는 기능</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <span class="field-note">※ 동일 기능은 여러 기능그룹에 중복 포함될 수 있습니다.</span>
+          </div>
+
+          <div class="btn-group-right">
+            <button class="btn-secondary" type="button">초기화</button>
+            <button class="btn-primary" type="button" onclick="alert('기능그룹 등록 예시입니다.')">등록</button>
+          </div>
+        </section>
+      `;
+    }
+
+
+    /* =========================
+        기능 등록 폼 핸들러 (이미지 업로드 로직)
+    ========================= */
+    function attachFeatureFormHandlers() {
+      // Helper to setup upload logic
+      const setupUpload = (inputId, dropzoneId, previewId, isIcon) => {
+        const input = document.getElementById(inputId);
+        const dropzone = document.getElementById(dropzoneId);
+        const previewCtx = document.getElementById(previewId);
+
+        if (!input || !dropzone || !previewCtx) return;
+
+        const trigger = () => input.click();
+        dropzone.addEventListener("click", trigger);
+
+        input.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              // Hide dropzone, Show preview
+              dropzone.style.display = "none";
+              previewCtx.style.display = isIcon ? "block" : "flex"; // Icon: block, Image: flex/block
+
+              // Inject HTML
+              previewCtx.innerHTML = `
+                                <div class="preview-container" style="${isIcon ? 'width:64px; height:64px;' : 'width:100%; max-width:400px;'}">
+                                    <img src="${ev.target.result}" alt="Preview" />
+                                    <button type="button" class="btn-remove-image" id="remove-${inputId}">✕</button>
+                                </div>
+                            `;
+
+              // Attach remove handler
+              const removeBtn = document.getElementById(`remove-${inputId}`);
+              if (removeBtn) {
+                removeBtn.addEventListener("click", (e) => {
+                  e.stopPropagation(); // prevent bubbling
+                  input.value = ""; // clear input
+                  previewCtx.innerHTML = "";
+                  previewCtx.style.display = "none";
+                  dropzone.style.display = isIcon ? "flex" : "block"; // Restore
+                });
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      };
+
+      // Icon Upload
+      setupUpload("input-feature-icon", "dropzone-feature-icon", "preview-feature-icon", true);
+      // Main Image Upload
+      setupUpload("input-feature-image", "dropzone-feature-image", "preview-feature-image", false);
+    }
+
+    function getFormFeatureHTML() {
+      return `
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">기능 기본 정보</h2>
+              <p class="section-desc">
+                최종 사용자에게 노출되는 단위 기능입니다. 대표 스크린샷 이미지는
+                기준정보 조회·변경 탭에서 기능 상세 확인 시 상단에 노출됩니다.
+              </p>
+            </div>
+          </div>
+          <div class="section-body form-grid-2col">
+            <div class="form-label">기능 아이콘</div>
+            <div class="form-field-group">
+                <input type="file" id="input-feature-icon" hidden accept="image/*" />
+                <div id="dropzone-feature-icon" class="upload-icon-box" title="아이콘 업로드">
+                    <span style="font-size:20px;">+</span>
+                </div>
+                <div id="preview-feature-icon" style="display:none;"></div>
+                <span class="field-note" style="margin-top:6px;">앱 리스트 및 메뉴에 노출되는 아이콘 (64x64 권장)</span>
+            </div>
+
+            <div class="form-label">기능명</div>
+            <div class="form-field-group">
+              <input class="field-input w-md" type="text" placeholder="예: 보이는 전화" />
+            </div>
+
+            <div class="form-label">설명</div>
+            <div class="form-field-group">
+              <textarea class="field-textarea" placeholder="사용자가 인지하는 기능 목적과 주요 사용 흐름을 입력하세요."></textarea>
+            </div>
+
+            <div class="form-label">대표 이미지</div>
+            <div class="form-field-group">
+              <input type="file" id="input-feature-image" hidden accept="image/*" />
+              <div id="dropzone-feature-image" class="upload-dropzone">
+                <div style="font-weight:500; margin-bottom:4px;">대표 스크린샷 업로드</div>
+                <div>여기에 이미지를 Drag & Drop 하거나, 클릭하여 파일을 선택하세요.</div>
+                <div class="field-note" style="margin-top:4px;">
+                  PNG/JPEG, 5MB 이하 권장. 통화 앱 내 실제 화면과 최대한 유사한 이미지를 사용합니다.
+                </div>
+              </div>
+              <div id="preview-feature-image" style="display:none;"></div>
+            </div>
+          </div>
+
+          <div class="btn-group-right">
+            <button class="btn-secondary" type="button">초기화</button>
+            <button class="btn-primary" type="button" onclick="alert('기능 등록 예시입니다.')">등록</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function getFormBillingHTML() {
+      return `
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">과금요소 기본 정보</h2>
+              <p class="section-desc">
+                상품과 독립된 과금 속성을 정의합니다. 실제 계약 생성 시 고객사-상품과 매핑되어
+                인당 단가, 무과금 구간 등의 정보를 제공합니다.
+              </p>
+            </div>
+            <span class="section-badge">과금 정책</span>
+          </div>
+          <div class="section-body form-grid-2col">
+            <div class="form-label">요소명</div>
+            <div class="form-field-group">
+              <input class="field-input w-md" type="text" placeholder="예: ixi-O 인당 과금(표준)" />
+            </div>
+
+            <div class="form-label">설명</div>
+            <div class="form-field-group">
+              <textarea class="field-textarea" placeholder="적용 대상 상품, 기본 단가, 무과금 구간 등 과금 정책을 설명합니다."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">과금 속성</h2>
+              <p class="section-desc">
+                과금 단위와 표준 단가를 정의합니다. 예시는 인당 과금 기준이며, 상품 가입자 수에 단가를 곱해 월 과금을 산정합니다.
+              </p>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>과금 단위</th>
+                    <th>적용 대상</th>
+                    <th>표준 단가(USD)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>인당</td>
+                    <td>상품 가입자</td>
+                    <td><input class="field-input w-xs" type="number" step="0.01" placeholder="예: 0.50" /></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <span class="field-note">
+              ※ 무과금량, 과금 상한 등 추가 정책은 계약·할인 정책과 연동하여 별도 정의합니다.
+            </span>
+          </div>
+
+          <div class="btn-group-right">
+            <button class="btn-secondary" type="button">초기화</button>
+            <button class="btn-primary" type="button" onclick="alert('과금요소 등록 예시입니다.')">등록</button>
+          </div>
+        </section>
+      `;
+    }
+
+    function getFormDiscountHTML() {
+      return `
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">할인요소 기본 정보</h2>
+              <p class="section-desc">
+                계약 기간, 가입자 수, 일회성 이벤트 등에 따라 조건부로 적용되는 할인 정책을 정의합니다.
+              </p>
+            </div>
+            <span class="section-badge">할인 정책</span>
+          </div>
+          <div class="section-body form-grid-2col">
+            <div class="form-label">요소명</div>
+            <div class="form-field-group">
+              <input class="field-input w-lg" type="text" placeholder="예: ixi-O 런칭 3개월 50% 할인" />
+            </div>
+
+            <div class="form-label">설명</div>
+            <div class="form-field-group">
+              <textarea class="field-textarea" placeholder="할인 적용 시점, 목적, 대상 등을 입력합니다. 예: 계약월 기준 3개월간 50% 할인 제공 등"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">할인 속성</h2>
+              <p class="section-desc">
+                할인 대상, 형태, 할인액/률 및 적용 조건을 설정합니다. 복수 할인 적용 시 우선순위 정책은 추후 정의(TBD)로 남겨둡니다.
+              </p>
+            </div>
+          </div>
+          <div class="section-body">
+            <!-- 할인 속성 그룹 박스 -->
+            <div class="gray-box form-grid-2col">
+              <div class="form-label">할인 대상</div>
+              <div class="form-field-group">
+                <div class="radio-group">
+                  <label><input type="radio" name="disc-target" checked /> 과금 할인 (단가에 할인 적용)</label>
+                  <label><input type="radio" name="disc-target" /> 청구 할인 (월 과금 총액에 할인 적용)</label>
+                </div>
+              </div>
+
+              <div class="form-label">할인 정의</div>
+              <div class="form-field-group">
+                <div class="integrated-input-row">
+                  <!-- 할인 형태 -->
+                  <div class="radio-group">
+                    <label><input type="radio" name="disc-type" checked /> 정액</label>
+                    <label><input type="radio" name="disc-type" /> 정률</label>
+                  </div>
+                  
+                  <span class="integrated-divider"></span>
+
+                  <!-- 할인값 입력 -->
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <input class="field-input w-xs" type="number" placeholder="예: 1000" />
+                    <span style="font-size:13px; color:var(--text-sub);">원 (또는 %)</span>
+                  </div>
+                </div>
+                <span class="field-note" style="margin-top:6px;">
+                  ※ 정액: 통화 단가/청구 금액에서 고정 금액 차감, 정률: 단가/금액에 비율(%) 할인 적용
+                </span>
+              </div>
+            </div>
+
+            <!-- 적용 조건 그룹 (박스 밖) -->
+            <div class="form-grid-2col">
+              <div class="form-label">적용 조건</div>
+            <div class="form-field-group">
+              <div class="radio-group">
+                <label><input type="radio" name="disc-cond" checked /> 기간</label>
+                <label><input type="radio" name="disc-cond" /> 가입자</label>
+                <label><input type="radio" name="disc-cond" /> 일회성</label>
+              </div>
+              <span class="field-note">
+                기간: 계약월 기준 상대월이나 절대월로 할인 기간 지정, 가입자: 월 평균 가입자 수에 따라 step 할인 적용, 일회성: 특정 청구월 1회성 프로모션 등
+              </span>
+            </div>
+
+            <div class="form-label">기간 조건</div>
+            <div class="form-field-group">
+              <div class="inline-row">
+                <select class="field-select" style="max-width:160px;">
+                  <option>계약월 기준 상대월</option>
+                  <option>절대월</option>
+                </select>
+                <input class="field-input w-md" type="text" placeholder="예: 계약월+1 ~ +3 (3개월간)" />
+              </div>
+              <span class="field-note">
+                예: 최초 청구월부터 3개월간 인당 단가 50% 할인 (계약월+0 ~ +2)
+              </span>
+            </div>
+
+            <div class="form-label">가입자 조건</div>
+            <div class="form-field-group">
+              <div class="inline-row">
+                <input class="field-input w-sm" type="number" placeholder="예: 100000" />
+                <select class="field-select" style="max-width:120px;">
+                  <option>이상</option>
+                  <option>초과</option>
+                  <option>이하</option>
+                </select>
+              </div>
+              <span class="field-note">
+                예: 가입자 10만 명 초과 시, 초과분(1.5만명)에 대해 인당 -100원 할인. 월말 기준 월 평균 가입자 집계 후 자동 적용.
+              </span>
+            </div>
+
+            <div class="form-label">우선순위 (TBD)</div>
+            <div class="form-field-group">
+              <input class="field-input w-sm" type="text" placeholder="예: 1 (숫자가 낮을수록 우선순위 높음)" />
+              <span class="field-note">
+                복수 할인요소가 동시에 적용될 경우의 처리 우선순위입니다. 실제 정책 확정 후 상세 로직을 반영합니다.
+              </span>
+            </div>
+            </div>
+          </div>
+
+          <div class="btn-group-right">
+            <button class="btn-secondary" type="button">초기화</button>
+            <button class="btn-primary" type="button" onclick="alert('할인요소 등록 예시입니다.')">등록</button>
+          </div>
+        </section>
+      `;
+    }
+
+    /* =========================
+       조회/변경 탭 – 테이블 + 상세(5개 일괄)
+    ========================= */
+    /* =========================
+       조회/변경 탭 – 테이블 + 상세(5개 일괄)
+       (Updated: Filtering Logic)
+    ========================= */
+    function renderReferenceTable() {
+      const tbody = document.getElementById("reference-tbody");
+      const filterSelect = document.getElementById("filter-type");
+
+      if (!tbody) return;
+
+      const filterValue = filterSelect ? filterSelect.value : "ALL";
+
+      // Filter items
+      const filteredItems = REFERENCE_ITEMS.filter(item => {
+        if (filterValue === "ALL") return true;
+        return item.type === filterValue;
+      });
+
+      // Update Total Count (PRD 3.1.1)
+      const countEl = document.getElementById("total-count");
+      if (countEl) countEl.textContent = filteredItems.length;
+
+      if (filteredItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#999;">조건에 맞는 데이터가 없습니다.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filteredItems.map(item => {
+        const isProduct = item.type === "상품";
+        const isDeleted = item.status === "삭제";
+
+        // 상품 스타일
+        let rowStyle = "";
+        let typeStyle = "";
+
+        if (isProduct) {
+          typeStyle = "font-weight:700; color:var(--brand-main);";
+          rowStyle = "background:var(--accent-chip-bg); border-left: 3px solid var(--brand-main);";
+        }
+
+        // 삭제된 항목 스타일 (PRD 3.1.3: 논리적 삭제 시각화)
+        if (isDeleted) {
+          rowStyle = "opacity: 0.6; background: #f1f5f9; border-left: 3px solid #94a3b8;"; // 상품 스타일 덮어쓸 수 있음
+          if (isProduct) rowStyle = "opacity: 0.6; background: #eff6ff; border-left: 3px solid #94a3b8;"; // 상품인데 삭제된 경우 배경색 유지하되 흐리게
+          typeStyle = "color: #64748b;";
+        }
+
+        const nameStyle = isDeleted ? "text-decoration: line-through; color: #64748b;" : (isProduct ? 'font-weight:600;' : '');
+
+        // 상태 배지
+        const statusBadge = item.status === "삭제"
+          ? `<span style="padding:2px 6px; border-radius:4px; background:#fee2e2; color:#dc2626; font-size:11px;">삭제</span>`
+          : `<span style="padding:2px 6px; border-radius:4px; background:#dcfce7; color:#166534; font-size:11px;">등록</span>`;
+
+        return `
+        <tr data-code="${item.code}" class="${item.code === selectedReferenceCode ? "selected" : ""}" style="${rowStyle}">
+          <td style="${typeStyle}">${item.type}</td>
+          <td>${item.code}</td>
+          <td><span class="name-link" style="${nameStyle}">${item.name}</span></td>
+          <td>${item.created}</td>
+          <td>${statusBadge}</td>
+          <td style="text-align:center;">
+            <button class="btn-history" data-code="${item.code}" style="border:1px solid #e2e8f0; background:#fff; border-radius:4px; padding:2px 6px; font-size:11px; cursor:pointer;">📋 이력</button>
+          </td>
+        </tr>
+      `;
+      }).join("");
+    }
+
+    function buildDetailHTML(item) {
+      if (!item) return "<p class='field-note'>선택된 기준정보가 없습니다.</p>";
+
+      const versionBlock = `
+                <!-- Version Control Panel -->
+                <div style="
+                    display: flex; 
+                    flex-direction: row; 
+                    align-items: center; 
+                    justify-content: space-between; 
+                    gap: 20px; 
+                    padding: 24px; 
+                    background: #f8fafc; 
+                    border: 1px solid #e2e8f0; 
+                    border-radius: 12px;
+                    margin-bottom: 30px;
+                    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                ">
+                    <!-- Left: Current Status -->
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="
+                            width: 44px; height: 44px; 
+                            background: #eff6ff; 
+                            border-radius: 8px; 
+                            display: flex; align-items: center; justify-content: center;
+                            font-size: 20px;
+                        ">📅</div>
+                        <div>
+                            <div style="font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 4px;">현재 버전 유효기간 (Valid Period)</div>
+                            <div style="font-size: 16px; font-weight: 700; color: #1e293b; letter-spacing: -0.01em;">
+                                ${item.valid_from} ~ ${item.valid_to}
+                                <span style="
+                                    display: inline-block; 
+                                    margin-left: 8px; 
+                                    padding: 2px 8px; 
+                                    background: #dcfce7; 
+                                    color: #166534; 
+                                    font-size: 11px; 
+                                    border-radius: 999px; 
+                                    vertical-align: middle;
+                                ">Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div style="width: 1px; height: 40px; background: #cbd5e1;"></div>
+
+                    <!-- Right: Action Area -->
+                    <div style="display: flex; align-items: center; gap: 16px; flex: 1;">
+                        <div style="flex: 1;">
+                            <label for="change-effective-date-${item.code}" style="display: block; font-size: 13px; color: var(--brand-main); font-weight: 600; margin-bottom: 4px;">
+                                신규 버전 시작일 (Effective Date)
+                            </label>
+                            <input type="date" id="change-effective-date-${item.code}" class="field-input w-sm" style="height: 38px; border-color: var(--accent-chip-bg-strong);" />
+                        </div>
+                        <div style="padding-top: 20px; display: flex; gap: 8px;"> <!-- align with input box -->
+                             <button class="btn-primary" type="button" 
+                                onclick="handleApplyChange('${item.code}')"
+                                style="height: 38px; padding: 0 20px; font-weight: 600; box-shadow: 0 2px 4px rgba(30, 64, 175, 0.3);"
+                             >
+                                변경사항 저장 (Version Up)
+                             </button>
+                             <button type="button" 
+                                onclick="handleDelete('${item.code}')"
+                                style="
+                                    height: 38px; 
+                                    padding: 0 12px; 
+                                    font-weight: 600; 
+                                    color: #dc2626; 
+                                    background: #fef2f2; 
+                                    border: 1px solid #fecaca; 
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                    display: flex; align-items: center; gap: 4px;
+                                "
+                                onmouseover="this.style.background='#fee2e2'"
+                                onmouseout="this.style.background='#fef2f2'"
+                             >
+                                <span style="font-size:14px;">🗑️</span> 삭제
+                             </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+      // Get Form HTML based on type
+      let formHtml = "";
+      if (item.type === "상품") formHtml = getFormProductHTML();
+      else if (item.type === "기능그룹") formHtml = getFormFeatureGroupHTML();
+      else if (item.type === "기능") formHtml = getFormFeatureHTML();
+      else if (item.type === "과금요소") formHtml = getFormBillingHTML();
+      else if (item.type === "할인요소") formHtml = getFormDiscountHTML();
+
+      return `
+               <div class="section-header">
+                 <div>
+                   <h2 class="section-title">상세 정보 · 변경</h2>
+                   <p class="section-desc">
+                     선택한 기준정보([${item.code}])의 속성을 확인하고 변경합니다. 
+                     아래 등록 양식을 통해 수정된 내용은 '변경 적용 기준일자'부터 유효한 신규 버전으로 생성됩니다.
+                   </p>
+                 </div>
+               </div>
+               
+               <div class="detail-layout" style="display:block;">
+                 <!-- Version & Meta Info -->
+                 ${versionBlock}
+
+                 <!-- Embedded Registration Form (The "Continuous Attachment") -->
+                 <div class="embedded-form-area" style="position:relative;">
+                    <div class="section-divider" style="margin:30px 0 10px; border-top:2px dashed var(--accent-chip-bg-strong);"></div>
+                    <div class="type-group-title" style="margin-bottom:15px; color:var(--brand-main-dark);">기준정보 등록 상세 (${item.type})</div>
+                    ${formHtml}
+                 </div>
+               </div>
+            `;
+    }
+
+    // [Modified] Render ONLY the selected item (or nothing if none selected)
+    function renderReferenceDetailList(targetCode = null) {
+      const listContainer = document.getElementById("reference-detail-list");
+      if (!listContainer) return;
+
+      if (!targetCode) {
+        listContainer.innerHTML = "";
+        return;
+      }
+
+      const item = REFERENCE_ITEMS.find(i => i.code === targetCode);
+      if (!item) return;
+
+      listContainer.innerHTML = `
+                <section class="card detail-block" id="detail-${item.code}" style="margin-top:20px;">
+                    ${buildDetailHTML(item)}
+                </section>
+            `;
+
+      // Scroll to the newly opened detail section
+      setTimeout(() => {
+        listContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    }
+
+    /* 변경 버튼 클릭 시 동작 */
+    function handleApplyChange(code) {
+      const inputId = `change-effective-date-${code}`;
+      const dateInput = document.getElementById(inputId);
+      const d = dateInput ? dateInput.value : "";
+      const msgDate = d || "선택된 기준일자";
+      alert(
+        "[" + code + "] 변경 요청이 접수되었습니다.\n\n" +
+        "선택하신 '" + msgDate + "' 부터 유효한 [새로운 버전]이 생성됩니다.\n" +
+        "기존 버전은 '" + msgDate + "' 전일자까지만 유효하도록 자동으로 만료 처리됩니다.\n\n" +
+        "(이전 버전은 자동으로 만료 처리됩니다)"
+      );
+    }
+
+    /* 삭제 버튼 클릭 시 동작 (Mock) */
+    function handleDelete(code) {
+      if (confirm("[" + code + "] 기준정보를 정말 삭제하시겠습니까?\n\n삭제 시 현재 유효한 버전이 즉시 '만료(Expiration)' 처리되며,\n신규 계약에서 더 이상 선택할 수 없게 됩니다.")) {
+        alert("[" + code + "] 삭제(만료) 처리가 완료되었습니다.");
+      }
+    }
+
+    /* =========================
+       상품 기준 정보 페이지 초기화
+    ========================= */
+    /* =========================
+       상품 기준 정보 페이지 초기화
+    ========================= */
+    function initProductStandardPage() {
+      // [Initial Render] 페이지 모드 폼 렌더링 (Hidden state but ready)
+      renderRegisterForm("register-tab-inner-page");
+
+      // 조회/변경 탭 테이블/상세 렌더링
+      renderReferenceTable();
+      // 조회/변경 탭 테이블/상세 렌더링
+      renderReferenceTable();
+      // View Switching Logic
+      const viewList = document.getElementById("view-list");
+      const viewRegister = document.getElementById("view-register"); // Page View Container
+
+      // 1. Page View Interaction
+      const btnGoRegisterPage = document.getElementById("btn-go-register-page");
+      const btnBackListPage = document.getElementById("btn-back-list-page");
+
+      if (btnGoRegisterPage) {
+        btnGoRegisterPage.addEventListener("click", () => {
+          viewList.classList.remove("active");
+          viewRegister.classList.add("active");
+          currentRenderTarget = "register-tab-inner-page";
+          renderRegisterForm("register-tab-inner-page");
+          document.querySelector(".main").scrollTop = 0;
+        });
+      }
+
+      if (btnBackListPage) {
+        btnBackListPage.addEventListener("click", () => {
+          viewRegister.classList.remove("active");
+          viewList.classList.add("active");
+        });
+      }
+
+      // 2. Modal View Interaction
+      const modalRegister = document.getElementById("modal-register");
+      const btnGoRegisterModal = document.getElementById("btn-go-register-modal");
+      const btnCloseModal = document.getElementById("btn-close-modal");
+
+      if (btnGoRegisterModal) {
+        btnGoRegisterModal.addEventListener("click", () => {
+          modalRegister.classList.add("open");
+          currentRenderTarget = "register-tab-inner-modal";
+          renderRegisterForm("register-tab-inner-modal");
+        });
+      }
+
+      if (btnCloseModal) {
+        btnCloseModal.addEventListener("click", () => {
+          modalRegister.classList.remove("open");
+        });
+      }
+
+      // Close modal when clicking outside
+      modalRegister.addEventListener("click", (e) => {
+        if (e.target === modalRegister) {
+          modalRegister.classList.remove("open");
+        }
+      });
+
+      // [New] Filter Event Listener
+      // [Modified] 등록 대상 칩 (서비스 구성 / 과금·할인) - Handler Generator
+      function setupChipHandlers(serviceGroupId, billingGroupId, targetContainerId) {
+        const serviceGroup = document.getElementById(serviceGroupId);
+        const billingGroup = document.getElementById(billingGroupId);
+
+        if (serviceGroup) {
+          serviceGroup.addEventListener("click", (e) => {
+            const chip = e.target.closest(".process-step");
+            if (!chip) return;
+            const type = chip.getAttribute("data-type");
+
+            // UI Update
+            billingGroup.querySelectorAll(".policy-card").forEach(c => c.classList.remove("active"));
+            serviceGroup.querySelectorAll(".process-step").forEach(c => c.classList.toggle("active", c === chip));
+
+            currentRegisterType = type;
+            renderRegisterForm(targetContainerId);
+          });
+        }
+
+        if (billingGroup) {
+          billingGroup.addEventListener("click", (e) => {
+            const chip = e.target.closest(".policy-card");
+            if (!chip) return;
+            const type = chip.getAttribute("data-type");
+
+            // UI Update
+            serviceGroup.querySelectorAll(".process-step").forEach(c => c.classList.remove("active"));
+            billingGroup.querySelectorAll(".policy-card").forEach(c => c.classList.toggle("active", c === chip));
+
+            currentRegisterType = type;
+            renderRegisterForm(targetContainerId);
+          });
+        }
+      }
+
+      // Setup for Page
+      setupChipHandlers("chip-group-service", "chip-group-billing", "register-tab-inner-page");
+      // Setup for Modal
+      setupChipHandlers("chip-group-service-modal", "chip-group-billing-modal", "register-tab-inner-modal");
+
+      const tbody = document.getElementById("reference-tbody");
+      if (tbody) {
+        tbody.addEventListener("click", (e) => {
+          // 이력 버튼 클릭 처리
+          const historyBtn = e.target.closest(".btn-history");
+          if (historyBtn) {
+            e.stopPropagation();
+            const code = historyBtn.getAttribute("data-code");
+            showHistoryModal(code);
+            return;
+          }
+
+          const row = e.target.closest("tr[data-code]");
+          if (!row) return;
+          selectedReferenceCode = row.getAttribute("data-code");
+          renderReferenceTable();
+
+          // Render ONLY the selected item
+          renderReferenceDetailList(selectedReferenceCode);
+        });
+      }
+
+      // 이력 모달 닫기
+      const closeHistoryBtn = document.getElementById("close-history-modal");
+      const historyModal = document.getElementById("history-modal");
+      if (closeHistoryBtn && historyModal) {
+        closeHistoryBtn.addEventListener("click", () => {
+          historyModal.style.display = "none";
+        });
+        historyModal.addEventListener("click", (e) => {
+          if (e.target === historyModal) {
+            historyModal.style.display = "none";
+          }
+        });
+      }
+
+      const btnLookup = document.getElementById("btn-lookup");
+      if (btnLookup) {
+        btnLookup.addEventListener("click", () => {
+          const date = document.getElementById("lookup-date").value;
+          const displayEl = document.getElementById("snapshot-date-display");
+          if (displayEl) displayEl.textContent = date || "미지정";
+
+          alert(
+            (date ? date : "선택된 기준일자") +
+            " 기준 조회 예시입니다. 실제 구현 시 해당 일자 기준 유효한 기준정보(버전)를 필터링합니다."
+          );
+        });
+      }
+    }
+
+    // 이력 모달 표시 함수 (PRD 3.3)
+    function showHistoryModal(code) {
+      const modal = document.getElementById("history-modal");
+      const codeEl = document.getElementById("history-modal-code");
+      const tbody = document.getElementById("history-tbody");
+
+      if (!modal || !codeEl || !tbody) return;
+
+      const item = REFERENCE_ITEMS.find(i => i.code === code);
+      if (!item || !item.history) {
+        alert("이력 정보가 없습니다.");
+        return;
+      }
+
+      codeEl.textContent = code + " (" + item.name + ")";
+
+      tbody.innerHTML = item.history.map(h => {
+        const actionColor = h.action === "생성" ? "#166534" : h.action === "삭제" ? "#dc2626" : "#1e40af";
+        return `
+          <tr>
+            <td>${h.date}</td>
+            <td><span style="color:${actionColor}; font-weight:500;">${h.action}</span></td>
+            <td>${h.user}</td>
+            <td>${h.desc}</td>
+          </tr>
+        `;
+      }).join("");
+
+      modal.style.display = "flex";
+    }
+
+    /* =========================
+       상단 네비 / 사이드바
+    ========================= */
+    function setActiveTopNav(topLabel) {
+      document.querySelectorAll(".top-nav-item").forEach((item) => {
+        const label = item.getAttribute("data-top-label");
+        item.classList.toggle("active", label === topLabel);
+      });
+    }
+
+    function renderSidebar(topLabel, selectedL2, selectedL3) {
+      const sidebarTitleEl = document.getElementById("sidebar-title");
+      const sidebarMenuEl = document.getElementById("sidebar-menu");
+
+      sidebarTitleEl.textContent = topLabel;
+      sidebarMenuEl.innerHTML = "";
+
+      const menus = MENU_STRUCTURE[topLabel] || {};
+      Object.keys(menus).forEach((l2Name) => {
+        const l3List = menus[l2Name];
+
+        const li = document.createElement("li");
+        li.className = "menu-item";
+        li.dataset.l2 = l2Name;
+
+        const isActiveL2 = l2Name === selectedL2;
+        if (isActiveL2) li.classList.add("active", "open");
+
+        const mainDiv = document.createElement("div");
+        mainDiv.className = "menu-main";
+
+        const labelDiv = document.createElement("div");
+        labelDiv.className = "menu-label";
+
+        const iconSpan = document.createElement("span");
+        iconSpan.className = "menu-icon";
+        iconSpan.textContent = "📂";
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = l2Name;
+
+        labelDiv.appendChild(iconSpan);
+        labelDiv.appendChild(textSpan);
+
+        const arrowSpan = document.createElement("span");
+        arrowSpan.className = "menu-arrow";
+        arrowSpan.textContent = "›";
+
+        mainDiv.appendChild(labelDiv);
+        mainDiv.appendChild(arrowSpan);
+
+        const subUl = document.createElement("ul");
+        subUl.className = "submenu-list";
+
+        l3List.forEach((l3Name) => {
+          const subLi = document.createElement("li");
+          subLi.className = "submenu-item";
+          subLi.dataset.l3 = l3Name;
+          subLi.textContent = l3Name;
+
+          if (isActiveL2 && l3Name === selectedL3) {
+            subLi.classList.add("active");
+          }
+
+          subUl.appendChild(subLi);
+        });
+
+        li.appendChild(mainDiv);
+        li.appendChild(subUl);
+        sidebarMenuEl.appendChild(li);
+      });
+    }
+
+    function routeTo(top, l2, l3) {
+      currentTop = top;
+      currentL2 = l2;
+      currentL3 = l3;
+
+      setActiveTopNav(top);
+      renderSidebar(top, l2, l3);
+      renderPage(top, l2, l3);
+    }
+
+    /* =========================
+       초기화
+    ========================= */
+    document.addEventListener("DOMContentLoaded", () => {
+      // 초기 진입: 상품 운영 > 상품 관리 > 상품 기준 정보
+      // 이 화면 안에서는 "기준정보 조회·변경" 탭이 기본 ACTIVE
+      routeTo(currentTop, currentL2, currentL3);
+
+      // 상단 L1 탭 클릭
+      document.querySelectorAll(".top-nav-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const topLabel = item.getAttribute("data-top-label");
+          const menus = MENU_STRUCTURE[topLabel];
+          if (!menus) return;
+
+          const l2Names = Object.keys(menus);
+          const firstL2 = l2Names[0];
+          const firstL3 = menus[firstL2][0];
+
+          routeTo(topLabel, firstL2, firstL3);
+        });
+      });
+
+      // 사이드바 L2/L3 클릭
+      const sidebarMenuEl = document.getElementById("sidebar-menu");
+      sidebarMenuEl.addEventListener("click", (e) => {
+        const submenuItem = e.target.closest(".submenu-item");
+        const menuMain = e.target.closest(".menu-main");
+
+        // L3 클릭
+        if (submenuItem) {
+          const l3 = submenuItem.dataset.l3;
+          const l2 = submenuItem.closest(".menu-item").dataset.l2;
+          routeTo(currentTop, l2, l3);
+          return;
+        }
+
+        // L2 헤더 클릭 (아코디언 + 첫 L3로 이동)
+        if (menuMain) {
+          const menuItem = menuMain.closest(".menu-item");
+          const l2 = menuItem.dataset.l2;
+          const menus = MENU_STRUCTURE[currentTop] || {};
+          const l3List = menus[l2] || [];
+          const l3 = l3List[0] || "";
+
+          if (menuItem.classList.contains("open") && currentL2 === l2) {
+            menuItem.classList.toggle("open");
+          } else {
+            routeTo(currentTop, l2, l3);
+          }
+        }
+      });
+    });
+  </script>
+
+
+</body>
+
+</html>

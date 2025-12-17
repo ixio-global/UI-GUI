@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>ixi-O O&M – 구독 현황</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+
+    /* =========================
+       Color Design Tokens
+    ========================= */
+    :root {
+      /* Base */
+      --bg-body: #f4f4ff;
+      --text-main: #111827;
+      --text-sub: #4b5563;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+
+      /* Brand / Primary */
+      --brand-grad-from: #8b5cf6;
+      --brand-grad-to:   #ec4899;
+      --brand-main:      #7c3aed;
+      --brand-main-dark: #5b21b6;
+      --brand-main-deep: #4c1d95;
+
+      /* Surface / Border */
+      --surface:        #ffffff;
+      --surface-soft:   #f5f3ff;
+      --surface-softer: #f9fafb;
+      --border-soft:    #e5e7eb;
+      --border-input:   #e5e0ff;
+
+      /* Sidebar / Menu */
+      --sidebar-bg:    #f5f3ff;
+      --sidebar-title: #6b7280;
+      --menu-text:     #111827;
+      --submenu-dot:   #d4bfff;
+
+      /* Accents */
+      --accent-chip-bg:        #f3f4ff;
+      --accent-chip-bg-strong: #e5e7ff;
+      --accent-chip-text:      #4b5563;
+      --accent-hover:          #f3f4ff;
+      --accent-row-alt:        #faf5ff;
+      --accent-link:           #4c1d95;
+
+      /* Buttons */
+      --btn-primary-bg:        #111827;
+      --btn-primary-bg-hover:  #1f2937;
+
+      /* Table / Pagination */
+      --table-head-bg:         #f5f3ff;
+
+      /* Badges */
+      --badge-on-bg:  #dcfce7;
+      --badge-on-text:#166534;
+      --badge-off-bg: #fee2e2;
+      --badge-off-text:#b91c1c;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", system-ui, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+    }
+
+    button { font-family: inherit; }
+
+    /* =========================
+       헤더 (L1)
+    ========================= */
+    .header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, var(--brand-grad-from), var(--brand-grad-to));
+      color: #ffffff;
+      z-index: 20;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+    }
+    .top-nav {
+      display: flex;
+      gap: 40px;
+      font-size: 15px;
+    }
+    .top-nav-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: default;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+    .top-nav-item.active {
+      background: #ffffff;
+      color: #4c1d95;
+      font-weight: 600;
+      opacity: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--brand-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* =========================
+       레이아웃
+    ========================= */
+    .layout {
+      display: flex;
+      margin-top: 60px;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* =========================
+       사이드바 (L2 / L3)
+    ========================= */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-soft);
+      padding: 24px 16px;
+    }
+    .sidebar-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--sidebar-title);
+      margin-bottom: 12px;
+    }
+    .menu-list {
+      list-style: none;
+      padding: 0;
+      margin: 2px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .menu-item {
+      border-radius: 10px;
+      color: var(--menu-text);
+    }
+    .menu-main {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 10px;
+      background: transparent;
+    }
+    .menu-item.active > .menu-main {
+      background: var(--brand-main);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .menu-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .menu-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: #ede9fe;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--brand-main);
+    }
+    .menu-item.active .menu-icon {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+    .submenu-list {
+      list-style: none;
+      padding-left: 32px;
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+    .submenu-item {
+      padding: 4px 6px;
+      border-radius: 6px;
+      position: relative;
+      cursor: default;
+    }
+    .submenu-item::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--submenu-dot);
+    }
+    .submenu-item.active {
+      background: #ede9fe;
+      color: var(--brand-main-dark);
+      font-weight: 600;
+    }
+    .submenu-item.active::before {
+      background: var(--brand-main);
+    }
+
+    /* =========================
+       메인 컨텐츠
+    ========================= */
+    .main {
+      flex: 1;
+      padding: 24px 32px 32px;
+      overflow: auto;
+    }
+    .page-inner {
+      max-width: 1180px;
+      margin: 0 auto 24px;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+    .breadcrumb span.current {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .page-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* =========================
+       공통 카드 / 섹션 헤더
+    ========================= */
+    .section-card {
+      background: var(--surface);
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      padding: 20px 22px 18px;
+      box-shadow: 0 10px 26px rgba(148, 163, 184, 0.24);
+    }
+    .section-spacing { margin-top: 14px; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .section-header-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .section-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .section-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .section-badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      font-size: 11px;
+      color: var(--brand-main-dark);
+      white-space: nowrap;
+    }
+
+    .helper-text {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+
+    /* =========================
+       버튼
+    ========================= */
+    .btn-primary {
+      padding: 9px 22px;
+      border-radius: 999px;
+      border: none;
+      background: var(--btn-primary-bg);
+      color: #ffffff;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--btn-primary-bg-hover); }
+
+    .btn-ghost {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: #ffffff;
+      color: var(--text-sub);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .btn-ghost:hover { background: var(--surface-soft); }
+
+    /* =========================
+       상단 요약 카드
+    ========================= */
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .summary-card {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      padding: 12px 14px;
+      box-shadow: 0 6px 18px rgba(148, 163, 184, 0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: default;
+    }
+    .summary-label {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+    .summary-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+    .summary-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .summary-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .summary-badge {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .badge-status-active {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge-status-warning {
+      background: #fef9c3;
+      color: #92400e;
+    }
+    .badge-status-muted {
+      background: #e5e7eb;
+      color: #4b5563;
+    }
+
+    /* =========================
+       폼 / 필터
+    ========================= */
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .field-inline {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .field-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .select-sm {
+      min-width: 110px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-input);
+      background: #ffffff;
+      font-size: 12px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    /* =========================
+       데이터 테이블
+    ========================= */
+    .table-wrapper {
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+      background: #ffffff;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .data-table thead { background: var(--table-head-bg); }
+    .data-table th,
+    .data-table td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+    .data-table th {
+      font-weight: 600;
+      color: var(--text-sub);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .data-table tbody tr:nth-child(even) { background: #faf5ff; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table a {
+      color: var(--accent-link);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .data-table a:hover { text-decoration: underline; }
+
+    .table-badge-on {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--badge-on-bg);
+      color: var(--badge-on-text);
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .table-badge-off {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--badge-off-bg);
+      color: var(--badge-off-text);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .table-note {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 6px;
+    }
+
+    /* =========================
+       범례 / 기간 표시
+    ========================= */
+    .legend-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .legend-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-chip-bg);
+      color: var(--accent-chip-text);
+      cursor: pointer;
+    }
+    .legend-chip:hover { background: var(--accent-chip-bg-strong); }
+
+    /* =========================
+       모달 (공통)
+    ========================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      padding: 18px 10px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.4);
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      width: 760px;
+    }
+    .modal-header {
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .modal-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .modal-meta-row {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+    .modal-header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .badge-soft {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      font-size: 11px;
+      color: var(--brand-main-dark);
+      white-space: nowrap;
+    }
+    .btn-close {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: none;
+      background: #f3f4ff;
+      color: var(--text-sub);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-close:hover { background: #e5e7ff; }
+
+    /* =========================
+       모달: 계약 전문
+    ========================= */
+    .modal-full {
+      width: 960px;
+      max-height: 85vh;
+    }
+    .modal-body-full {
+      display: grid;
+      grid-template-columns: 2.1fr 0.9fr;
+      gap: 0;
+      min-height: 0;
+      height: 100%;
+    }
+    .contract-main {
+      padding: 14px 18px 16px;
+      border-right: 1px solid var(--border-soft);
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .contract-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+    .contract-clause { margin-bottom: 10px; }
+    .contract-clause-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .contract-clause-body {
+      color: var(--text-sub);
+      white-space: pre-line;
+    }
+
+    .contract-side {
+      padding: 14px 14px 16px;
+      overflow-y: auto;
+      background: var(--surface-softer);
+      font-size: 12px;
+    }
+    .side-block {
+      margin-bottom: 12px;
+      padding: 10px 10px 8px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid var(--border-soft);
+    }
+    .side-block-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .toc-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .toc-item {
+      padding: 4px 0;
+      cursor: pointer;
+      color: var(--accent-link);
+    }
+    .toc-item:hover { text-decoration: underline; }
+    .highlight-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 6px;
+    }
+    .highlight-label {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+    .highlight-value {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    /* =========================
+       모달: 계약 요약문 (및 연관 계약 상세 재사용)
+    ========================= */
+    .modal-summary {
+      width: 760px;
+      max-height: 78vh;
+    }
+    .modal-summary-body {
+      padding: 14px 18px 16px;
+      overflow-y: auto;
+      background: #f9fafb;
+    }
+    .summary-block {
+      margin-bottom: 12px;
+      padding: 10px 12px 10px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid var(--border-soft);
+      font-size: 12px;
+    }
+    .summary-block-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .summary-list {
+      margin: 0;
+      padding-left: 16px;
+      color: var(--text-sub);
+    }
+    .summary-list li { margin-bottom: 2px; }
+    .summary-meta-footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    /* =========================
+       모달: 연관 계약 상세 전용 미세 조정
+    ========================= */
+    .modal-related {
+      width: 720px;
+    }
+
+    /* =========================
+       반응형
+    ========================= */
+    @media (max-width: 960px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      .main { padding: 18px 14px 24px; }
+      .page-inner { max-width: 100%; }
+      .summary-row { grid-template-columns: 1fr; }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .legend-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .modal-full,
+      .modal-summary,
+      .modal-related {
+        width: 94vw;
+      }
+      .modal-body-full { grid-template-columns: 1fr; }
+      .contract-main {
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 헤더 -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">ixi-O O&M</div>
+      <nav class="top-nav">
+        <div class="top-nav-item">상품 운영</div>
+        <div class="top-nav-item active">서비스 운영</div>
+        <div class="top-nav-item">서비스 정산</div>
+        <div class="top-nav-item">일반</div>
+      </nav>
+    </div>
+    <div class="header-right">
+      <div class="avatar">A</div>
+      <span>LG U+ ixi-O 서브</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- L2 / L3 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title">서비스 운영</div>
+      <ul class="menu-list">
+        <li class="menu-item active">
+          <div class="menu-main">
+            <div class="menu-label">
+              <span class="menu-icon">📄</span>
+              <span>구독 관리</span>
+            </div>
+          </div>
+          <ul class="submenu-list">
+            <li class="submenu-item active">구독 현황</li>
+          </ul>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 메인 영역 -->
+    <main class="main">
+      <div class="page-inner">
+        <!-- 브레드크럼 / 타이틀 -->
+        <div class="breadcrumb">
+          <span>서비스 운영</span>
+          <span>›</span>
+          <span>구독 관리</span>
+          <span>›</span>
+          <span class="current">구독 현황</span>
+        </div>
+        <div class="page-title">구독 현황</div>
+        <p class="page-desc">
+          본 페이지는 고객사의 사업 운영 및 정산 담당자가 현재 <strong>계약 내용</strong>과
+          <strong>데이터 수집 현황</strong>을 일목요연하게 확인하기 위한 화면입니다.<br/>
+          소속 고객사의 계약 및 데이터 수집 현황만 조회할 수 있습니다.
+        </p>
+
+        <!-- 상단 요약 카드 -->
+        <section class="summary-row">
+          <!-- 계약 요약 -->
+          <article class="summary-card" id="summaryContractCard">
+            <div class="summary-label">대표 계약 요약</div>
+            <div class="summary-main">
+              <div>
+                <div class="summary-value" id="summaryContractName">ECO 기본 패키지 – Maxis</div>
+                <div class="summary-sub" id="summaryContractPeriod">계약기간 2025-01-01 ~ 2025-12-31</div>
+              </div>
+              <span class="summary-badge badge-status-active" id="summaryContractStatus">유효</span>
+            </div>
+          </article>
+
+          <!-- 과금 / 정산 요약 -->
+          <article class="summary-card" id="summaryBillingCard">
+            <div class="summary-label">과금 기준</div>
+            <div class="summary-main">
+              <div>
+                <div class="summary-value">통화 건수 기반</div>
+                <div class="summary-sub">과금요소: 통화 요약 생성 건수</div>
+              </div>
+              <span class="summary-badge badge-status-muted">월 단위 청구</span>
+            </div>
+          </article>
+
+          <!-- 데이터 수집 요약 -->
+          <article class="summary-card" id="summaryDataCard">
+            <div class="summary-label">데이터 수집 상태</div>
+            <div class="summary-main">
+              <div>
+                <div class="summary-value">수집 ON · 학습 활용</div>
+                <div class="summary-sub" id="summaryDataLastCollected">최근 수집 완료일: 2025-11-27 기준</div>
+              </div>
+              <span class="summary-badge badge-status-warning" id="summaryDataRangeLabel">최근 3개월 조회</span>
+            </div>
+          </article>
+        </section>
+
+        <!-- 섹션 1: 계약내용 조회 -->
+        <section class="section-card section-spacing">
+          <header class="section-header">
+            <div class="section-header-main">
+              <h2 class="section-title">계약내용 조회</h2>
+              <p class="section-caption">
+                소속 고객사의 유효한 계약 및 연관 계약의 기본 정보를 조회합니다.
+                계약 전문 및 핵심 요약문은 별도 팝업으로 확인합니다.
+              </p>
+            </div>
+            <div class="section-header-actions">
+              <span class="section-badge">계약 기준정보</span>
+              <button type="button" class="btn-primary" id="btnFetchContract">
+                계약 기준정보 조회
+              </button>
+            </div>
+          </header>
+
+          <p class="helper-text">
+            · 소속 고객사의 계약만 조회 가능합니다. 계약 행을 선택하면 상단 요약 카드와 다른 섹션의 기준 정보가 함께 갱신되는 흐름을 가정합니다. (Stub)
+          </p>
+
+          <div class="table-wrapper">
+            <table class="data-table" id="contractTable">
+              <thead>
+                <tr>
+                  <th>고객사</th>
+                  <th>상품·기능그룹·기능</th>
+                  <th>과금요소</th>
+                  <th>계약명(영문)</th>
+                  <th>계약기간</th>
+                  <th>계약 전문</th>
+                  <th>계약 요약문</th>
+                  <th>연관 계약번호/계약명</th>
+                  <th>계약 상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 예시 행 (Stub 데이터) -->
+                <tr class="contract-row"
+                    data-contract-name="ECO_BASIC_MAXIS_V1"
+                    data-customer="Maxis"
+                    data-period="2025-01-01 ~ 2025-12-31"
+                    data-status="유효">
+                  <td>Maxis</td>
+                  <td>ECO 기본 패키지 / 통화 편의 / 보이는 전화</td>
+                  <td>통화 요약 생성 건수</td>
+                  <td>ECO_BASIC_MAXIS_V1</td>
+                  <td>2025-01-01 ~ 2025-12-31</td>
+                  <td>
+                    <a href="#"
+                       class="link-contract-full"
+                       data-contract-name="ECO_BASIC_MAXIS_V1"
+                       data-customer="Maxis"
+                       data-period="2025-01-01 ~ 2025-12-31">
+                      보기
+                    </a>
+                  </td>
+                  <td>
+                    <a href="#"
+                       class="link-contract-summary"
+                       data-contract-name="ECO_BASIC_MAXIS_V1"
+                       data-customer="Maxis"
+                       data-period="2025-01-01 ~ 2025-12-31">
+                      보기
+                    </a>
+                  </td>
+                  <td>
+                    <a href="#"
+                       class="link-related-contract"
+                       data-related-code="ECO_BASIC_MAXIS_V0"
+                       data-related-label="ECO 기본 패키지 – Maxis (V0)"
+                       data-related-period="2024-01-01 ~ 2024-12-31"
+                       data-related-status="종료"
+                       data-base-contract="ECO_BASIC_MAXIS_V1">
+                      ECO_BASIC_MAXIS_V0
+                    </a>
+                  </td>
+                  <td><span class="summary-badge badge-status-active">유효</span></td>
+                </tr>
+
+                <tr class="contract-row"
+                    data-contract-name="ECO_EXT_MAXIS_V1"
+                    data-customer="Maxis"
+                    data-period="2024-07-01 ~ 2025-06-30"
+                    data-status="만료 예정">
+                  <td>Maxis</td>
+                  <td>ECO 확장 패키지 / 분석 리포트 / 요약 리포트</td>
+                  <td>리포트 생성 건수</td>
+                  <td>ECO_EXT_MAXIS_V1</td>
+                  <td>2024-07-01 ~ 2025-06-30</td>
+                  <td>
+                    <a href="#"
+                       class="link-contract-full"
+                       data-contract-name="ECO_EXT_MAXIS_V1"
+                       data-customer="Maxis"
+                       data-period="2024-07-01 ~ 2025-06-30">
+                      보기
+                    </a>
+                  </td>
+                  <td>
+                    <a href="#"
+                       class="link-contract-summary"
+                       data-contract-name="ECO_EXT_MAXIS_V1"
+                       data-customer="Maxis"
+                       data-period="2024-07-01 ~ 2025-06-30">
+                      보기
+                    </a>
+                  </td>
+                  <td>
+                    <a href="#"
+                       class="link-related-contract"
+                       data-related-code="ECO_EXT_MAXIS_V0"
+                       data-related-label="ECO 확장 패키지 – Maxis (V0)"
+                       data-related-period="2023-07-01 ~ 2024-06-30"
+                       data-related-status="종료"
+                       data-base-contract="ECO_EXT_MAXIS_V1">
+                      ECO_EXT_MAXIS_V0
+                    </a>
+                  </td>
+                  <td><span class="summary-badge badge-status-muted">만료 예정</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="table-note">
+            ※ 실제 연동 시 상단 “계약 기준정보 조회” 버튼 클릭을 기준으로 계약 목록이 조회되며,
+            연관 계약 클릭 시 <strong>연관 계약 상세 모달 → 기준 계약 전환</strong> 흐름을 거쳐
+            화면의 기준 계약이 해당 계약으로 전환됩니다.
+          </p>
+        </section>
+
+        <!-- 섹션 2: 데이터 수집 현황 -->
+        <section class="section-card section-spacing">
+          <header class="section-header">
+            <div class="section-header-main">
+              <h2 class="section-title">데이터 수집 현황</h2>
+              <p class="section-caption">
+                선택한 기간 동안 소속 고객사의 통화 데이터 수집 여부, 유형별 수집량 및 학습에 활용된 데이터량을 조회합니다.
+              </p>
+            </div>
+            <div class="section-header-actions">
+              <span class="section-badge">데이터 수집</span>
+              <button type="button" class="btn-primary" id="btnFetchCollection">
+                수집 현황 조회
+              </button>
+            </div>
+          </header>
+
+          <!-- 조회기간 설정 / 범례 -->
+          <div class="filter-row">
+            <div class="field-group">
+              <span class="field-label">조회기간 설정</span>
+              <div class="field-inline">
+                <label class="field-label">시작월</label>
+                <select class="select-sm" id="startMonth">
+                  <option value="2025-09" selected>2025-09</option>
+                  <option value="2025-10">2025-10</option>
+                  <option value="2025-11">2025-11</option>
+                </select>
+                <span>~</span>
+                <label class="field-label">종료월</label>
+                <select class="select-sm" id="endMonth">
+                  <option value="2025-11" selected>2025-11</option>
+                  <option value="2025-12">2025-12 (당월)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend-row">
+            <div>
+              <span class="legend-chip" id="legendPeriod">
+                조회 기간: 2025-09 ~ 2025-11 (최근 수집 완료일 기준 2025-11-27)
+              </span>
+            </div>
+            <div>
+              <span class="helper-text">
+                · 종료월이 당월인 경우, 실제 데이터 수집이 완료된 날짜까지를 기준으로 마지막 일자를 표시합니다.<br/>
+                · 예) 11월 28일에 9~11월로 조회하고 최근 수집 완료일이 11월 27일이면 “9~11월 27일”로 표기.
+              </span>
+            </div>
+          </div>
+
+          <!-- 데이터 수집 현황 테이블 -->
+          <div class="table-wrapper">
+            <table class="data-table" id="collectionTable">
+              <thead>
+                <tr>
+                  <th>고객사명</th>
+                  <th>조회기간 중 수집 여부</th>
+                  <th>수집 데이터 유형</th>
+                  <th>수집된 데이터량 (총 건수)</th>
+                  <th>학습에 활용된 데이터량</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 예시 행 (Stub 데이터) -->
+                <tr>
+                  <td>Maxis</td>
+                  <td><span class="table-badge-on">ON</span></td>
+                  <td>통화 전사문</td>
+                  <td>1,820건</td>
+                  <td>1,280건 (70%)</td>
+                </tr>
+                <tr>
+                  <td>Maxis</td>
+                  <td><span class="table-badge-on">ON</span></td>
+                  <td>통화 요약문</td>
+                  <td>1,520건</td>
+                  <td>1,240건 (81%)</td>
+                </tr>
+                <tr>
+                  <td>Maxis</td>
+                  <td><span class="table-badge-off">OFF</span></td>
+                  <td>기타 메타데이터</td>
+                  <td>0건</td>
+                  <td>0건</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">
+            ※ 이 화면에서는 소속 고객사의 데이터 수집 현황만 조회할 수 있습니다.
+            수집 여부(ON/OFF), 유형별 수집량, 학습 활용량은 실제 로그 수집 및 AI Data Hub 연동 결과를 기반으로 집계됩니다.
+          </p>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================
+       모달: 계약 전문
+  ========================= -->
+  <div class="modal-overlay" id="fullContractModalOverlay" data-modal="full">
+    <div class="modal modal-full" role="dialog" aria-modal="true" aria-labelledby="fullContractTitle">
+      <header class="modal-header">
+        <div class="modal-title-block">
+          <h2 class="modal-title" id="fullContractTitle">계약 전문 – ECO_BASIC_MAXIS_V1</h2>
+          <div class="modal-subtitle" id="fullContractSubtitle">
+            Maxis · 계약기간 2025-01-01 ~ 2025-12-31 · 유효
+          </div>
+          <div class="modal-meta-row">
+            원본 계약 버전: V1.2 · 법무 검토 완료
+          </div>
+        </div>
+        <div class="modal-header-actions">
+          <span class="badge-soft">원본 계약</span>
+          <button type="button" class="btn-ghost" id="btnFullPdfStub">
+            PDF 다운로드
+          </button>
+          <button type="button" class="btn-close" data-close-modal="full">
+            닫기
+          </button>
+        </div>
+      </header>
+      <div class="modal-body-full">
+        <!-- 왼쪽: 계약 본문 -->
+        <div class="contract-main" id="fullContractBody">
+          <div class="contract-section-title">1. 계약 목적</div>
+          <div class="contract-clause">
+            <div class="contract-clause-body">
+              본 계약은 LG유플러스(이하 "공급자")와 Maxis(이하 "고객사") 간의 ixi-O ECO 서비스를
+              제공함에 있어, 서비스 이용 조건, 과금 기준, 데이터 처리 및 보안에 관한 제반 사항을
+              정함을 목적으로 합니다.
+            </div>
+          </div>
+
+          <div class="contract-section-title" id="clause-def">2. 정의</div>
+          <div class="contract-clause">
+            <div class="contract-clause-title">2.1 "서비스"</div>
+            <div class="contract-clause-body">
+              "서비스"라 함은 ECO 기반 통화 요약, 전사, 검색 기능을 포함하는 ixi-O ECO 서비스를 의미합니다.
+            </div>
+          </div>
+          <div class="contract-clause">
+            <div class="contract-clause-title">2.2 "데이터"</div>
+            <div class="contract-clause-body">
+              "데이터"라 함은 고객사 및 고객사의 최종 사용자로부터 수집되는 통화 메타데이터, 통화 전사문,
+              통화 요약문 등 서비스 제공을 위해 처리되는 정보를 의미합니다.
+            </div>
+          </div>
+
+          <div class="contract-section-title" id="clause-billing">3. 과금 및 정산</div>
+          <div class="contract-clause">
+            <div class="contract-clause-title">3.1 과금 기준</div>
+            <div class="contract-clause-body">
+              공급자는 고객사의 월간 통화 요약 생성 건수를 기준으로 서비스 이용료를 산정합니다.
+              월 최소 과금량은 10,000건이며, 해당 건수 미만 사용 시에도 최소 과금액이 적용됩니다.
+            </div>
+          </div>
+          <div class="contract-clause">
+            <div class="contract-clause-title">3.2 청구 및 결제</div>
+            <div class="contract-clause-body">
+              공급자는 매월 말일을 기준으로 당월 이용량을 집계하여 익월 말일까지 고객사에 청구하며,
+              고객사는 청구일로부터 정해진 기한 내에 서비스 이용료를 납부합니다.
+            </div>
+          </div>
+
+          <div class="contract-section-title" id="clause-data">4. 데이터 수집 및 활용</div>
+          <div class="contract-clause">
+            <div class="contract-clause-title">4.1 수집 범위</div>
+            <div class="contract-clause-body">
+              공급자는 서비스 제공을 위해 통화 메타데이터, 통화 전사문 및 통화 요약문을 수집·저장할 수 있습니다.
+              수집 범위는 개인정보 보호법 및 관련 법령을 준수하며, 고객사의 내부 정책과 별도 합의에 따릅니다.
+            </div>
+          </div>
+          <div class="contract-clause">
+            <div class="contract-clause-title">4.2 AI 학습 활용</div>
+            <div class="contract-clause-body">
+              고객사는 통화 전사문 및 통화 요약문의 일부를 공급자의 AI 모델 개선을 위한 학습 데이터로 활용하는 것에 동의합니다.
+              단, 민감정보가 포함된 대화는 사전 정의된 필터링 정책에 따라 학습 대상에서 제외됩니다.
+            </div>
+          </div>
+          <div class="contract-clause">
+            <div class="contract-clause-title">4.3 보관 기간</div>
+            <div class="contract-clause-body">
+              수집된 데이터는 수집일로부터 24개월간 보관되며, 보관 기간 경과 후 안전한 방식으로 파기합니다.
+            </div>
+          </div>
+
+          <div class="contract-section-title" id="clause-privacy">5. 개인정보 및 보안</div>
+          <div class="contract-clause">
+            <div class="contract-clause-body">
+              공급자는 개인정보 보호법 및 정보통신망법 등 관련 법령을 준수하며, 데이터 암호화, 접근 제어,
+              로그 관리 등 적절한 기술적·관리적 보호조치를 시행합니다.
+            </div>
+          </div>
+
+          <div class="contract-section-title" id="clause-term">6. 계약 기간 및 해지</div>
+          <div class="contract-clause">
+            <div class="contract-clause-body">
+              본 계약의 유효기간은 계약서에 명시된 계약기간으로 하며, 각 당사자는 중대한 계약 위반이 발생한 경우
+              서면 통지 후 일정 기간 내 시정되지 않을 시 계약을 해지할 수 있습니다.
+            </div>
+          </div>
+
+          <div class="contract-section-title" id="clause-etc">7. 기타</div>
+          <div class="contract-clause">
+            <div class="contract-clause-body">
+              본 계약에 명시되지 않은 사항은 관련 법령 및 상관례에 따르며, 개별 특약이 있는 경우 별도 부속합의서로 정합니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 목차 + 하이라이트 -->
+        <aside class="contract-side">
+          <div class="side-block">
+            <div class="side-block-title">조항 목차</div>
+            <ul class="toc-list">
+              <li class="toc-item" data-scroll-target="fullContractBody">1. 계약 목적</li>
+              <li class="toc-item" data-scroll-target="clause-def">2. 정의</li>
+              <li class="toc-item" data-scroll-target="clause-billing">3. 과금 및 정산</li>
+              <li class="toc-item" data-scroll-target="clause-data">4. 데이터 수집 및 활용</li>
+              <li class="toc-item" data-scroll-target="clause-privacy">5. 개인정보 및 보안</li>
+              <li class="toc-item" data-scroll-target="clause-term">6. 계약 기간 및 해지</li>
+              <li class="toc-item" data-scroll-target="clause-etc">7. 기타</li>
+            </ul>
+          </div>
+
+          <div class="side-block">
+            <div class="side-block-title">운영·정산 관점 핵심 요약</div>
+            <div class="highlight-row">
+              <span class="highlight-label">과금 기준</span>
+              <span class="highlight-value">월 통화 요약 생성 건수 기준, 최소 과금 10,000건</span>
+            </div>
+            <div class="highlight-row">
+              <span class="highlight-label">청구 주기</span>
+              <span class="highlight-value">월 단위 청구, 익월 말 결제</span>
+            </div>
+            <div class="highlight-row">
+              <span class="highlight-label">데이터 보관 기간</span>
+              <span class="highlight-value">수집일로부터 24개월</span>
+            </div>
+            <div class="highlight-row">
+              <span class="highlight-label">AI 학습 활용</span>
+              <span class="highlight-value">전사·요약 일부를 모델 개선 목적으로 활용 (민감정보 제외)</span>
+            </div>
+          </div>
+
+          <div class="side-block">
+            <div class="side-block-title">참고</div>
+            <div class="highlight-row">
+              <span class="highlight-label">SLA 요약</span>
+              <span class="highlight-value">월 99.5% 가용성, 장애 등급별 대응 시간은 별도 SLA 문서 참조</span>
+            </div>
+            <div class="highlight-row">
+              <span class="highlight-label">특약</span>
+              <span class="highlight-value">런칭 3개월 50% 할인, 서브계정에 대한 별도 라이선스 미과금</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+       모달: 계약 요약문
+  ========================= -->
+  <div class="modal-overlay" id="summaryContractModalOverlay" data-modal="summary">
+    <div class="modal modal-summary" role="dialog" aria-modal="true" aria-labelledby="summaryContractTitle">
+      <header class="modal-header">
+        <div class="modal-title-block">
+          <h2 class="modal-title" id="summaryContractTitle">계약 핵심 요약 – ECO_BASIC_MAXIS_V1</h2>
+          <div class="modal-subtitle" id="summaryContractSubtitle">
+            Maxis · 계약기간 2025-01-01 ~ 2025-12-31 · 유효
+          </div>
+          <div class="modal-meta-row">
+            요약 기준일: 2025-11-30 · 원본 계약 V1.2 기준
+          </div>
+        </div>
+        <div class="modal-header-actions">
+          <span class="badge-soft">운영용 요약</span>
+          <button type="button" class="btn-close" data-close-modal="summary">
+            닫기
+          </button>
+        </div>
+      </header>
+
+      <div class="modal-summary-body">
+        <section class="summary-block">
+          <div class="summary-block-title">A. 기본 계약 정보</div>
+          <ul class="summary-list" id="summaryBasicInfo">
+            <li>고객사: Maxis</li>
+            <li>상품/플랜: ECO 기본 패키지 – Maxis</li>
+            <li>계약기간: 2025-01-01 ~ 2025-12-31</li>
+            <li>계약 상태: 유효</li>
+          </ul>
+        </section>
+
+        <section class="summary-block">
+          <div class="summary-block-title">B. 과금 및 정산 조건</div>
+          <ul class="summary-list">
+            <li><strong>과금 기준:</strong> 월 통화 요약 생성 건수 기준</li>
+            <li><strong>최소 과금:</strong> 월 최소 10,000건</li>
+            <li><strong>초과분 과금:</strong> 기준 건수 초과분에 대해 건당 단가 적용</li>
+            <li><strong>청구/정산:</strong> 월 단위 청구, 익월 말 결제</li>
+          </ul>
+        </section>
+
+        <section class="summary-block">
+          <div class="summary-block-title">C. 데이터 수집 및 활용 범위</div>
+          <ul class="summary-list">
+            <li><strong>수집 데이터:</strong> 통화 메타데이터, 통화 전사문, 통화 요약문</li>
+            <li><strong>학습 활용:</strong> 전사문/요약문 일부를 AI 모델 개선 목적으로 활용 가능</li>
+            <li><strong>보관 기간:</strong> 수집일로부터 24개월 보관 후 파기</li>
+            <li><strong>제한 사항:</strong> 민감정보(정치, 건강 등) 포함 대화는 학습 대상에서 제외</li>
+          </ul>
+        </section>
+
+        <section class="summary-block">
+          <div class="summary-block-title">D. 서비스 품질 및 지원</div>
+          <ul class="summary-list">
+            <li><strong>SLA:</strong> 월 99.5% 가용성 목표</li>
+            <li><strong>장애 대응:</strong> 장애 등급별 응답/복구 시간은 SLA 문서 기준</li>
+            <li><strong>지원 채널:</strong> 티켓/이메일/전화 지원, 평일 09:00 ~ 18:00</li>
+          </ul>
+        </section>
+
+        <section class="summary-block">
+          <div class="summary-block-title">E. 특약 및 유의사항</div>
+          <ul class="summary-list">
+            <li>런칭 후 3개월 간 서비스 이용료 50% 할인</li>
+            <li>POC 기간 중 트래픽 상한을 초과한 경우에도 추가 과금 없이 품질 확인 목적 허용</li>
+            <li>일부 기능(고급 리포트, 실시간 모니터링)은 별도 옵션 계약 시 활성화</li>
+          </ul>
+        </section>
+
+        <div class="summary-meta-footer">
+          ※ 본 요약은 운영·정산 담당자의 빠른 이해를 돕기 위한 참고용이며, 법적 효력은
+          원본 계약서(계약 전문)에 따릅니다. 자세한 내용은 “원본 계약 열기”를 통해 확인해 주십시오.
+        </div>
+
+        <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px;">
+          <button type="button" class="btn-ghost" id="btnOpenFullFromSummary">
+            원본 계약 열기
+          </button>
+          <button type="button" class="btn-primary" data-close-modal="summary">
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================
+       모달: 연관 계약 상세
+  ========================= -->
+  <div class="modal-overlay" id="relatedContractModalOverlay" data-modal="related">
+    <div class="modal modal-summary modal-related" role="dialog" aria-modal="true" aria-labelledby="relatedContractTitle">
+      <header class="modal-header">
+        <div class="modal-title-block">
+          <h2 class="modal-title" id="relatedContractTitle">
+            연관 계약 상세 – (Stub)
+          </h2>
+          <div class="modal-subtitle" id="relatedContractSubtitle">
+            고객사 · 연관 계약 · 계약기간 - · -
+          </div>
+          <div class="modal-meta-row" id="relatedContractMeta">
+            현재 선택 계약과의 관계 정보를 표시합니다. (Stub)
+          </div>
+        </div>
+        <div class="modal-header-actions">
+          <span class="badge-soft">연관 계약</span>
+          <button type="button" class="btn-close" data-close-modal="related">
+            닫기
+          </button>
+        </div>
+      </header>
+
+      <div class="modal-summary-body">
+        <section class="summary-block">
+          <div class="summary-block-title">A. 연관 계약 기본 정보</div>
+          <ul class="summary-list" id="relatedBasicInfo"></ul>
+        </section>
+
+        <section class="summary-block">
+          <div class="summary-block-title">B. 현재 선택 계약과의 관계</div>
+          <ul class="summary-list" id="relatedRelationInfo"></ul>
+        </section>
+
+        <section class="summary-block">
+          <div class="summary-block-title">C. 이 계약 기준으로 화면 전환 시 (Stub)</div>
+          <div class="summary-meta-footer" id="relatedActionResult">
+            버튼 클릭 시 상단 ‘대표 계약 요약’ 카드가 연관 계약 기준으로 바뀌는 모습만 보여줍니다.
+            실제 서비스에서는 계약 기준정보, 수집 현황, 정산 화면이 모두 연관 계약 기준으로 재조회됩니다.
+          </div>
+        </section>
+
+        <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 8px;">
+          <button type="button" class="btn-ghost" data-close-modal="related">
+            닫기
+          </button>
+          <button type="button" class="btn-primary" id="btnApplyRelatedBase">
+            이 계약을 기준으로 구독 현황 보기 (Stub)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // =========================
+      // 기간 범례 Stub
+      // =========================
+      const startMonthSelect = document.getElementById("startMonth");
+      const endMonthSelect = document.getElementById("endMonth");
+      const legendPeriod = document.getElementById("legendPeriod");
+      const summaryDataLastCollected = document.getElementById("summaryDataLastCollected");
+      const summaryDataRangeLabel = document.getElementById("summaryDataRangeLabel");
+
+      function updateLegend() {
+        const start = startMonthSelect.value;
+        const end = endMonthSelect.value;
+
+        let legendText = `조회 기간: ${start} ~ ${end}`;
+        let lastCollected = "최근 수집 완료일: 2025-11-27 기준";
+        let rangeLabel = "조회 기간 기준";
+
+        if (end === "2025-11") {
+          legendText += " (최근 수집 완료일 기준 2025-11-27)";
+          rangeLabel = "최근 3개월 조회";
+        } else if (end === "2025-12") {
+          legendText += " (최근 수집 완료일 기준 2025-12-25)";
+          lastCollected = "최근 수집 완료일: 2025-12-25 기준";
+          rangeLabel = "당월 포함 조회";
+        }
+
+        legendPeriod.textContent = legendText;
+        summaryDataLastCollected.textContent = lastCollected;
+        summaryDataRangeLabel.textContent = rangeLabel;
+      }
+
+      startMonthSelect.addEventListener("change", updateLegend);
+      endMonthSelect.addEventListener("change", updateLegend);
+      legendPeriod.addEventListener("click", () => {
+        alert("조회기간 변경 UI 호출 (Stub)");
+      });
+      updateLegend();
+
+      // =========================
+      // 상단 요약 카드 요소
+      // =========================
+      const summaryContractNameEl = document.getElementById("summaryContractName");
+      const summaryContractPeriodEl = document.getElementById("summaryContractPeriod");
+      const summaryContractStatusEl = document.getElementById("summaryContractStatus");
+
+      // =========================
+      // 모달 요소
+      // =========================
+      const fullOverlay = document.getElementById("fullContractModalOverlay");
+      const summaryOverlay = document.getElementById("summaryContractModalOverlay");
+      const relatedOverlay = document.getElementById("relatedContractModalOverlay");
+
+      const fullTitle = document.getElementById("fullContractTitle");
+      const fullSubtitle = document.getElementById("fullContractSubtitle");
+
+      const summaryTitle = document.getElementById("summaryContractTitle");
+      const summarySubtitle = document.getElementById("summaryContractSubtitle");
+      const summaryBasicInfo = document.getElementById("summaryBasicInfo");
+
+      const relatedTitle = document.getElementById("relatedContractTitle");
+      const relatedSubtitle = document.getElementById("relatedContractSubtitle");
+      const relatedMeta = document.getElementById("relatedContractMeta");
+      const relatedBasicInfo = document.getElementById("relatedBasicInfo");
+      const relatedRelationInfo = document.getElementById("relatedRelationInfo");
+      const relatedActionResult = document.getElementById("relatedActionResult");
+      const btnApplyRelatedBase = document.getElementById("btnApplyRelatedBase");
+
+      // =========================
+      // 계약 전문 열기
+      // =========================
+      function openFullModal(contractName, customer, period, status) {
+        fullTitle.textContent = `계약 전문 – ${contractName}`;
+        fullSubtitle.textContent = `${customer} · 계약기간 ${period} · ${status}`;
+        fullOverlay.classList.add("open");
+      }
+
+      // =========================
+      // 계약 요약문 열기
+      // =========================
+      function openSummaryModal(contractName, customer, period, status) {
+        summaryTitle.textContent = `계약 핵심 요약 – ${contractName}`;
+        summarySubtitle.textContent = `${customer} · 계약기간 ${period} · ${status}`;
+
+        summaryBasicInfo.innerHTML = `
+          <li>고객사: ${customer}</li>
+          <li>상품/플랜: ${contractName.replace(/_/g, " ")}</li>
+          <li>계약기간: ${period}</li>
+          <li>계약 상태: ${status}</li>
+        `;
+
+        summaryOverlay.classList.add("open");
+      }
+
+      // =========================
+      // 연관 계약 상세 모달 열기
+      // =========================
+      function openRelatedModal({ code, label, period, status, baseContractName, customer }) {
+        const safeCustomer = customer || "고객사";
+        const safeLabel = label || code || "연관 계약";
+        const safePeriod = period || "-";
+        const safeStatus = status || "-";
+        const safeBase = baseContractName || "-";
+
+        relatedTitle.textContent = `연관 계약 상세 – ${code}`;
+        relatedSubtitle.textContent =
+          `${safeCustomer} · ${safeLabel} · 계약기간 ${safePeriod} · ${safeStatus}`;
+
+        relatedMeta.textContent =
+          `현재 선택 계약: ${safeBase}와(과)의 관계 정보입니다. (Stub)`;
+
+        relatedBasicInfo.innerHTML = `
+          <li><strong>계약번호:</strong> ${code}</li>
+          <li><strong>계약명:</strong> ${safeLabel}</li>
+          <li><strong>계약기간:</strong> ${safePeriod}</li>
+          <li><strong>계약 상태:</strong> ${safeStatus}</li>
+          <li><strong>참고:</strong> 과금/데이터 수집 옵션은 계약 기준정보 화면에서 비교 조회 가능</li>
+        `;
+
+        relatedRelationInfo.innerHTML = `
+          <li>이 계약은 현재 선택한 계약 <strong>${safeBase}</strong>의 이전 또는 연장 전 버전으로 관리되는 상태를 가정합니다.</li>
+          <li>실제 서비스에서는 이 계약을 기준으로 구독 현황, 데이터 수집 현황, 정산 화면이 모두 재조회됩니다.</li>
+        `;
+
+        relatedActionResult.textContent =
+          "버튼 클릭 시 상단 ‘대표 계약 요약’ 카드가 연관 계약 기준으로 바뀌는 모습만 보여줍니다. 실제 서비스에서는 계약 기준정보, 수집 현황, 정산 화면이 모두 연관 계약 기준으로 재조회됩니다.";
+
+        btnApplyRelatedBase.dataset.relatedCode = code || "";
+        btnApplyRelatedBase.dataset.relatedLabel = safeLabel || "";
+        btnApplyRelatedBase.dataset.relatedPeriod = safePeriod || "";
+        btnApplyRelatedBase.dataset.relatedStatus = safeStatus || "";
+
+        relatedOverlay.classList.add("open");
+      }
+
+      // =========================
+      // 리스트 내 링크 바인딩
+      // =========================
+      document.querySelectorAll(".link-contract-full").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          const name = el.dataset.contractName || "계약";
+          const customer = el.dataset.customer || "고객사";
+          const period = el.dataset.period || "";
+          const row = el.closest("tr");
+          const status = row ? (row.dataset.status || "유효") : "유효";
+          openFullModal(name, customer, period, status);
+        });
+      });
+
+      document.querySelectorAll(".link-contract-summary").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          const name = el.dataset.contractName || "계약";
+          const customer = el.dataset.customer || "고객사";
+          const period = el.dataset.period || "";
+          const row = el.closest("tr");
+          const status = row ? (row.dataset.status || "유효") : "유효";
+          openSummaryModal(name, customer, period, status);
+        });
+      });
+
+      // 연관 계약 링크 클릭
+      document.querySelectorAll(".link-related-contract").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          const code = el.dataset.relatedCode || "";
+          const label = el.dataset.relatedLabel || "";
+          const period = el.dataset.relatedPeriod || "";
+          const status = el.dataset.relatedStatus || "";
+          const baseContractName = el.dataset.baseContract || "";
+
+          const row = el.closest("tr");
+          const customer = row ? (row.dataset.customer || row.querySelector("td")?.textContent.trim()) : "고객사";
+
+          openRelatedModal({
+            code, label, period, status, baseContractName, customer
+          });
+        });
+      });
+
+      // =========================
+      // 닫기 버튼
+      // =========================
+      document.querySelectorAll("[data-close-modal]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const target = btn.getAttribute("data-close-modal");
+          if (target === "full") {
+            fullOverlay.classList.remove("open");
+          } else if (target === "summary") {
+            summaryOverlay.classList.remove("open");
+          } else if (target === "related") {
+            relatedOverlay.classList.remove("open");
+          }
+        });
+      });
+
+      // 오버레이 클릭 시 닫기
+      [fullOverlay, summaryOverlay, relatedOverlay].forEach((overlay) => {
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) {
+            overlay.classList.remove("open");
+          }
+        });
+      });
+
+      // =========================
+      // 요약 모달에서 "원본 계약 열기"
+      // =========================
+      const btnOpenFullFromSummary = document.getElementById("btnOpenFullFromSummary");
+      btnOpenFullFromSummary.addEventListener("click", () => {
+        summaryOverlay.classList.remove("open");
+        fullOverlay.classList.add("open");
+      });
+
+      // =========================
+      // 연관 계약 기준 전환 (Stub)
+      // =========================
+      btnApplyRelatedBase.addEventListener("click", () => {
+        const code = btnApplyRelatedBase.dataset.relatedCode || "";
+        const label = btnApplyRelatedBase.dataset.relatedLabel || code;
+        const period = btnApplyRelatedBase.dataset.relatedPeriod || "";
+        const status = btnApplyRelatedBase.dataset.relatedStatus || "";
+
+        if (label) {
+          summaryContractNameEl.textContent = label;
+        }
+        if (period) {
+          summaryContractPeriodEl.textContent = `계약기간 ${period}`;
+        }
+        if (status) {
+          summaryContractStatusEl.textContent = status;
+          // 상태 색상은 Stub이므로 텍스트만 변경
+        }
+
+        relatedActionResult.textContent =
+          "Stub) 상단 ‘대표 계약 요약’ 카드가 연관 계약 기준으로 변경되었습니다. 실제 서비스에서는 계약 기준정보/데이터 수집 현황/정산 화면이 모두 연관 계약 기준으로 재조회됩니다.";
+      });
+
+      // =========================
+      // 조항 목차 클릭 시 스크롤
+      // =========================
+      document.querySelectorAll(".toc-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const targetId = item.getAttribute("data-scroll-target");
+          const container = document.getElementById("fullContractBody");
+          if (!container) return;
+
+          let target;
+          if (targetId === "fullContractBody") {
+            target = container.firstElementChild;
+          } else {
+            target = document.getElementById(targetId);
+          }
+
+          if (target) {
+            container.scrollTo({
+              top: target.offsetTop - 8,
+              behavior: "smooth",
+            });
+          }
+        });
+      });
+
+      // =========================
+      // [계약 기준정보 조회] 버튼 Stub
+      // =========================
+      const btnFetchContract = document.getElementById("btnFetchContract");
+      btnFetchContract.addEventListener("click", () => {
+        alert("계약 기준정보 API 조회 후 테이블/상단 요약을 갱신하는 흐름입니다. (Stub)");
+      });
+
+      // =========================
+      // [수집 현황 조회] 버튼 Stub
+      // =========================
+      const btnFetchCollection = document.getElementById("btnFetchCollection");
+      btnFetchCollection.addEventListener("click", () => {
+        alert("조회기간을 기준으로 데이터 수집 현황을 재집계하여 테이블/요약을 갱신하는 흐름입니다. (Stub)");
+      });
+
+      // =========================
+      // 계약 행 클릭 시 상단 요약 카드 갱신
+      // =========================
+      const contractRows = document.querySelectorAll(".contract-row");
+
+      contractRows.forEach((row) => {
+        row.addEventListener("click", (e) => {
+          // 링크 클릭은 행 클릭 처리와 중복되니 무시
+          if (e.target.tagName.toLowerCase() === "a") return;
+
+          const name = row.dataset.contractName || "";
+          const period = row.dataset.period || "";
+          const status = row.dataset.status || "유효";
+
+          summaryContractNameEl.textContent = name.replace(/_/g, " ");
+          summaryContractPeriodEl.textContent = `계약기간 ${period}`;
+          summaryContractStatusEl.textContent = status;
+        });
+      });
+
+      // =========================
+      // 기타 Stub 버튼
+      // =========================
+      const btnFullPdfStub = document.getElementById("btnFullPdfStub");
+      btnFullPdfStub.addEventListener("click", () => {
+        alert("PDF 다운로드 (Stub)");
+      });
+    });
+  </script>
+</body>
+</html>

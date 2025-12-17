@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>ixi-O O&M – 사업 실적 관리(실적 종합)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+
+    /* =========================
+       Color Design Tokens
+       (ixi enterprise 사용자 관리 느낌 + 보라 그라데이션)
+    ========================= */
+    :root {
+      /* Base */
+      --bg-body: #f3f4ff;
+      --text-main: #111827;
+      --text-sub: #4b5563;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+
+      /* Brand / Primary (보라 그라데이션) */
+      --brand-grad-from: #8b5cf6;
+      --brand-grad-to:   #ec4899;
+      --brand-main:      #7c3aed;
+      --brand-main-dark: #5b21b6;
+      --brand-main-deep: #4c1d95;
+
+      /* Surface / Border */
+      --surface:        #ffffff;
+      --surface-soft:   #f5f3ff;
+      --surface-softer: #f9fafb;
+      --border-soft:    #e5e7eb;
+      --border-input:   #e5e0ff;
+
+      /* Sidebar / Menu */
+      --sidebar-bg:    #f5f3ff;
+      --sidebar-title: #6b7280;
+      --menu-text:     #111827;
+      --submenu-dot:   #d4bfff;
+
+      /* Accents */
+      --accent-chip-bg:        #f3f4ff;
+      --accent-chip-bg-strong: #e5e7ff;
+      --accent-chip-text:      #4b5563;
+      --accent-hover:          #f3f4ff;
+      --accent-row-alt:        #faf5ff;
+      --accent-link:           #4c1d95;
+
+      /* Buttons */
+      --btn-primary-bg:        #7c3aed;
+      --btn-primary-bg-hover:  #5b21b6;
+      --btn-dark-bg:           #111827;
+      --btn-dark-bg-hover:     #1f2937;
+      --btn-danger-border:     #f97373;
+      --btn-danger-text:       #b91c1c;
+      --btn-danger-bg-hover:   #fef2f2;
+
+      --stub-border: #e5e7eb;
+      --row-selected-bg: #ede9fe;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", system-ui, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+    }
+
+    input[type="checkbox"] {
+      accent-color: var(--brand-main);
+    }
+
+    /* =========================
+       헤더
+    ========================= */
+    .header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, var(--brand-grad-from), var(--brand-grad-to));
+      color: #ffffff;
+      z-index: 20;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+    }
+    .top-nav {
+      display: flex;
+      gap: 40px;
+      font-size: 15px;
+    }
+    .top-nav-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+    .top-nav-item:hover {
+      background: rgba(255, 255, 255, 0.18);
+      opacity: 1;
+    }
+    .top-nav-item.active {
+      background: #ffffff;
+      color: #4c1d95;
+      font-weight: 600;
+      opacity: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--brand-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* =========================
+       레이아웃
+    ========================= */
+    .layout {
+      display: flex;
+      margin-top: 60px;
+      min-height: calc(100vh - 60px);
+    }
+
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-soft);
+      padding: 24px 16px;
+    }
+    .sidebar-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--sidebar-title);
+      margin-bottom: 12px;
+    }
+    .menu-list {
+      list-style: none;
+      padding: 0;
+      margin: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .menu-item {
+      border-radius: 10px;
+      color: var(--menu-text);
+    }
+    .menu-main {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    .menu-main:hover {
+      background: #ede9fe;
+    }
+    .menu-item.active > .menu-main {
+      background: var(--brand-main);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .menu-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .menu-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: #ede9fe;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--brand-main);
+    }
+    .menu-item.active .menu-icon {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+    .menu-arrow {
+      font-size: 12px;
+      transition: transform 0.15s ease-out;
+    }
+    .menu-item.open .menu-arrow {
+      transform: rotate(90deg);
+    }
+    .submenu-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 4px 32px;
+      display: none;
+    }
+    .menu-item.open .submenu-list {
+      display: block;
+    }
+    .submenu-item {
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-sub);
+      cursor: pointer;
+      position: relative;
+    }
+    .submenu-item::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--submenu-dot);
+    }
+    .submenu-item:hover {
+      background: #f5f3ff;
+    }
+    .submenu-item.active {
+      background: #ede9fe;
+      color: var(--brand-main-dark);
+      font-weight: 600;
+    }
+    .submenu-item.active::before {
+      background: var(--brand-main);
+    }
+
+    .main {
+      flex: 1;
+      padding: 24px 32px 32px;
+      overflow: auto;
+    }
+    #page-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+    .breadcrumb span.current {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-bottom: 16px;
+    }
+
+    /* =========================
+       공통 카드 / 버튼 / 폼
+    ========================= */
+    .board-header-panel,
+    .board-card {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 16px 20px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      border: 1px solid var(--border-soft);
+    }
+
+    .board-header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .board-header-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .board-header-title h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .board-header-title span {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      align-items: flex-end;
+      margin-top: 12px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .field label {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .field small {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .field-inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-sub);
+      flex-wrap: wrap;
+    }
+
+    .field input,
+    .field select {
+      padding: 7px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border-input);
+      background: #fafafc;
+      font-size: 13px;
+      outline: none;
+      color: var(--text-main);
+      min-width: 150px;
+    }
+    .field input[type="month"] {
+      min-width: 130px;
+    }
+    .field select:focus,
+    .field input:focus {
+      border-color: var(--brand-main);
+      box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.18);
+      background: #ffffff;
+    }
+
+    .btn-primary {
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      background: var(--btn-primary-bg);
+      color: #ffffff;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 8px 18px rgba(124, 58, 237, 0.35);
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      background: var(--btn-primary-bg-hover);
+    }
+    .btn-ghost {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      color: var(--text-sub);
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-ghost:hover {
+      background: var(--surface-soft);
+    }
+
+    .chip-toggle {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-sub);
+    }
+    .chip-toggle.active {
+      background: var(--brand-main);
+      color: #ffffff;
+      border-color: var(--brand-main);
+      font-weight: 500;
+    }
+
+    .pill-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--accent-chip-bg);
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+    .pill-inline strong {
+      color: var(--text-main);
+    }
+
+    /* =========================
+       그래프 카드 / 요약
+    ========================= */
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .card-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .card-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+    }
+    .legend-color-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #c4b5fd;
+    }
+    .legend-color-dot.alt1 { background: #f97373; }
+    .legend-color-dot.alt2 { background: #4ade80; }
+    .legend-color-dot.alt3 { background: #38bdf8; }
+
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      margin-top: 4px;
+    }
+
+    .kpi-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+      font-size: 12px;
+    }
+    .kpi-pill {
+      flex: 1 1 140px;
+      min-width: 0;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--surface-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .kpi-label {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+    .kpi-value {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    /* Detail 모드 전용 레이아웃 */
+    .detail-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(260px, 1fr);
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .detail-panel {
+      border-radius: 14px;
+      border: 1px dashed var(--border-soft);
+      background: var(--surface-softer);
+      padding: 12px 14px;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .detail-panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+    .detail-panel dl {
+      margin: 0;
+    }
+    .detail-panel dt {
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .detail-panel dd {
+      margin: 0;
+      margin-top: 2px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .footnote {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    /* Stub 카드 */
+    .stub-card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px dashed var(--stub-border);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .stub-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+    .stub-desc {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+      }
+      .main {
+        padding: 18px 14px 24px;
+      }
+      #page-inner {
+        max-width: 100%;
+      }
+      .detail-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .board-header-panel,
+      .board-card {
+        padding: 14px 14px 16px;
+      }
+    }
+
+    /* 상단 헤더/사이드바 텍스트 선택 방지 */
+    .top-nav-item,
+    .top-nav-item *,
+    .menu-item,
+    .menu-main,
+    .menu-label,
+    .submenu-item,
+    .submenu-item::before,
+    .menu-icon {
+      cursor: pointer !important;
+      user-select: none;
+    }
+  </style>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">ixi-O O&M</div>
+      <nav class="top-nav">
+        <div class="top-nav-item active" data-top-label="상품 운영">상품 운영</div>
+        <div class="top-nav-item" data-top-label="서비스 운영">서비스 운영</div>
+        <div class="top-nav-item" data-top-label="서비스 정산">서비스 정산</div>
+        <div class="top-nav-item" data-top-label="일반">일반</div>
+      </nav>
+    </div>
+    <div class="header-right">
+      <div class="avatar">A</div>
+      <span>관리자</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title">상품 운영</div>
+      <ul class="menu-list" id="sidebar-menu"></ul>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="main">
+      <div id="page-inner">
+        <div class="breadcrumb" id="breadcrumb">
+          <span>상품 운영</span>
+          <span>›</span>
+          <span>대시보드</span>
+          <span>›</span>
+          <span class="current">사업 실적 관리</span>
+        </div>
+
+        <div class="page-title" id="page-title">사업 실적 관리 (실적 종합)</div>
+        <div class="page-subtitle">
+          고객사별 가입자·청구·수납 지표를 한 화면에서 비교하고, 단일 고객사 상세까지 드릴다운하는 화면입니다.
+        </div>
+
+        <div id="page-content">
+          <!-- ===========================
+               사업 실적 관리 대시보드
+          ============================ -->
+          <section id="performance-dashboard">
+            <!-- Section 1. 조회 조건 설정 -->
+            <section class="board-header-panel" id="filter-section">
+              <div class="board-header-top">
+                <div class="board-header-title">
+                  <h2>조회 조건 설정</h2>
+                  <span>조회기간(최대 3년)·고객사·청구금액 유형을 선택한 후 ‘조회’ 버튼을 눌러 실적을 확인합니다.</span>
+                  <span style="font-size:11px;color:var(--text-muted);">
+                    ※ Phase 1에서는 단일 고객사(Maxis) 기준으로만 조회됩니다.
+                  </span>
+                </div>
+                <div>
+                  <div class="pill-inline">
+                    <span>본 페이지 용도:</span>
+                    <strong>고객사별 사업지표 추이 직관적 관찰 및 비교</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="filter-row">
+                <div class="field">
+                  <label>조회기간</label>
+                  <div class="field-inline">
+                    <input type="month" id="start-month" value="2025-01" />
+                    <span style="font-size:11px;color:var(--text-muted);">~</span>
+                    <input type="month" id="end-month" value="2025-12" />
+                  </div>
+                  <small>최대 36개월(3년) 이내 범위만 선택 가능합니다.</small>
+                </div>
+
+                <div class="field">
+                  <label>조회할 고객사</label>
+                  <select id="customer-select" disabled>
+                    <option value="maxis">Maxis (M사)</option>
+                  </select>
+                  <small>Phase 1: Maxis 1개만 노출 · 추후 다수 고객사 목록 및 검색 제공 예정</small>
+                </div>
+
+                <div class="field">
+                  <label>청구금액 유형</label>
+                  <div class="field-inline">
+                    <label><input type="checkbox" id="bill-type-recurring" checked /> 반복성</label>
+                    <label><input type="checkbox" id="bill-type-onetime" checked /> 일회성</label>
+                  </div>
+                  <small>디폴트: 반복성·일회성 모두 선택된 상태</small>
+                </div>
+
+                <div class="field">
+                  <label style="visibility:hidden;">조회 버튼</label>
+                  <button class="btn-primary" id="btn-run-query">조회</button>
+                </div>
+              </div>
+
+              <div class="footnote">
+                - 지표 보관 기간은 사업지표 기준 영구이며, 지표 산출에 사용된 원천 데이터(가입일·기능별 사용량 등)는 정산 이의 제기 기간을 고려해 N개월 후 파기합니다.<br/>
+                - (AI APIM 기준) 기능 호출 수·토큰 수 등은 내부 원가 관리용 별도 리포트에서 관리합니다.
+              </div>
+            </section>
+
+            <!-- Section 2. 가입자 추이 그래프 -->
+            <section class="board-card" id="subscribers-section">
+              <div class="section-label">Section 2 · Subscribers</div>
+              <div class="card-header-row">
+                <div class="card-title-block">
+                  <div class="card-title">가입자 추이 그래프</div>
+                  <div class="card-subtitle">
+                    선택한 기간 동안 고객사별 월 평균 가입자 추이를 누적 영역 그래프로 제공합니다.
+                  </div>
+                </div>
+                <div class="card-legend">
+                  <div class="legend-item">
+                    <span class="legend-color-dot"></span>
+                    <span>월 평균 가입자수 (Maxis)</span>
+                  </div>
+                  <div class="legend-item">
+                    <span>조회기간:</span>
+                    <strong id="legend-period-sub">2025.01 ~ 2025.12</strong>
+                  </div>
+                  <div class="legend-item">
+                    <span>필터:</span>
+                    <strong>Maxis 1개사</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-wrapper">
+                <canvas id="subscribersChart"></canvas>
+              </div>
+
+              <div class="kpi-row" id="sub-kpi-row">
+                <div class="kpi-pill">
+                  <div class="kpi-label">기간 평균 가입자수</div>
+                  <div class="kpi-value" id="kpi-sub-avg">12,450 명</div>
+                </div>
+                <div class="kpi-pill">
+                  <div class="kpi-label">최대 가입자수(월)</div>
+                  <div class="kpi-value" id="kpi-sub-max">13,200 명</div>
+                </div>
+                <div class="kpi-pill">
+                  <div class="kpi-label">최소 가입자수(월)</div>
+                  <div class="kpi-value" id="kpi-sub-min">11,800 명</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Section 3. 청구금액 추이 그래프 (복수 고객사 Overview) -->
+            <section class="board-card" id="billing-multi-section">
+              <div class="section-label">Section 3 · Billing – Overview</div>
+              <div class="card-header-row">
+                <div class="card-title-block">
+                  <div class="card-title">청구금액 추이 그래프 (복수 고객사 관점)</div>
+                  <div class="card-subtitle">
+                    각 고객사별 총 청구금액(반복성 + 일회성)을 누적 영역 그래프로 표현합니다.
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+                  <div class="card-legend">
+                    <div class="legend-item">
+                      <span class="legend-color-dot"></span>
+                      <span>총 청구금액 (Maxis)</span>
+                    </div>
+                    <div class="legend-item">
+                      <span>조회기간:</span>
+                      <strong id="legend-period-bill">2025.01 ~ 2025.12</strong>
+                    </div>
+                    <div class="legend-item">
+                      <span>청구 유형:</span>
+                      <strong id="legend-bill-type">반복성 + 일회성</strong>
+                    </div>
+                  </div>
+                  <div class="field-inline" style="justify-content:flex-end;">
+                    <button class="btn-ghost" id="btn-detail-mode">단일 고객사 상세 보기</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-wrapper">
+                <canvas id="billingMultiChart"></canvas>
+              </div>
+
+              <div class="kpi-row" id="bill-multi-kpi-row">
+                <div class="kpi-pill">
+                  <div class="kpi-label">조회기간 총 청구금액 누계</div>
+                  <div class="kpi-value" id="kpi-bill-total">85.3 억원</div>
+                </div>
+                <div class="kpi-pill">
+                  <div class="kpi-label">반복성 청구금액 누계</div>
+                  <div class="kpi-value" id="kpi-bill-rec">74.1 억원</div>
+                </div>
+                <div class="kpi-pill">
+                  <div class="kpi-label">일회성 청구금액 누계</div>
+                  <div class="kpi-value" id="kpi-bill-one">11.2 억원</div>
+                </div>
+                <div class="kpi-pill">
+                  <div class="kpi-label">총 수납금액 누계 / 수납율</div>
+                  <div class="kpi-value" id="kpi-bill-collect">82.7 억원 (97.0%)</div>
+                </div>
+              </div>
+
+              <div class="footnote">
+                - 그래프 영역에서 고객사 영역을 클릭하면 해당 고객사만 필터된 단일 고객사 상세 모드(Section 4)로 전환하는 것을 기본 플로우로 가정합니다.<br/>
+                - Phase 1 기준으로는 Maxis 1개사만 존재하므로, 추가 고객사가 붙을 경우를 고려한 UX 스켈레톤입니다.
+              </div>
+            </section>
+
+            <!-- Section 4. 청구금액 추이 그래프 (단일 고객사 Detail) -->
+            <section class="board-card" id="billing-detail-section" style="display:none;">
+              <div class="section-label">Section 4 · Billing – Detail (Single Customer)</div>
+              <div class="card-header-row">
+                <div class="card-title-block">
+                  <div class="card-title">청구금액 추이 그래프 – 단일 고객사 (Maxis)</div>
+                  <div class="card-subtitle">
+                    청구금액 유형(일회성 / 반복성 / 전체)에 따라 그래프 구성이 달라집니다.
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+                  <div class="field-inline">
+                    <span style="font-size:11px;color:var(--text-muted);">청구금액 유형 보기</span>
+                    <button class="chip-toggle active" data-detail-mode="both">전체(일+반복)</button>
+                    <button class="chip-toggle" data-detail-mode="recurring">반복성</button>
+                    <button class="chip-toggle" data-detail-mode="onetime">일회성</button>
+                  </div>
+                  <div class="field-inline">
+                    <button class="btn-ghost" id="btn-back-overview">Overview로 돌아가기</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail-layout">
+                <div>
+                  <div class="chart-wrapper">
+                    <canvas id="billingDetailChart"></canvas>
+                  </div>
+                  <div class="footnote">
+                    - 막대를 클릭하면 해당 월의 청구 상세(일회성 내역 / 할인·과금 요소)를 우측 패널에서 확인할 수 있습니다.<br/>
+                    - ‘일회성’ 모드: 일회성 청구금액·크레딧 잔액을 x축 기준 위/아래로 표현하는 누적 막대 그래프<br/>
+                    - ‘반복성’ 모드: 반복성 청구금액·총 할인금액·총 과금금액(할인 전)을 누적 막대 + 반복성 청구금액 꺾은선으로 동시 표현<br/>
+                    - ‘전체(일+반복)’ 모드: 총 청구·반복성·일회성·총 수납금액/수납율을 그루핑된 누적 막대 그래프로 표현
+                  </div>
+                  <div style="margin-top:8px;">
+                    <button class="btn-ghost" id="btn-export-csv">현재 그래프 지표 CSV 다운로드</button>
+                    <span style="font-size:11px;color:var(--text-muted);margin-left:6px;">
+                      (현재 표시된 그래프의 속성들을 CSV 포맷으로 내보내는 기능)
+                    </span>
+                  </div>
+                </div>
+
+                <aside class="detail-panel">
+                  <div class="detail-panel-title">청구내역 상세 (예시 · 2025-08 · Maxis)</div>
+                  <dl>
+                    <dt>일회성 청구 내역</dt>
+                    <dd>- 구축 고도화 2단계 잔금 청구: 3.2억<br/>- 원천 데이터 누락에 따른 보정 청구: 0.4억</dd>
+
+                    <dt>크레딧 차감 및 잔액</dt>
+                    <dd>- 당월 크레딧 차감액: 0.6억<br/>- 조회기간 말 기준 크레딧 잔액: 1.8억</dd>
+
+                    <dt>반복성 청구 구성(월)</dt>
+                    <dd>- 기본 구독 과금금액(할인 전): 7.5억<br/>
+                        - 총 할인금액(과금할인+청구할인): 0.9억<br/>
+                        - 반복성 청구금액(할인 후): 6.6억</dd>
+
+                    <dt>수납 현황</dt>
+                    <dd>- 당월 수납금액: 9.7억<br/>
+                        - 수납율(월 기준): 98.1%<br/>
+                        - 조회기간 수납율(기간 기준): 97.0%</dd>
+                  </dl>
+                </aside>
+              </div>
+
+              <div class="kpi-row" id="bill-detail-kpi-row" style="margin-top:14px;">
+                <div class="kpi-pill">
+                  <div class="kpi-label">조회기간 총 청구금액 누계</div>
+                  <div class="kpi-value" id="kpi-detail-total">85.3 억원</div>
+                </div>
+                <div class="kpi-pill">
+                  <div class="kpi-label">반복성 청구금액 누계</div>
+                  <div class="kpi-value" id="kpi-detail-rec">74.1 억원</div>
+                </div>
+                <div class="kpi-pill">
+                  <div class="kpi-label">일회성 청구금액 누계</div>
+                  <div class="kpi-value" id="kpi-detail-one">11.2 억원</div>
+                </div>
+                <div class="kpi-pill">
+                  <div class="kpi-label">총 수납금액 누계 / 수납율</div>
+                  <div class="kpi-value" id="kpi-detail-collect">82.7 억원 (97.0%)</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- 정책 메모 섹션(선택) -->
+            <section class="board-card" id="policy-note-section">
+              <div class="section-label">Policy Note</div>
+              <div class="card-title" style="margin-bottom:6px;">당월 청구금액 예측 로직 요약</div>
+              <div style="font-size:12px;color:var(--text-sub);line-height:1.7;">
+                - 가입자 예측: 조회일 기준 직전 N일 가입자 수의 이동평균(MA)을 사용하여 조회일+1일의 가입자를 추정하고, sliding window 방식으로 당월 말까지 일별 가입자 예측치를 생성합니다.<br/>
+                - 청구금액 예측: 월 평균 가입자 × 단가를 이용해 과금할인 전 청구금액을 산출한 뒤, 해당 월에 유효한 과금할인·청구할인이 존재하는 경우 이를 반영합니다.<br/>
+                - 조회기간 종료월에 ‘당월’을 선택한 경우, 위 예측 로직을 활용해 ‘당월 예상 청구금액’을 우측 상단 배지 또는 별도 KPI로 표시할 수 있습니다.
+              </div>
+            </section>
+          </section>
+
+          <!-- Stub: 다른 메뉴용 -->
+          <section id="stub-container" style="display:none;">
+            <div class="stub-card">
+              <div class="stub-title" id="stub-title">화면 준비 중입니다</div>
+              <p class="stub-desc" id="stub-desc">
+                선택하신 메뉴의 상세 GUI는 아직 정의되지 않았습니다.<br />
+                운영 정책 및 요구사항 정리 후, 순차적으로 화면을 구성할 예정입니다.
+              </p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    /* =========================
+       메뉴 구조 정의
+    ========================= */
+    const MENU_STRUCTURE = {
+      "상품 운영": {
+        "상품 관리": ["상품 기준 정보"],
+        "고객사 관리": ["고객사 정보", "계약 관리"],
+        "대시보드": ["사업 실적 관리", "학습데이터 수집"]
+      },
+      "서비스 운영": {
+        "사용자 관리": ["계정 관리"],
+        "구독 관리": ["구독 현황"],
+        "DevOps": ["AI 모델"],
+        "Support Center": ["공지/SOP/FAQ"]
+      },
+      "서비스 정산": {
+        "청구/수납": ["청구/수납"]
+      },
+      "일반": {
+        "시스템": ["보안, 컴플라이언스", "설정"]
+      }
+    };
+
+    const DEFAULT_TOP = "상품 운영";
+    const DEFAULT_L2  = "대시보드";
+    const DEFAULT_L3  = "사업 실적 관리";
+
+    let currentTop = DEFAULT_TOP;
+    let currentL2  = DEFAULT_L2;
+    let currentL3  = DEFAULT_L3;
+
+    let subscribersChart, billingMultiChart, billingDetailChart;
+    let currentDetailMode = "both"; // both | recurring | onetime
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const topNavItems   = document.querySelectorAll(".top-nav-item");
+      const sidebarTitle  = document.querySelector(".sidebar-section-title");
+      const sidebarMenuEl = document.getElementById("sidebar-menu");
+      const breadcrumbEl  = document.getElementById("breadcrumb");
+      const pageTitleEl   = document.getElementById("page-title");
+
+      const perfDashboard = document.getElementById("performance-dashboard");
+      const stubContainer = document.getElementById("stub-container");
+
+      const billingMultiSection  = document.getElementById("billing-multi-section");
+      const billingDetailSection = document.getElementById("billing-detail-section");
+      const btnDetailMode = document.getElementById("btn-detail-mode");
+      const btnBackOverview = document.getElementById("btn-back-overview");
+      const detailModeButtons = document.querySelectorAll(".chip-toggle[data-detail-mode]");
+      const btnExportCsv = document.getElementById("btn-export-csv");
+      const btnRunQuery = document.getElementById("btn-run-query");
+
+      const startMonthInput = document.getElementById("start-month");
+      const endMonthInput   = document.getElementById("end-month");
+      const legendPeriodSub = document.getElementById("legend-period-sub");
+      const legendPeriodBill= document.getElementById("legend-period-bill");
+      const legendBillType  = document.getElementById("legend-bill-type");
+      const chkRecurring    = document.getElementById("bill-type-recurring");
+      const chkOnetime      = document.getElementById("bill-type-onetime");
+
+      function setActiveTopNav(label) {
+        topNavItems.forEach((item) => {
+          const topLabel = item.getAttribute("data-top-label");
+          item.classList.toggle("active", topLabel === label);
+        });
+      }
+
+      function renderSidebar(topLabel, selectedL2, selectedL3) {
+        sidebarTitle.textContent = topLabel;
+        sidebarMenuEl.innerHTML = "";
+
+        const menus = MENU_STRUCTURE[topLabel] || {};
+        Object.keys(menus).forEach((l2Name) => {
+          const l3List = menus[l2Name];
+          const li = document.createElement("li");
+          li.className = "menu-item";
+          li.dataset.l2 = l2Name;
+
+          const isActiveL2 = l2Name === selectedL2;
+          if (isActiveL2) li.classList.add("active", "open");
+
+          const mainDiv = document.createElement("div");
+          mainDiv.className = "menu-main";
+
+          const labelDiv = document.createElement("div");
+          labelDiv.className = "menu-label";
+
+          const iconSpan = document.createElement("span");
+          iconSpan.className = "menu-icon";
+          iconSpan.textContent = "📂";
+
+          const textSpan = document.createElement("span");
+          textSpan.textContent = l2Name;
+
+          labelDiv.appendChild(iconSpan);
+          labelDiv.appendChild(textSpan);
+
+          const arrowSpan = document.createElement("span");
+          arrowSpan.className = "menu-arrow";
+          arrowSpan.textContent = "›";
+
+          mainDiv.appendChild(labelDiv);
+          mainDiv.appendChild(arrowSpan);
+
+          const subUl = document.createElement("ul");
+          subUl.className = "submenu-list";
+
+          l3List.forEach((l3Name) => {
+            const subLi = document.createElement("li");
+            subLi.className = "submenu-item";
+            subLi.dataset.l3 = l3Name;
+            subLi.textContent = l3Name;
+
+            if (isActiveL2 && l3Name === selectedL3) {
+              subLi.classList.add("active");
+            }
+
+            subUl.appendChild(subLi);
+          });
+
+          li.appendChild(mainDiv);
+          li.appendChild(subUl);
+          sidebarMenuEl.appendChild(li);
+        });
+      }
+
+      function updateBreadcrumbAndTitle() {
+        breadcrumbEl.innerHTML = "";
+        const span1 = document.createElement("span");
+        span1.textContent = currentTop;
+        const sep1 = document.createElement("span");
+        sep1.textContent = "›";
+        const span2 = document.createElement("span");
+        span2.textContent = currentL2;
+        const sep2 = document.createElement("span");
+        sep2.textContent = "›";
+        const span3 = document.createElement("span");
+        span3.textContent = currentL3;
+        span3.className = "current";
+
+        breadcrumbEl.appendChild(span1);
+        breadcrumbEl.appendChild(sep1);
+        breadcrumbEl.appendChild(span2);
+        breadcrumbEl.appendChild(sep2);
+        breadcrumbEl.appendChild(span3);
+
+        if (currentTop === "상품 운영" && currentL2 === "대시보드" && currentL3 === "사업 실적 관리") {
+          pageTitleEl.textContent = "사업 실적 관리 (실적 종합)";
+        } else {
+          pageTitleEl.textContent = currentL2;
+        }
+      }
+
+      function isPerformancePage() {
+        return (
+          currentTop === "상품 운영" &&
+          currentL2 === "대시보드" &&
+          currentL3 === "사업 실적 관리"
+        );
+      }
+
+      function renderPage() {
+        if (isPerformancePage()) {
+          perfDashboard.style.display = "";
+          stubContainer.style.display = "none";
+        } else {
+          perfDashboard.style.display = "none";
+          stubContainer.style.display = "";
+          const stubTitle = document.getElementById("stub-title");
+          const stubDesc  = document.getElementById("stub-desc");
+          stubTitle.textContent = `${currentTop} - ${currentL2} (${currentL3})`;
+          stubDesc.textContent  = "해당 메뉴는 현재 사업 실적 관리 이외의 기능으로, 상세 GUI는 추후 구성될 예정입니다.";
+        }
+        updateBreadcrumbAndTitle();
+      }
+
+      /* ========== Chart 샘플 데이터 ========== */
+      const labels = ["2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12"];
+
+      const subsData = [11800,12150,12300,12450,12500,12600,12750,13200,13100,12950,12800,12700];
+
+      const recurringBill = [5.8,6.1,6.3,6.5,6.6,6.7,6.9,7.1,7.2,7.3,7.4,7.5];
+      const onetimeBill   = [0.4,0.0,0.8,0.0,0.6,0.0,1.1,3.6,0.0,1.2,1.0,2.1];
+      const totalBill     = recurringBill.map((v,i)=>Number((v + onetimeBill[i]).toFixed(1)));
+      const collectedBill = totalBill.map(v => Number((v * 0.97).toFixed(1)));
+      const totalDiscount = recurringBill.map(v => Number((v * 0.12).toFixed(1))); // 예시: 12% 할인
+      const preDiscount   = recurringBill.map((v,i)=> Number((v + totalDiscount[i]).toFixed(1)));
+
+      function sum(arr) {
+        return arr.reduce((a,b)=>a+b,0);
+      }
+
+      /* ========== Chart 초기화 함수 ========== */
+      function initSubscribersChart() {
+        const ctx = document.getElementById("subscribersChart").getContext("2d");
+        if (subscribersChart) subscribersChart.destroy();
+        subscribersChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "월 평균 가입자수 (Maxis)",
+                data: subsData,
+                fill: true,
+                borderColor: "#7c3aed",
+                backgroundColor: "rgba(124,58,237,0.18)",
+                tension: 0.3,
+                pointRadius: 3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { mode: "index", intersect: false }
+            },
+            scales: {
+              x: {
+                grid: { display: false }
+              },
+              y: {
+                ticks: {
+                  callback: (value) => value.toLocaleString("ko-KR") + "명"
+                }
+              }
+            }
+          }
+        });
+
+        // KPI 업데이트
+        const avg = sum(subsData) / subsData.length;
+        const max = Math.max(...subsData);
+        const min = Math.min(...subsData);
+        document.getElementById("kpi-sub-avg").textContent = Math.round(avg).toLocaleString("ko-KR") + " 명";
+        document.getElementById("kpi-sub-max").textContent = max.toLocaleString("ko-KR") + " 명";
+        document.getElementById("kpi-sub-min").textContent = min.toLocaleString("ko-KR") + " 명";
+      }
+
+      function initBillingMultiChart() {
+        const ctx = document.getElementById("billingMultiChart").getContext("2d");
+        if (billingMultiChart) billingMultiChart.destroy();
+        billingMultiChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "총 청구금액 (Maxis)",
+                data: totalBill,
+                fill: true,
+                borderColor: "#ec4899",
+                backgroundColor: "rgba(236,72,153,0.18)",
+                tension: 0.3,
+                pointRadius: 3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { mode: "index", intersect: false }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                ticks: {
+                  callback: (value) => value + "억"
+                }
+              }
+            },
+            onClick: () => {
+              // 실제 구현 시: 특정 고객사 클릭 → Detail 모드 전환
+              enterDetailMode();
+            }
+          }
+        });
+
+        const total = sum(totalBill);
+        const rec   = sum(recurringBill);
+        const one   = sum(onetimeBill);
+        const coll  = sum(collectedBill);
+        document.getElementById("kpi-bill-total").textContent = total.toFixed(1) + " 억원";
+        document.getElementById("kpi-bill-rec").textContent   = rec.toFixed(1)   + " 억원";
+        document.getElementById("kpi-bill-one").textContent   = one.toFixed(1)   + " 억원";
+        document.getElementById("kpi-bill-collect").textContent = coll.toFixed(1) + " 억원 (97.0%)";
+      }
+
+      function initBillingDetailChart() {
+        const ctx = document.getElementById("billingDetailChart").getContext("2d");
+        if (billingDetailChart) billingDetailChart.destroy();
+
+        if (currentDetailMode === "onetime") {
+          // (a) 일회성 모드: 일회성 청구 + 크레딧 잔액(음수) 누적 막대
+          const creditBalance = onetimeBill.map((v,i)=> Number((-v * 0.3).toFixed(1))); // 예시: 크레딧 잔액 음수 표현
+          billingDetailChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "일회성 청구금액",
+                  data: onetimeBill,
+                  backgroundColor: "#f97373",
+                  stack: "one"
+                },
+                {
+                  label: "크레딧 잔액(음수표현)",
+                  data: creditBalance,
+                  backgroundColor: "#60a5fa",
+                  stack: "one"
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "top" },
+                tooltip: { mode: "index", intersect: false }
+              },
+              scales: {
+                x: { stacked: true },
+                y: {
+                  stacked: true,
+                  ticks: {
+                    callback: (value)=> value + "억"
+                  }
+                }
+              },
+              onClick: () => {
+                // 클릭 시 우측 패널 내용 업데이트하는 공간
+              }
+            }
+          });
+        } else if (currentDetailMode === "recurring") {
+          // (b) 반복성 모드: 누적 막대(과금 전 / 할인 / 반복성 청구) + 꺾은선(반복성)
+          billingDetailChart = new Chart(ctx, {
+            data: {
+              labels,
+              datasets: [
+                {
+                  type: "bar",
+                  label: "총 과금금액(할인 전)",
+                  data: preDiscount,
+                  backgroundColor: "rgba(37,99,235,0.4)",
+                  stack: "stack1"
+                },
+                {
+                  type: "bar",
+                  label: "총 할인금액",
+                  data: totalDiscount.map(v=>-v),
+                  backgroundColor: "rgba(248,113,113,0.7)",
+                  stack: "stack1"
+                },
+                {
+                  type: "bar",
+                  label: "반복성 청구금액",
+                  data: recurringBill,
+                  backgroundColor: "rgba(34,197,94,0.7)",
+                  stack: "stack1"
+                },
+                {
+                  type: "line",
+                  label: "반복성 청구금액 (Line)",
+                  data: recurringBill,
+                  borderColor: "#22c55e",
+                  backgroundColor: "#22c55e",
+                  tension: 0.3,
+                  yAxisID: "y"
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "top" }
+              },
+              scales: {
+                x: { stacked: true },
+                y: {
+                  stacked: true,
+                  ticks: {
+                    callback: (value)=> value + "억"
+                  }
+                }
+              }
+            }
+          });
+        } else {
+          // (c) 전체 모드: 총 청구 / 반복성 / 일회성 / 총 수납금액(그룹형 막대)
+          billingDetailChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "총 청구금액",
+                  data: totalBill,
+                  backgroundColor: "#a855f7"
+                },
+                {
+                  label: "반복성 청구금액",
+                  data: recurringBill,
+                  backgroundColor: "#22c55e"
+                },
+                {
+                  label: "일회성 청구금액",
+                  data: onetimeBill,
+                  backgroundColor: "#f97373"
+                },
+                {
+                  label: "총 수납금액",
+                  data: collectedBill,
+                  backgroundColor: "#38bdf8"
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: "top" },
+                tooltip: { mode: "index", intersect: false }
+              },
+              scales: {
+                x: {
+                  stacked: false
+                },
+                y: {
+                  stacked: false,
+                  ticks: {
+                    callback: (value)=> value + "억"
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        // Detail KPI는 Overview와 동일 샘플 값 사용
+        const total = sum(totalBill);
+        const rec   = sum(recurringBill);
+        const one   = sum(onetimeBill);
+        const coll  = sum(collectedBill);
+        document.getElementById("kpi-detail-total").textContent   = total.toFixed(1) + " 억원";
+        document.getElementById("kpi-detail-rec").textContent     = rec.toFixed(1)   + " 억원";
+        document.getElementById("kpi-detail-one").textContent     = one.toFixed(1)   + " 억원";
+        document.getElementById("kpi-detail-collect").textContent = coll.toFixed(1) + " 억원 (97.0%)";
+      }
+
+      function enterDetailMode() {
+        billingMultiSection.style.display  = "none";
+        billingDetailSection.style.display = "";
+        currentDetailMode = "both";
+        detailModeButtons.forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.detailMode === "both");
+        });
+        initBillingDetailChart();
+      }
+
+      function backToOverview() {
+        billingMultiSection.style.display  = "";
+        billingDetailSection.style.display = "none";
+      }
+
+      /* ========== 이벤트 바인딩 ========== */
+      setActiveTopNav(DEFAULT_TOP);
+      renderSidebar(DEFAULT_TOP, DEFAULT_L2, DEFAULT_L3);
+      renderPage();
+      initSubscribersChart();
+      initBillingMultiChart();
+
+      // Top Nav
+      topNavItems.forEach(item => {
+        item.addEventListener("click", () => {
+          const label = item.getAttribute("data-top-label");
+          currentTop = label;
+          const l2List = Object.keys(MENU_STRUCTURE[label] || {});
+          currentL2 = l2List[0] || "";
+          const l3List = (MENU_STRUCTURE[label] || {})[currentL2] || [];
+          currentL3 = l3List[0] || "";
+
+          setActiveTopNav(label);
+          renderSidebar(currentTop, currentL2, currentL3);
+          renderPage();
+        });
+      });
+
+      // Sidebar
+      sidebarMenuEl.addEventListener("click", (e) => {
+        const menuMain = e.target.closest(".menu-main");
+        const submenu  = e.target.closest(".submenu-item");
+
+        if (menuMain) {
+          const li = menuMain.parentElement;
+          if (li.classList.contains("open")) {
+            li.classList.remove("open");
+          } else {
+            sidebarMenuEl.querySelectorAll(".menu-item").forEach(mi => {
+              mi.classList.toggle("open", mi === li);
+            });
+          }
+        }
+
+        if (submenu) {
+          const l2 = submenu.closest(".menu-item").dataset.l2;
+          const l3 = submenu.dataset.l3;
+
+          currentL2 = l2;
+          currentL3 = l3;
+
+          sidebarMenuEl.querySelectorAll(".menu-item").forEach(mi => {
+            mi.classList.toggle("active", mi.dataset.l2 === l2);
+          });
+          sidebarMenuEl.querySelectorAll(".submenu-item").forEach(si => {
+            si.classList.toggle("active", si === submenu);
+          });
+
+          renderPage();
+        }
+      });
+
+      // 조회 버튼 → 기간/유형에 맞게 레이블만 업데이트 (샘플)
+      btnRunQuery.addEventListener("click", () => {
+        const s = startMonthInput.value || "2025-01";
+        const e = endMonthInput.value   || "2025-12";
+        const [sy,sm] = s.split("-");
+        const [ey,em] = e.split("-");
+        const periodLabel = `${sy}.${sm} ~ ${ey}.${em}`;
+
+        legendPeriodSub.textContent  = periodLabel;
+        legendPeriodBill.textContent = periodLabel;
+
+        const types = [];
+        if (chkRecurring.checked) types.push("반복성");
+        if (chkOnetime.checked)   types.push("일회성");
+        legendBillType.textContent = types.length === 2 ? "반복성 + 일회성" : (types[0] || "유형 없음");
+
+        // 실제 구현 시 여기서 API를 호출하여 차트 데이터를 재계산·재렌더링
+        initSubscribersChart();
+        initBillingMultiChart();
+        if (billingDetailSection.style.display !== "none") {
+          initBillingDetailChart();
+        }
+      });
+
+      // Detail 모드 전환 버튼
+      btnDetailMode.addEventListener("click", enterDetailMode);
+      btnBackOverview.addEventListener("click", backToOverview);
+
+      // Detail 모드 토글 버튼
+      detailModeButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const mode = btn.dataset.detailMode;
+          currentDetailMode = mode;
+          detailModeButtons.forEach(b => {
+            b.classList.toggle("active", b === btn);
+          });
+          initBillingDetailChart();
+        });
+      });
+
+      // CSV 다운로드 (샘플)
+      btnExportCsv.addEventListener("click", () => {
+        alert("현재 그래프에 표시된 데이터셋을 CSV로 내보내는 기능은 백엔드/프론트 연동 시 구현합니다. (UI 스켈레톤)");
+      });
+    });
+  </script>
+</body>
+</html>

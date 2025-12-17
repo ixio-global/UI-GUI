@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>ixi-O O&M – 고객사 정보</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* =========================
+       Color Design Tokens
+    ========================= */
+    :root {
+      /* Base */
+      --bg-body: #f4f4ff;
+      --text-main: #111827;
+      --text-sub: #4b5563;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+
+      /* Brand / Primary */
+      --brand-grad-from: #8b5cf6;
+      --brand-grad-to: #ec4899;
+      --brand-main: #7c3aed;
+      --brand-main-dark: #5b21b6;
+      --brand-main-deep: #4c1d95;
+
+      /* Surface / Border */
+      --surface: #ffffff;
+      --surface-soft: #f5f3ff;
+      --surface-softer: #f9fafb;
+      --border-soft: #e5e7eb;
+      --border-input: #e5e0ff;
+
+      /* Sidebar / Menu */
+      --sidebar-bg: #f5f3ff;
+      --sidebar-title: #6b7280;
+      --menu-text: #111827;
+      --submenu-dot: #d4bfff;
+
+      /* Accents */
+      --accent-chip-bg: #f3f4ff;
+      --accent-chip-bg-strong: #e5e7ff;
+      --accent-chip-text: #4b5563;
+      --accent-hover: #f3f4ff;
+      --accent-row-alt: #faf5ff;
+      --accent-link: #4c1d95;
+
+      /* Buttons */
+      --btn-primary-bg: #7C3AED;
+      --btn-primary-bg-hover: #6D28D9;
+
+      /* Table / Pagination */
+      --table-head-bg: #f5f3ff;
+
+      /* Badges */
+      --badge-on-bg: #dcfce7;
+      --badge-on-text: #166534;
+      --badge-off-bg: #fee2e2;
+      --badge-off-text: #b91c1c;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", system-ui, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    /* =========================
+       헤더 (L1)
+    ========================= */
+    .header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 60px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, var(--brand-grad-from), var(--brand-grad-to));
+      color: #ffffff;
+      z-index: 20;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    .top-nav {
+      display: flex;
+      gap: 40px;
+      font-size: 15px;
+    }
+
+    .top-nav-item {
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: default;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+
+    .top-nav-item.active {
+      background: #ffffff;
+      color: #4c1d95;
+      font-weight: 600;
+      opacity: 1;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--brand-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* =========================
+       레이아웃
+    ========================= */
+    .layout {
+      display: flex;
+      margin-top: 60px;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* =========================
+       사이드바 (L2 / L3)
+    ========================= */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-soft);
+      padding: 24px 16px;
+    }
+
+    .sidebar-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--sidebar-title);
+      margin-bottom: 12px;
+    }
+
+    .menu-list {
+      list-style: none;
+      padding: 0;
+      margin: 2px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .menu-item {
+      border-radius: 10px;
+      color: var(--menu-text);
+    }
+
+    .menu-main {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 10px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .menu-main:hover {
+      background: var(--accent-hover);
+    }
+
+    .menu-item.active>.menu-main {
+      background: var(--brand-main);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .menu-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      background: #ede9fe;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--brand-main);
+    }
+
+    .menu-item.active .menu-icon {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+
+    .menu-arrow {
+      font-size: 12px;
+      transition: transform 0.15s ease-out;
+    }
+
+    .menu-item.open .menu-arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu-list {
+      list-style: none;
+      padding-left: 32px;
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--text-sub);
+      display: none;
+    }
+
+    .menu-item.open .submenu-list {
+      display: block;
+    }
+
+    .submenu-item {
+      padding: 4px 6px;
+      border-radius: 6px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .submenu-item:hover {
+      background: var(--accent-hover);
+    }
+
+    .submenu-item::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--submenu-dot);
+    }
+
+    .submenu-item.active {
+      background: #ede9fe;
+      color: var(--brand-main-dark);
+      font-weight: 600;
+    }
+
+    .submenu-item.active::before {
+      background: var(--brand-main);
+    }
+
+    /* =========================
+       메인 컨텐츠
+    ========================= */
+    .main {
+      flex: 1;
+      padding: 24px 32px 32px;
+      overflow: auto;
+    }
+
+    .page-inner {
+      max-width: 1180px;
+      margin: 0 auto 24px;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .breadcrumb span.current {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .page-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    /* =========================
+       공통 카드 / 섹션 헤더
+    ========================= */
+    .section-card {
+      background: var(--surface);
+      border-radius: 18px;
+      border: 1px solid var(--border-soft);
+      padding: 20px 22px 18px;
+      box-shadow: 0 10px 26px rgba(148, 163, 184, 0.24);
+    }
+
+    .section-spacing {
+      margin-top: 14px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-header-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .section-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .section-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .section-badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      font-size: 11px;
+      color: var(--brand-main-dark);
+      white-space: nowrap;
+    }
+
+    .helper-text {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+
+    /* =========================
+       버튼
+    ========================= */
+    .btn-primary {
+      padding: 9px 22px;
+      border-radius: 999px;
+      border: none;
+      background: var(--btn-primary-bg);
+      color: #ffffff;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      background: var(--btn-primary-bg-hover);
+    }
+
+    .btn-ghost {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: #ffffff;
+      color: var(--text-sub);
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface-soft);
+    }
+
+    /* =========================
+       툴바 / 필터
+    ========================= */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      font-size: 12px;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .input-text {
+      min-width: 180px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-input);
+      font-size: 12px;
+      outline: none;
+      background: #ffffff;
+      color: var(--text-main);
+    }
+
+    .select-sm {
+      min-width: 120px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-input);
+      background: #ffffff;
+      font-size: 12px;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    /* =========================
+       데이터 테이블
+    ========================= */
+    .table-wrapper {
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .data-table thead {
+      background: var(--table-head-bg);
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+
+    .data-table th {
+      font-weight: 600;
+      color: var(--text-sub);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .data-table tbody tr:nth-child(even) {
+      background: #faf5ff;
+    }
+
+    .data-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tbody tr {
+      cursor: pointer;
+      transition: background 0.08s ease;
+    }
+
+    .data-table tbody tr:hover {
+      background: #ede9fe;
+    }
+
+    .data-table tbody tr.selected {
+      background: #e0d4ff;
+    }
+
+    .badge-on {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--badge-on-bg);
+      color: var(--badge-on-text);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .badge-off {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--badge-off-bg);
+      color: var(--badge-off-text);
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .table-note {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 6px;
+    }
+
+    /* =========================
+       상세 편집 영역
+    ========================= */
+    .detail-card {
+      margin-top: 14px;
+      padding: 14px 16px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface-softer);
+    }
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .detail-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .detail-caption {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+      font-size: 12px;
+    }
+
+    .detail-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .detail-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .detail-input,
+    .detail-select,
+    .detail-textarea {
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border-input);
+      background: #ffffff;
+      font-size: 12px;
+      outline: none;
+      resize: vertical;
+      min-height: 30px;
+    }
+
+    .detail-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    /* =========================
+       미리보기 래퍼 (모달 펼쳐서 노출)
+    ========================= */
+    .preview-wrapper {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border-soft);
+    }
+
+    .preview-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .preview-caption {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+
+    /* =========================
+       모달 (신규 고객사 등록)
+    ========================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.4);
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* 인라인 프리뷰용: 레이아웃 안에서 쓸 때 */
+    .modal-inline {
+      max-height: none;
+      margin-top: 8px;
+    }
+
+    .modal-header {
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .modal-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .modal-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .modal-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-soft {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      font-size: 11px;
+      color: var(--brand-main-dark);
+      white-space: nowrap;
+    }
+
+    .btn-close {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: none;
+      background: #f3f4ff;
+      color: var(--text-sub);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-close:hover {
+      background: #e5e7ff;
+    }
+
+    .modal-body {
+      padding: 14px 18px 14px;
+      overflow-y: auto;
+      background: #f9fafb;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+      font-size: 12px;
+    }
+
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .modal-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .modal-input,
+    .modal-select,
+    .modal-textarea {
+      padding: 7px 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border-input);
+      background: #ffffff;
+      font-size: 12px;
+      outline: none;
+      resize: vertical;
+      min-height: 32px;
+    }
+
+    .modal-footer {
+      padding: 10px 18px 14px;
+      border-top: 1px solid var(--border-soft);
+      background: #ffffff;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .pill-input-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .pill-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill-remove {
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .modal-sm {
+      width: 680px;
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+      }
+
+      .main {
+        padding: 18px 14px 24px;
+      }
+
+      .page-inner {
+        max-width: 100%;
+      }
+
+      .detail-grid,
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-sm {
+        width: 94vw;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 상단 헤더 -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">ixi-O O&M</div>
+      <nav class="top-nav">
+        <div class="top-nav-item active">상품 운영</div>
+        <div class="top-nav-item">서비스 운영</div>
+        <div class="top-nav-item">서비스 정산</div>
+        <div class="top-nav-item">일반</div>
+      </nav>
+    </div>
+    <div class="header-right">
+      <div class="avatar">A</div>
+      <span>LG U+ ixi-O 서브</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- L2 / L3 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title" id="sidebar-title">상품 운영</div>
+      <ul class="menu-list" id="sidebar-menu">
+        <!-- JS Rendered -->
+      </ul>
+    </aside>
+
+    <!-- 메인 영역 -->
+    <main class="main">
+      <div class="page-inner">
+        <!-- 브레드크럼 / 타이틀 -->
+        <div class="breadcrumb">
+          <span>상품 운영</span>
+          <span>›</span>
+          <span>고객사 관리</span>
+          <span>›</span>
+          <span class="current">고객사 정보</span>
+        </div>
+        <div class="page-title">고객사 정보</div>
+        <p class="page-desc">
+          본 화면은 계약·청구·계정에 공통으로 활용되는 <strong>고객사 기준정보</strong>를 관리하기 위한 화면입니다.<br />
+          각 고객사는 국가, 회사명, 사용할 IP 대역, 대표 시간대, 도메인 등 계약 생성 및 정산 산정에 필요한 속성으로 관리되며,<br />
+          고객사당 1개의 수퍼어드민 계정만 관리자로 연결할 수 있습니다.
+        </p>
+
+        <!-- 섹션: 고객사 기준정보 리스트 / 조회·변경 -->
+        <section class="section-card section-spacing">
+          <header class="section-header">
+            <div class="section-header-main">
+              <h2 class="section-title">고객사 기준정보 리스트</h2>
+              <p class="section-caption">
+                별도 조회 조건 없이 등록된 고객사 목록을 기본으로 표시합니다. 행 선택 시 세부 정보를 확인하고 변경할 수 있습니다.
+              </p>
+            </div>
+            <div class="section-header-actions">
+              <span class="section-badge">고객사 / 국가 / 시간대 / 도메인</span>
+              <button type="button" class="btn-primary" id="btnOpenCreateModal">
+                신규 고객사 등록
+              </button>
+            </div>
+          </header>
+
+          <p class="helper-text">
+            · 고객사당 1개 계정만 수퍼어드민(관리자)로 매핑 가능합니다. 관리자 변경은 안전한 운영을 위해 수퍼어드민 권한에서만 수행됩니다.<br />
+            · IP 대역 및 도메인은 계약 생성, 계정 생성 시 검증 및 제한 조건으로 사용됩니다. (Stub)
+          </p>
+
+          <!-- 상단 툴바 -->
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span class="field-label">검색</span>
+                <input type="text" id="searchCompanyInput" class="input-text" placeholder="회사명 / 도메인 검색" />
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span class="field-label">국가</span>
+                <select id="filterCountry" class="select-sm">
+                  <option value="">전체</option>
+                  <option value="KR">KR (대한민국)</option>
+                  <option value="MY">MY (말레이시아)</option>
+                </select>
+              </div>
+            </div>
+            <div class="toolbar-right">
+              <button type="button" class="btn-ghost" id="btnResetFilter">
+                초기화
+              </button>
+            </div>
+          </div>
+
+          <!-- 고객사 리스트 테이블 -->
+          <div class="table-wrapper">
+            <table class="data-table" id="customerTable">
+              <thead>
+                <tr>
+                  <th>국가</th>
+                  <th>회사명</th>
+                  <th>대표 시간대</th>
+                  <th>관리자 계정(ID)</th>
+                  <th>사용할 IP 대역</th>
+                  <th>도메인 수</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Stub 데이터 예시 -->
+                <tr class="customer-row selected" data-country="KR" data-company="LG Uplus" data-timezone="GMT+09"
+                  data-admin-id="admin@lguplus.co.kr" data-ip-range="203.248.10.0/24"
+                  data-domains="lguplus.co.kr,lgupluspartners.co.kr" data-status="사용 중">
+                  <td>KR</td>
+                  <td>LG Uplus</td>
+                  <td>GMT+09</td>
+                  <td>admin@lguplus.co.kr</td>
+                  <td>203.248.10.0/24</td>
+                  <td>2개</td>
+                  <td><span class="badge-on">사용 중</span></td>
+                </tr>
+                <tr class="customer-row" data-country="MY" data-company="Maxis" data-timezone="GMT+08"
+                  data-admin-id="eco-admin@maxis.com" data-ip-range="172.28.10.0/24,172.28.20.0/24"
+                  data-domains="maxis.com" data-status="준비 중">
+                  <td>MY</td>
+                  <td>Maxis</td>
+                  <td>GMT+08</td>
+                  <td>eco-admin@maxis.com</td>
+                  <td>172.28.10.0/24 · 172.28.20.0/24</td>
+                  <td>1개</td>
+                  <td><span class="badge-off">준비 중</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">
+            ※ 실제 연동 시 API 기반으로 고객사 목록을 조회하며, 고객사 선택 시 관련 계약·청구·계정 정보 화면과 연계됩니다. (Stub)
+          </p>
+
+          <!-- 선택된 고객사 상세 / 변경 -->
+          <div class="detail-card" id="customerDetailCard">
+            <div class="detail-header">
+              <div>
+                <div class="detail-title" id="detailTitle">선택된 고객사 상세 정보</div>
+                <div class="detail-caption">
+                  상단 테이블에서 고객사를 선택하면 상세 정보가 표시됩니다. 수퍼어드민만 변경/적용이 가능합니다. (Stub)
+                </div>
+              </div>
+              <div class="detail-caption" id="detailMeta">
+                현재 선택: LG Uplus (KR)
+              </div>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-field">
+                <span class="detail-label">국가</span>
+                <select id="detailCountry" class="detail-select">
+                  <option value="KR">KR (대한민국)</option>
+                  <option value="MY">MY (말레이시아)</option>
+                </select>
+              </div>
+              <div class="detail-field">
+                <span class="detail-label">회사명</span>
+                <input type="text" id="detailCompany" class="detail-input" />
+              </div>
+              <div class="detail-field">
+                <span class="detail-label">대표 시간대 (GMT +N)</span>
+                <input type="text" id="detailTimezone" class="detail-input" placeholder="예: GMT+09" />
+              </div>
+              <div class="detail-field">
+                <span class="detail-label">관리자 계정 (ID / 이메일)</span>
+                <input type="email" id="detailAdminId" class="detail-input" placeholder="admin@example.com" />
+              </div>
+              <div class="detail-field">
+                <span class="detail-label">사용할 IP 대역</span>
+                <textarea id="detailIpRange" class="detail-textarea" rows="2"
+                  placeholder="예: 203.248.10.0/24 또는 172.28.[10-30].[1-20]"></textarea>
+              </div>
+              <div class="detail-field">
+                <span class="detail-label">도메인 목록 (@ 뒤 도메인)</span>
+                <textarea id="detailDomains" class="detail-textarea" rows="2"
+                  placeholder="예: lguplus.co.kr,lgupluspartners.co.kr"></textarea>
+              </div>
+            </div>
+
+            <div class="detail-actions">
+              <button type="button" class="btn-ghost" id="btnDetailReset">
+                선택값 되돌리기
+              </button>
+              <button type="button" class="btn-primary" id="btnDetailApply">
+                적용
+              </button>
+            </div>
+          </div>
+
+          <!-- 신규 고객사 등록 모달 미리보기 제거됨 (팝업으로 전환) -->
+
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================
+       모달: 신규 고객사 등록 (실제 동작)
+  ========================= -->
+  <div class="modal-overlay" id="customerCreateModal">
+    <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="createCustomerTitle">
+      <header class="modal-header">
+        <div class="modal-title-block">
+          <h2 class="modal-title" id="createCustomerTitle">신규 고객사 등록</h2>
+          <div class="modal-subtitle">
+            계약 생성 및 청구 산정에 사용될 고객사 기준정보를 등록합니다. 등록 후 계약/계정 관리 화면에서 사용됩니다.
+          </div>
+        </div>
+        <div class="modal-header-actions">
+          <span class="badge-soft">기준정보 등록</span>
+          <button type="button" class="btn-close" id="btnCloseCreateModal">
+            닫기
+          </button>
+        </div>
+      </header>
+
+      <div class="modal-body">
+        <div class="modal-grid">
+          <div class="modal-field">
+            <span class="modal-label">국가</span>
+            <select id="createCountry" class="modal-select">
+              <option value="">선택하세요</option>
+              <option value="KR">KR (대한민국)</option>
+              <option value="MY">MY (말레이시아)</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <span class="modal-label">회사명 (영문)</span>
+            <input type="text" id="createCompany" class="modal-input" placeholder="예: LG Uplus" />
+          </div>
+          <div class="modal-field">
+            <span class="modal-label">대표 시간대 (GMT +N)</span>
+            <input type="text" id="createTimezone" class="modal-input" placeholder="예: GMT+09" />
+          </div>
+          <div class="modal-field">
+            <span class="modal-label">관리자 계정 (ID / 이메일)</span>
+            <input type="email" id="createAdminId" class="modal-input" placeholder="admin@example.com" />
+          </div>
+          <div class="modal-field">
+            <span class="modal-label">
+              사용할 IP 대역<br />
+              <span style="font-weight:400;color:var(--text-light);">
+                (외부에 노출되는 공인 IP, 범위 입력 가능)
+              </span>
+            </span>
+            <textarea id="createIpRange" class="modal-textarea" rows="2"
+              placeholder="예: 203.248.10.0/24 또는 172.28.[10-30].[1-20]"></textarea>
+          </div>
+          <div class="modal-field">
+            <span class="modal-label">도메인 (복수개 입력 가능)</span>
+            <input type="text" id="createDomainInput" class="modal-input" placeholder="예: lguplus.co.kr" />
+            <div class="pill-input-row">
+              <button type="button" class="btn-ghost" id="btnAddDomainPill">
+                도메인 추가
+              </button>
+            </div>
+            <div class="pill-container" id="domainPillContainer"></div>
+          </div>
+        </div>
+
+        <div class="modal-hint">
+          · 고객사당 1개의 수퍼어드민 계정만 지정할 수 있습니다. 이미 다른 관리자가 매핑된 경우, 변경 정책에 따라 별도 화면에서 교체 처리합니다. (Stub)<br />
+          · 도메인은 계정 생성 시 ID를 특정 도메인으로 제한하는 조건으로 활용됩니다.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" id="btnCreateCancel">
+          취소
+        </button>
+        <button type="button" class="btn-primary" id="btnCreateSave">
+          등록
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================
+       메뉴 구조 및 렌더링 로직
+    ========================= */
+    const MENU_STRUCTURE = {
+      "상품 운영": {
+        "상품 관리": ["상품 기준 정보"],
+        "고객사 관리": ["고객사 정보", "계약 관리"],
+        "대시보드": ["사업 실적 관리"]
+      },
+      "서비스 운영": {
+        "사용자 관리": ["계정 관리"],
+        "구독 관리": ["구독 현황"],
+        "DevOps": ["On-device AI 모델", "Cloud AI 기능", "서비스 연동 관리"],
+        "Support Center": ["유플러스", "A사(고객사)", "공지/SOP/FAQ"]
+      },
+      "서비스 정산": {
+        "청구/수납": ["고객사별 청구"]
+      },
+      "일반": {
+        "시스템": ["보안/컴플라이언스", "설정"],
+        "Global": ["로그인/인증", "마이페이지"]
+      }
+    };
+
+    let currentTop = "상품 운영";
+    let currentL2 = "고객사 관리";
+    let currentL3 = "고객사 정보";
+
+    function setActiveTopNav(topLabel) {
+      document.querySelectorAll(".top-nav-item").forEach((item) => {
+        // Find by text because this file uses text content mostly
+        // But for safety, let's match text content if dataset not present
+        const text = item.textContent.trim();
+        item.classList.toggle("active", text === topLabel);
+      });
+    }
+
+    function renderSidebar(topLabel, selectedL2, selectedL3) {
+      const sidebarTitleEl = document.getElementById("sidebar-title");
+      const sidebarMenuEl = document.getElementById("sidebar-menu");
+
+      if (sidebarTitleEl) sidebarTitleEl.textContent = topLabel;
+      if (sidebarMenuEl) {
+        sidebarMenuEl.innerHTML = "";
+
+        const menus = MENU_STRUCTURE[topLabel] || {};
+        Object.keys(menus).forEach((l2Name) => {
+          const l3List = menus[l2Name];
+
+          const li = document.createElement("li");
+          li.className = "menu-item";
+          li.dataset.l2 = l2Name;
+
+          const isActiveL2 = l2Name === selectedL2;
+          if (isActiveL2) li.classList.add("active", "open");
+
+          const mainDiv = document.createElement("div");
+          mainDiv.className = "menu-main";
+
+          const labelDiv = document.createElement("div");
+          labelDiv.className = "menu-label";
+
+          const iconSpan = document.createElement("span");
+          iconSpan.className = "menu-icon";
+          // Simple icon mapping or default
+          iconSpan.textContent = "📂";
+
+          const textSpan = document.createElement("span");
+          textSpan.textContent = l2Name;
+
+          labelDiv.appendChild(iconSpan);
+          labelDiv.appendChild(textSpan);
+
+          const arrowSpan = document.createElement("span");
+          arrowSpan.className = "menu-arrow";
+          arrowSpan.textContent = "›";
+
+          mainDiv.appendChild(labelDiv);
+          mainDiv.appendChild(arrowSpan);
+
+          const subUl = document.createElement("ul");
+          subUl.className = "submenu-list";
+
+          l3List.forEach((l3Name) => {
+            const subLi = document.createElement("li");
+            subLi.className = "submenu-item";
+            subLi.dataset.l3 = l3Name;
+            subLi.textContent = l3Name;
+
+            if (isActiveL2 && l3Name === selectedL3) {
+              subLi.classList.add("active");
+            }
+
+            subUl.appendChild(subLi);
+          });
+
+          li.appendChild(mainDiv);
+          li.appendChild(subUl);
+          sidebarMenuEl.appendChild(li);
+        });
+      }
+    }
+
+    function routeTo(top, l2, l3) {
+      currentTop = top;
+      currentL2 = l2;
+      currentL3 = l3;
+      setActiveTopNav(top);
+      renderSidebar(top, l2, l3);
+    }
+
+    /* =========================
+       DOM Loaded
+    ========================= */
+    document.addEventListener("DOMContentLoaded", () => {
+      // 메뉴 초기화
+      routeTo(currentTop, currentL2, currentL3);
+
+      // 상단 탭 이벤트 (텍스트 기반 매핑)
+      document.querySelectorAll(".top-nav-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const text = item.textContent.trim();
+          // 메뉴 구조에 있는 키인지 확인
+          if (MENU_STRUCTURE[text]) {
+            const menus = MENU_STRUCTURE[text];
+            const l2Names = Object.keys(menus);
+            if (l2Names.length > 0) {
+              const firstL2 = l2Names[0];
+              const firstL3 = menus[firstL2][0];
+              routeTo(text, firstL2, firstL3);
+            } else {
+              routeTo(text, "", "");
+            }
+          }
+        });
+      });
+
+      // 사이드바 이벤트
+      const sidebarMenuEl = document.getElementById("sidebar-menu");
+      if (sidebarMenuEl) {
+        sidebarMenuEl.addEventListener("click", (e) => {
+          const submenuItem = e.target.closest(".submenu-item");
+          const menuMain = e.target.closest(".menu-main");
+
+          if (submenuItem) {
+            const l3 = submenuItem.dataset.l3;
+            const l2 = submenuItem.closest(".menu-item").dataset.l2;
+            routeTo(currentTop, l2, l3);
+            // 실제 페이지 이동 로직은 없으므로 UI 상태만 변경
+            return;
+          }
+
+          if (menuMain) {
+            const menuItem = menuMain.closest(".menu-item");
+            const l2 = menuItem.dataset.l2;
+            // Toggle open
+            if (menuItem.classList.contains("open")) {
+              menuItem.classList.remove("open");
+            } else {
+              // Others close? Or one open at a time? Let's keep multiple open or just toggle
+              menuItem.classList.add("open");
+            }
+            // If we want to switch active L2 selection on click header:
+            // routeTo(currentTop, l2, currentL3); 
+          }
+        });
+      }
+
+
+      // ---- 기존 페이지 로직 ----
+      const customerTable = document.getElementById("customerTable");
+      const customerRows = customerTable.querySelectorAll(".customer-row");
+
+      const searchInput = document.getElementById("searchCompanyInput");
+      const filterCountry = document.getElementById("filterCountry");
+      const btnResetFilter = document.getElementById("btnResetFilter");
+
+      const detailCountry = document.getElementById("detailCountry");
+      const detailCompany = document.getElementById("detailCompany");
+      const detailTimezone = document.getElementById("detailTimezone");
+      const detailAdminId = document.getElementById("detailAdminId");
+      const detailIpRange = document.getElementById("detailIpRange");
+      const detailDomains = document.getElementById("detailDomains");
+      const detailMeta = document.getElementById("detailMeta");
+
+      const btnDetailReset = document.getElementById("btnDetailReset");
+      const btnDetailApply = document.getElementById("btnDetailApply");
+
+      let currentSelectedRow = customerTable.querySelector(".customer-row.selected");
+
+      function fillDetailFromRow(row) {
+        if (!row) return;
+        const country = row.dataset.country || "";
+        const company = row.dataset.company || "";
+        const tz = row.dataset.timezone || "";
+        const adminId = row.dataset.adminId || "";
+        const ipRange = row.dataset.ipRange || "";
+        const domains = row.dataset.domains || "";
+        const status = row.dataset.status || "";
+
+        detailCountry.value = country || "KR";
+        detailCompany.value = company;
+        detailTimezone.value = tz;
+        detailAdminId.value = adminId;
+        detailIpRange.value = ipRange;
+        detailDomains.value = domains;
+
+        detailMeta.textContent = `현재 선택: ${company || "-"} (${country || "-"}) · 상태: ${status || "-"}`;
+      }
+
+      // 초기 상세 세팅
+      if (currentSelectedRow) {
+        fillDetailFromRow(currentSelectedRow);
+      }
+
+      // 테이블 행 클릭 시 선택 처리
+      customerRows.forEach((row) => {
+        row.addEventListener("click", () => {
+          if (currentSelectedRow === row) return;
+          if (currentSelectedRow) currentSelectedRow.classList.remove("selected");
+          row.classList.add("selected");
+          currentSelectedRow = row;
+          fillDetailFromRow(row);
+        });
+      });
+
+      // 상세 되돌리기 (선택된 행 기준으로 다시 채우기)
+      btnDetailReset.addEventListener("click", () => {
+        if (!currentSelectedRow) return;
+        fillDetailFromRow(currentSelectedRow);
+        alert("선택된 고객사의 기준정보로 되돌렸습니다. (Stub)");
+      });
+
+      // 상세 적용 (Stub)
+      btnDetailApply.addEventListener("click", () => {
+        if (!currentSelectedRow) {
+          alert("선택된 고객사가 없습니다.");
+          return;
+        }
+        // Stub: 실제로는 API 호출 후 성공 시 테이블 반영
+        alert("고객사 기준정보 변경 요청을 전송했습니다. (Stub – 수퍼어드민 전용 기능)");
+      });
+
+      // 필터링 로직
+      function applyFilter() {
+        const keyword = (searchInput.value || "").trim().toLowerCase();
+        const country = filterCountry.value;
+
+        customerRows.forEach((row) => {
+          const company = (row.dataset.company || "").toLowerCase();
+          const domains = (row.dataset.domains || "").toLowerCase();
+          const rowCountry = row.dataset.country || "";
+
+          let visible = true;
+
+          if (keyword) {
+            visible =
+              company.includes(keyword) ||
+              domains.includes(keyword);
+          }
+
+          if (visible && country) {
+            visible = rowCountry === country;
+          }
+
+          row.style.display = visible ? "" : "none";
+        });
+      }
+
+      searchInput.addEventListener("input", applyFilter);
+      filterCountry.addEventListener("change", applyFilter);
+      btnResetFilter.addEventListener("click", () => {
+        searchInput.value = "";
+        filterCountry.value = "";
+        applyFilter();
+      });
+
+      // =========================
+      // 모달 관련 (신규 고객사 등록)
+      // =========================
+      const modalOverlay = document.getElementById("customerCreateModal");
+      const btnOpenCreateModal = document.getElementById("btnOpenCreateModal");
+      const btnCloseCreateModal = document.getElementById("btnCloseCreateModal");
+      const btnCreateCancel = document.getElementById("btnCreateCancel");
+      const btnCreateSave = document.getElementById("btnCreateSave");
+
+      const createCountry = document.getElementById("createCountry");
+      const createCompany = document.getElementById("createCompany");
+      const createTimezone = document.getElementById("createTimezone");
+      const createAdminId = document.getElementById("createAdminId");
+      const createIpRange = document.getElementById("createIpRange");
+
+      const createDomainInput = document.getElementById("createDomainInput");
+      const btnAddDomainPill = document.getElementById("btnAddDomainPill");
+      const domainPillContainer = document.getElementById("domainPillContainer");
+
+      function openCreateModal() {
+        modalOverlay.classList.add("open");
+      }
+      function closeCreateModal() {
+        modalOverlay.classList.remove("open");
+      }
+
+      if (btnOpenCreateModal) {
+        btnOpenCreateModal.addEventListener("click", openCreateModal);
+      }
+      if (btnCloseCreateModal) {
+        btnCloseCreateModal.addEventListener("click", closeCreateModal);
+      }
+      if (btnCreateCancel) {
+        btnCreateCancel.addEventListener("click", closeCreateModal);
+      }
+
+      if (modalOverlay) {
+        modalOverlay.addEventListener("click", (e) => {
+          if (e.target === modalOverlay) {
+            closeCreateModal();
+          }
+        });
+      }
+
+      // 도메인 pill 관리
+      function addDomainPill(value) {
+        const trimmed = value.trim();
+        if (!trimmed) return;
+
+        const pill = document.createElement("div");
+        pill.className = "pill";
+        pill.dataset.value = trimmed;
+        pill.innerHTML = `
+          <span>${trimmed}</span>
+          <span class="pill-remove" title="삭제">×</span>
+        `;
+        domainPillContainer.appendChild(pill);
+
+        pill.querySelector(".pill-remove").addEventListener("click", () => {
+          pill.remove();
+        });
+      }
+
+      if (btnAddDomainPill) {
+        btnAddDomainPill.addEventListener("click", () => {
+          const value = createDomainInput.value;
+          if (!value.trim()) {
+            alert("추가할 도메인을 입력해 주세요.");
+            return;
+          }
+          addDomainPill(value);
+          createDomainInput.value = "";
+        });
+      }
+
+      if (createDomainInput) {
+        createDomainInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            btnAddDomainPill.click();
+          }
+        });
+      }
+
+      function getDomainListFromPills() {
+        const pills = domainPillContainer.querySelectorAll(".pill");
+        const values = [];
+        pills.forEach((pill) => {
+          const v = pill.dataset.value || "";
+          if (v) values.push(v);
+        });
+        return values;
+      }
+
+      function resetCreateForm() {
+        createCountry.value = "";
+        createCompany.value = "";
+        createTimezone.value = "";
+        createAdminId.value = "";
+        createIpRange.value = "";
+        createDomainInput.value = "";
+        domainPillContainer.innerHTML = "";
+      }
+
+      // 신규 등록 저장 (Stub)
+      if (btnCreateSave) {
+        btnCreateSave.addEventListener("click", () => {
+          const country = createCountry.value;
+          const company = createCompany.value.trim();
+          const timezone = createTimezone.value.trim();
+          const adminId = createAdminId.value.trim();
+          const ipRange = createIpRange.value.trim();
+          const domains = getDomainListFromPills();
+
+          if (!country || !company || !timezone || !adminId) {
+            alert("국가, 회사명, 대표 시간대, 관리자 계정은 필수입니다.");
+            return;
+          }
+
+          const tbody = customerTable.querySelector("tbody");
+          const tr = document.createElement("tr");
+          tr.className = "customer-row";
+          tr.dataset.country = country;
+          tr.dataset.company = company;
+          tr.dataset.timezone = timezone;
+          tr.dataset.adminId = adminId;
+          tr.dataset.ipRange = ipRange;
+          tr.dataset.domains = domains.join(",");
+          tr.dataset.status = "사용 중";
+
+          const ipDisplay = ipRange || "-";
+          const domainCount = domains.length ? `${domains.length}개` : "0개";
+
+          tr.innerHTML = `
+              <td>${country}</td>
+              <td>${company}</td>
+              <td>${timezone}</td>
+              <td>${adminId}</td>
+              <td>${ipDisplay}</td>
+              <td>${domainCount}</td>
+              <td><span class="badge-on">사용 중</span></td>
+            `;
+
+          tbody.appendChild(tr);
+
+          // 새 행 클릭 시 동작 바인딩
+          tr.addEventListener("click", () => {
+            if (currentSelectedRow) currentSelectedRow.classList.remove("selected");
+            tr.classList.add("selected");
+            currentSelectedRow = tr;
+            fillDetailFromRow(tr);
+          });
+
+          // 모달 닫고 폼 초기화
+          closeCreateModal();
+          resetCreateForm();
+          alert("신규 고객사를 등록했습니다. (Stub – 실제 환경에서는 API 연동)");
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>
+```
